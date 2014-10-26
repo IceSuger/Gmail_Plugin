@@ -16,7 +16,6 @@ google.authorize(function() {
 	var MsgList = null;
 	var token = '';
 
-  // Hook up the form to create a new task with Google Tasks
   form.addEventListener('submit', function(event) {
     event.preventDefault();
 		
@@ -40,8 +39,6 @@ google.authorize(function() {
 						document.getElementById('taskid').innerHTML += '<br />';
 						document.getElementById('taskid').innerHTML += list.messages[i].id ;
 						
-						//getAttachments('me', list.messages[i].id, callback);
-						
 						getMessage(list.messages[i].id);
 					}
 			
@@ -62,30 +59,6 @@ google.authorize(function() {
 
     xhr.send(null);
   }
-	/*
-	function getAttachments(userId, msgid, callback) {
-		var parts = gapi.client.gmail.users.messages.get({'id': msgid}).payload.parts;
-		for (var i = 0; i < parts.length; i++) {
-			var part = parts[i];
-			if (part.filename && part.filename.length > 0) {
-				var attachId = part.body.attachmentId;
-				var request = gapi.client.gmail.users.messages.attachments.get({
-					'id': attachId,
-					'messageId': message.id,
-					'userId': userId
-				});
-				request.execute(function(attachment) {
-					callback(part.filename, part.mimeType, attachment);
-				});
-			}
-		}
-	}
-	
-	function callback(a, b, c) {
-		getElementById('taskid').innerHTML = a;
-	}
-	//function printAttInfo
-`*/
 	
 	function getMessage(MessageId) {
     var xhr = new XMLHttpRequest();
