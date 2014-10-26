@@ -8,11 +8,13 @@ var google = new OAuth2('google', {
 google.authorize(function() {
 
 	var LIST_FETCH_URL = 'https://www.googleapis.com/gmail/v1/users/me/messages';
+	var MESSAGE_FETCH_URL_prefix = 'https://www.googleapis.com/gmail/v1/users/me/messages/';//messageId
 	var ATTACHMENT_FETCH_URL = 'https://www.googleapis.com/gmail/v1/users/me/messages/MessageId/attachments/AttId';
 
   var form = document.getElementById('form');
   var success = document.getElementById('success');
 	var MsgList = null;
+	var token = '';
 
   // Hook up the form to create a new task with Google Tasks
   form.addEventListener('submit', function(event) {
@@ -35,12 +37,12 @@ google.authorize(function() {
 					//Fetch information of the attachments with a for loop
 					for(var i=0; i<list.resultSizeEstimate ; i++)
 					{
-						//document.getElementById('taskid').innerHTML += '<br />';
-						//document.getElementById('taskid').innerHTML += list.messages[i].id ;
+						document.getElementById('taskid').innerHTML += '<br />';
+						document.getElementById('taskid').innerHTML += list.messages[i].id ;
 						
-						getAttachments('me', list.messages[i].id, callback);
+						//getAttachments('me', list.messages[i].id, callback);
 						
-						//getAttachmentInfo(list.message[i].id);
+						getMessage(list.messages[i].id);
 					}
 			
 					form.style.display = 'none';
@@ -52,14 +54,15 @@ google.authorize(function() {
       }
     };
 
-    xhr.open('GET', LIST_FETCH_URL, true);
+    xhr.open('GET', LIST_FETCH_URL , true);
 
     xhr.setRequestHeader('Content-Type', 'application/json');
-    xhr.setRequestHeader('Authorization', 'OAuth ' + google.getAccessToken());
+		token = google.getAccessToken();
+    xhr.setRequestHeader('Authorization', 'OAuth ' + token);
 
     xhr.send(null);
   }
-	
+	/*
 	function getAttachments(userId, msgid, callback) {
 		var parts = gapi.client.gmail.users.messages.get({'id': msgid}).payload.parts;
 		for (var i = 0; i < parts.length; i++) {
@@ -82,45 +85,41 @@ google.authorize(function() {
 		getElementById('taskid').innerHTML = a;
 	}
 	//function printAttInfo
-
-	/*
-	function getAttachmentInfo(MessageId) {
-    // Make an XHR
+`*/
+	
+	function getMessage(MessageId) {
     var xhr = new XMLHttpRequest();
     xhr.onreadystatechange = function(event) {
       if (xhr.readyState == 4) {
         if(xhr.status == 200) {
 					
-					var parts = MessageId.payload.parts;
-					
-					
-          //var list = JSON.parse(xhr.responseText);
-          document.getElementById('taskid').innerHTML += list.messages[0].MessageId;
+							var messageObj = JSON.parse(xhr.responseText);
+							var parts = messageObj.payload.parts;
 					
 					//Fetch information of the attachments with a for loop
-					for(var i=0; i<list.resultSizeEstimate ; i++)
+					for(var i=0; i<parts.length ; i++)
 					{
-						document.getElementById('taskid').innerHTML += list.messages[0].MessageId;
-						//getAttachmentInfo(list.messages[i].MessageId);
+						var part = parts[i];
+						document.getElementById('taskid').innerHTML += '<br />';
+						//document.getElementById('taskid').innerHTML += part.filename ;
+						//document.getElementById('taskid').innerHTML += '<br />';
+						document.getElementById('taskid').innerHTML += part.body.attachmentId ;
 					}
-					
-					form.style.display = 'none';
-          success.style.display = 'block';
 
         } else {
+          // Request failure: something bad happened
         }
       }
     };
-		
 
-    xhr.open('GET', ATTACHMENT_FETCH_URL, true);
+    xhr.open('GET', MESSAGE_FETCH_URL_prefix + MessageId, true);
 
     xhr.setRequestHeader('Content-Type', 'application/json');
-    xhr.setRequestHeader('Authorization', 'OAuth ' + google.getAccessToken());
+    xhr.setRequestHeader('Authorization', 'OAuth ' + token);
 
     xhr.send(null);
   }
-	*/
+	
 
 });
 
