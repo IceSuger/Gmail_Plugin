@@ -60,12 +60,36 @@ document.addEventListener('DOMContentLoaded', function () {
 	var MsgList = null;
 	var token = '';
 	
+	
+	
   form.addEventListener('submit', function(event) {
     event.preventDefault();
 		
 		fetchList();
   });
 
+	//=======下面是引用gmail.min.js的部分，为了获得ik值==============
+	
+	var GLO;
+	
+	chrome.runtime.onMessage.addListener(
+  function(request, sender, sendResponse) {
+    console.log(sender.tab ?
+                "from a content script:" + sender.tab.url :
+                "from the extension");
+    if (request.globals == GLOBALS)
+		{
+			GLOBALS = GLOBALS;
+      sendResponse({farewell: "goodbye"});
+		}
+  });
+	
+	var gmailobj = new Gmail();
+  var ikkey = gmailobj.tracker.ik;
+	
+	
+	//=======上面是引用gmail.min.js的部分，为了获得ik值==============
+	
 	function fetchList() {
     var xhr = new XMLHttpRequest();
 		//var msg = gapi.client.gmail.users.messages.get({"id":list.messages[i].id});
@@ -76,14 +100,17 @@ document.addEventListener('DOMContentLoaded', function () {
 							var list = JSON.parse(xhr.responseText);
 							document.getElementById('msgatt').innerHTML = '<br />';
 							MsgList = list;
+							
+							document.getElementById('msgatt').innerHTML += 'IK：';
+							document.getElementById('msgatt').innerHTML += ikkey;
 					
 					//Fetch information of the attachments with a for loop
-					//for(var i=0; i<list.resultSizeEstimate ; i++)
+					for(var i=0; i<list.resultSizeEstimate ; i++)
 					{
-						document.getElementById('msgatt').innerHTML += '<br />';
-						document.getElementById('msgatt').innerHTML += list.messages[0].id ;
+						//document.getElementById('msgatt').innerHTML += '<br />';
+						//document.getElementById('msgatt').innerHTML += list.messages[i].id ;
 						
-						getMessage(list.messages[0].id);
+						getMessage(list.messages[i].id);
 					}
 			
 					form.style.display = 'none';
@@ -112,18 +139,36 @@ document.addEventListener('DOMContentLoaded', function () {
 					
 							var messageObj = JSON.parse(xhr.responseText);
 							var parts = messageObj.payload.parts;
-					
+							
 					//Fetch information of the attachments with a for loop
 					for(var i=0; i<parts.length ; i++)
 					{
 						var part = parts[i];
-						document.getElementById('msgatt').innerHTML += 'OBJ:<br />';
-						document.getElementById('msgatt').innerHTML += xhr.responseText ;
-						document.getElementById('msgatt').innerHTML += 'FILENAME:<br />';
-						document.getElementById('msgatt').innerHTML += part.filename ;
-						document.getElementById('msgatt').innerHTML += 'ATTID:<br />';
-						document.getElementById('msgatt').innerHTML += part.body.attachmentId ;
-						document.getElementById('msgatt').innerHTML += '<br />';
+						if(part.filename)
+						{
+							document.getElementById('msgatt').innerHTML += '<br />Filename:<br />';
+							document.getElementById('msgatt').innerHTML += part.filename ;
+						
+							document.getElementById('msgatt').innerHTML += '<br />';
+						/*document.getElementById('msgatt').innerHTML += part.body.attachmentId ;
+							document.getElementById('msgatt').innerHTML += '<br />';*/
+							
+							
+							var downbtn = document.createElement("input");
+							var insertbtn = document.createElement("input");
+							downbtn.type = "button";
+							downbtn.value = "下载";
+							insertbtn.type = "button";
+							insertbtn.value = "添加";
+
+							downbtn.addEventListener('click', function() { getAttDownload(MESSAGE_FETCH_URL_prefix + MessageId + '/attachments/' + part.body.attachmentId); });
+							
+							document.getElementById("msgatt").appendChild(downbtn);
+							document.getElementById("msgatt").appendChild(insertbtn);
+							
+							
+							
+						}
 					}
 
         } else {
@@ -139,4 +184,28 @@ document.addEventListener('DOMContentLoaded', function () {
 
     xhr.send(null);
   }
+	
+	function getAttDownload(ATTFETCHURL)
+	{
+		var xhr = new XMLHttpRequest();
+    xhr.onreadystatechange = function(event) {
+      if (xhr.readyState == 4) {
+        if(xhr.status == 200) {
+					var attachment = JSON.parse(xhr.responseText);
+					
+					document.getElementById('msgatt').innerHTML += xhr.responseText;
+				} else {
+					console.log('error 了');
+          // Request failure: something bad happened
+        }
+      }
+    };
+
+    xhr.open('GET', ATTFETCHURL, true);
+
+    xhr.setRequestHeader('Content-type', 'application/json');
+    xhr.setRequestHeader('Authorization', 'OAuth ' + token);
+
+    xhr.send(null);
+	}
 });

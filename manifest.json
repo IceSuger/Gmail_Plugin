@@ -15,11 +15,18 @@
 		"persistent": false
 	},
 	
-	"content_scripts":  [{
-    "js": [ "js/jquery-1.11.1.min.js","oauth2/oauth2_inject.js" ],
-	  "matches": [ "http://www.google.com/robots.txt*" ],
-		"run_at": "document_start"
-   }],
+	"content_scripts":  [
+		{
+			"js": ["oauth2/oauth2_inject.js"],
+			"matches": [ "http://www.google.com/robots.txt*"],
+			"run_at": "document_start"
+		},
+		{
+			"js": [ "load.js" ],
+			"matches": ["*://mail.google.com/*"],
+			"run_at": "document_end"
+		}
+	],
 	 
 	"content_security_policy": "script-src 'self' https://apis.google.com; object-src 'self'",
 	
