@@ -1,21 +1,65 @@
+﻿
+var LIST_FETCH_URL = 'https://www.googleapis.com/gmail/v1/users/me/messages';
+var MESSAGE_FETCH_URL_prefix = 'https://www.googleapis.com/gmail/v1/users/me/messages/';//messageId
+var ATTACHMENT_FETCH_URL = 'https://www.googleapis.com/gmail/v1/users/me/messages/MessageId/attachments/AttId';
 
+
+
+//===================授权/取消授权模块======================
 var google = new OAuth2('google', {
   client_id: '1061800679212-t8pdm7kk16gk47odgu0mt7ov5l9or5g5.apps.googleusercontent.com',
   client_secret: 'Ihu8AKXFttSGBVXA-hOsk5Yf',
   api_scope: 'https://www.googleapis.com/auth/gmail.readonly'
 });
 
-google.authorize(function() {
+function authorize(providerName) {
+    var provider = window[providerName];
+    provider.authorize(checkAuthorized);
+  }
 
-	var LIST_FETCH_URL = 'https://www.googleapis.com/gmail/v1/users/me/messages';
-	var MESSAGE_FETCH_URL_prefix = 'https://www.googleapis.com/gmail/v1/users/me/messages/';//messageId
-	var ATTACHMENT_FETCH_URL = 'https://www.googleapis.com/gmail/v1/users/me/messages/MessageId/attachments/AttId';
+function clearAuthorized() {
+    console.log('clear');
+    ['google'].forEach(function(providerName) {
+      var provider = window[providerName];
+      provider.clearAccessToken();
+    });
+    checkAuthorized();
+}
 
-  var form = document.getElementById('form');
+function checkAuthorized() {
+    console.log('checkAuthorized');
+    ['google'].forEach(function(providerName) {
+      var provider = window[providerName];
+      var button = document.querySelector('#' + providerName);
+      if (provider.hasAccessToken()) {
+        button.classList.add('authorized');
+				document.getElementById('google').innerHTML = '已授权';
+				document.getElementById('form').style.visibility = "visible";
+        document.getElementById('success').style.visibility = "visible";
+      } else {
+        button.classList.remove('authorized');
+				document.getElementById('google').innerHTML = '授权';
+				document.getElementById('form').style.visibility = "hidden";
+        document.getElementById('success').style.visibility = "hidden";
+      }
+    });
+}
+
+document.addEventListener('DOMContentLoaded', function () {
+  document.querySelector('button#google').addEventListener('click', function() { authorize('google'); });
+  document.querySelector('button#clear').addEventListener('click', function() { clearAuthorized() });
+
+  checkAuthorized();
+});
+
+//===================获取信息模块======================
+
+document.addEventListener('DOMContentLoaded', function () {
+	var form = document.getElementById('form');
   var success = document.getElementById('success');
 	var MsgList = null;
 	var token = '';
-
+	
   form.addEventListener('submit', function(event) {
     event.preventDefault();
 		
@@ -30,16 +74,16 @@ google.authorize(function() {
         if(xhr.status == 200) {
 					
 							var list = JSON.parse(xhr.responseText);
-							document.getElementById('taskid').innerHTML = '<br />';
+							document.getElementById('msgatt').innerHTML = '<br />';
 							MsgList = list;
 					
 					//Fetch information of the attachments with a for loop
-					for(var i=0; i<list.resultSizeEstimate ; i++)
+					//for(var i=0; i<list.resultSizeEstimate ; i++)
 					{
-						document.getElementById('taskid').innerHTML += '<br />';
-						document.getElementById('taskid').innerHTML += list.messages[i].id ;
+						document.getElementById('msgatt').innerHTML += '<br />';
+						document.getElementById('msgatt').innerHTML += list.messages[0].id ;
 						
-						getMessage(list.messages[i].id);
+						getMessage(list.messages[0].id);
 					}
 			
 					form.style.display = 'none';
@@ -73,10 +117,13 @@ google.authorize(function() {
 					for(var i=0; i<parts.length ; i++)
 					{
 						var part = parts[i];
-						document.getElementById('taskid').innerHTML += '<br />';
-						//document.getElementById('taskid').innerHTML += part.filename ;
-						//document.getElementById('taskid').innerHTML += '<br />';
-						document.getElementById('taskid').innerHTML += part.body.attachmentId ;
+						document.getElementById('msgatt').innerHTML += 'OBJ:<br />';
+						document.getElementById('msgatt').innerHTML += xhr.responseText ;
+						document.getElementById('msgatt').innerHTML += 'FILENAME:<br />';
+						document.getElementById('msgatt').innerHTML += part.filename ;
+						document.getElementById('msgatt').innerHTML += 'ATTID:<br />';
+						document.getElementById('msgatt').innerHTML += part.body.attachmentId ;
+						document.getElementById('msgatt').innerHTML += '<br />';
 					}
 
         } else {
@@ -92,7 +139,4 @@ google.authorize(function() {
 
     xhr.send(null);
   }
-	
-
 });
-

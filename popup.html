@@ -1,8 +1,9 @@
-<head>
+﻿<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
   <title>OAuth 2.0 Popup</title>
   <script src="js/jquery-1.11.1.min.js"></script>
 	<script src="oauth2/oauth2.js"></script>
-	<script src="test/test4.js"></script>
+	<script src="test/test4.js" charset="utf-8"></script>
   
 	<style type="text/css">
 		div#success{width:300px}
@@ -11,10 +12,11 @@
   </style>
 </head>
 
+<button id="google">授权</button>
+<button id="clear">取消授权</button>
 <form id="form">
-  <input id="button" type="submit" value="lalala"/>
+  <input id="button" type="submit" value="获取附件列表"/>
 </form>
 <div id="success">
-  Successfully get the auth token:<span id="taskid"></span>.
+  Successfully get the auth token:<span id="msgatt"></span>.
 </div>
-<script src="https://apis.google.com/js/client.js?onload=google.authorize"></script>
