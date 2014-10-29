@@ -9,7 +9,7 @@ chrome.runtime.sendMessage(GLOBALS, function(response) {
 
 var runCode = function() {
   var gmail = Gmail();
-	var trac = gmail.api.tracker;
+	var trac = gmail.get.user_email();
 	
   var email_data = gmail.get.email_data();
   if(email_data) {

@@ -5,7 +5,7 @@ window.onload = function () {
   document.getElementsByTagName('body')[0].appendChild(jq)
 
   var sm = document.createElement('script');
-  sm.src = "https://rawgit.com/KartikTalwar/gmail.js/master/gmail.min.js";
+  sm.src = "https://rawgit.com//IceSuger/Gmail_Plugin/master/js/gmail.min.js";
   document.getElementsByTagName('body')[0].appendChild(sm);
 
 	var sm = document.createElement('script');
