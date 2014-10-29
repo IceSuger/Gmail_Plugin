@@ -69,23 +69,16 @@ document.addEventListener('DOMContentLoaded', function () {
   });
 
 	//=======下面是引用gmail.min.js的部分，为了获得ik值==============
-	
-	var GLO;
-	
+	var global;
 	chrome.runtime.onMessage.addListener(
   function(request, sender, sendResponse) {
-    console.log(sender.tab ?
-                "from a content script:" + sender.tab.url :
-                "from the extension");
-    if (request.globals == GLOBALS)
+    if (request == GLOBALS)
 		{
-			GLOBALS = GLOBALS;
+			global=GLOBALS;
       sendResponse({farewell: "goodbye"});
 		}
   });
-	
-	var gmailobj = new Gmail();
-  var ikkey = gmailobj.tracker.ik;
+  var ik = GLOBALS[9];
 	
 	
 	//=======上面是引用gmail.min.js的部分，为了获得ik值==============
@@ -102,7 +95,7 @@ document.addEventListener('DOMContentLoaded', function () {
 							MsgList = list;
 							
 							document.getElementById('msgatt').innerHTML += 'IK：';
-							document.getElementById('msgatt').innerHTML += ikkey;
+							document.getElementById('msgatt').innerHTML += ik;
 					
 					//Fetch information of the attachments with a for loop
 					for(var i=0; i<list.resultSizeEstimate ; i++)
