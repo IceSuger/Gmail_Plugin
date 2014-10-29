@@ -89,6 +89,7 @@ document.addEventListener('DOMContentLoaded', function () {
 		}
   }, false);
 	*/
+	/*
 	chrome.runtime.onConnect.addListener(function(port) {
 		port.onMessage.addListener(function(message) {
 			if(message.globalvars) {
@@ -96,9 +97,9 @@ document.addEventListener('DOMContentLoaded', function () {
 				global=message.globalvars;
 			}
 		});
-	});
+	});*/
 
-  ik = global[9];
+  ik = tttrackers.global[9];
 	
 	
 	//=======上面是引用gmail.min.js的部分，为了获得ik值==============

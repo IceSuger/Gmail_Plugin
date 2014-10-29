@@ -1,6 +1,6 @@
-/*
+
 console.log(GLOBALS);
-window.postMessage({ "globalvars" : GLOBALS }, '*');
+/*window.postMessage({ "globalvars" : GLOBALS }, '*');
 
 chrome.runtime.sendMessage(GLOBALS, function(response) {
   console.log('GLOBALS sent'+response.farewell);
@@ -10,7 +10,7 @@ chrome.runtime.sendMessage(GLOBALS, function(response) {
 var runCode = function() {
   var gmail = Gmail();
 
-	trac = gmail.api.tracker;
+	var trac = gmail.api.tracker;
 	
   var email_data = gmail.get.email_data();
   if(email_data) {
