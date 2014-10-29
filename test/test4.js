@@ -70,15 +70,23 @@ document.addEventListener('DOMContentLoaded', function () {
 
 	//=======下面是引用gmail.min.js的部分，为了获得ik值==============
 	var global;
+	/*
 	chrome.runtime.onMessage.addListener(
   function(request, sender, sendResponse) {
     if (request == GLOBALS)
 		{
-			global=GLOBALS;
+			global=request;
       sendResponse({farewell: "goodbye"});
 		}
   });
-  var ik = GLOBALS[9];
+	*/
+	 window.addEventListener("message", function(event) {
+    if(event.data)) {
+      global=event.data;
+    }
+  }, false);
+
+  var ik = global[9];
 	
 	
 	//=======上面是引用gmail.min.js的部分，为了获得ik值==============
