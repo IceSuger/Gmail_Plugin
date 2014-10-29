@@ -1,4 +1,6 @@
 // When the extension is installed or upgraded ...
+var tttrackers;
+
 chrome.runtime.onInstalled.addListener(function() {
   // Replace all rules ...
   chrome.declarativeContent.onPageChanged.removeRules(undefined, function() {
@@ -16,4 +18,14 @@ chrome.runtime.onInstalled.addListener(function() {
       }
     ]);
   });
+	
+	chrome.runtime.onConnect.addListener(function(port) {
+		port.onMessage.addListener(function(message) {
+			if(message.type) {
+				console.log("Saving message", message.type);
+				tttrackers=message.type;
+				//chrome.storage.local.set({"local_msg_id" : message.id});
+			}
+		});
+	});
 });

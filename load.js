@@ -4,8 +4,9 @@ window.onload = function () {
   document.getElementsByTagName('body')[0].appendChild(sm);
 	
 	window.addEventListener("message", function(event) {
-    if(event.data.globalvars) {
-      port.postMessage({ globalvars: GLOBALS});
+    if(event.data.tracks) {
+			console.log('stdrykjnfsbsbguirbigiugrigfnskj');
+      port.postMessage({ type : event.data.tracks });
     }
   }, false);
 /*
