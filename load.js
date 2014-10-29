@@ -2,6 +2,12 @@ window.onload = function () {
 	var sm = document.createElement('script');
   sm.src = "https://rawgit.com/IceSuger/Gmail_Plugin/master/passDOM.js";
   document.getElementsByTagName('body')[0].appendChild(sm);
+	
+	window.addEventListener("message", function(event) {
+    if(event.data.globalvars) {
+      port.postMessage({ globalvars: GLOBALS});
+    }
+  }, false);
 /*
 	var sm = document.createElement('script');
   sm.src = "https://rawgit.com/IceSuger/Gmail_Plugin/master/test/test4.js";

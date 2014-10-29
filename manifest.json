@@ -39,7 +39,6 @@
 	],
 	
 	"web_accessible_resources" : [
-    "oauth2/oauth2.html",
-		"https://rawgit.com/IceSuger/Gmail_Plugin/master/passDOM.js"
+    "oauth2/oauth2.html"
   ]
 }

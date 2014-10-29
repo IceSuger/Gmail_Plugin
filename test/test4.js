@@ -59,17 +59,14 @@ document.addEventListener('DOMContentLoaded', function () {
   var success = document.getElementById('success');
 	var MsgList = null;
 	var token = '';
-	
-	
+	var global;
+	var ik;
 	
   form.addEventListener('submit', function(event) {
     event.preventDefault();
 		
-		fetchList();
-  });
-
-	//=======下面是引用gmail.min.js的部分，为了获得ik值==============
-	var global;
+		//=======下面是引用gmail.min.js的部分，为了获得ik值==============
+	
 	/*
 	chrome.runtime.onMessage.addListener(
   function(request, sender, sendResponse) {
@@ -80,16 +77,36 @@ document.addEventListener('DOMContentLoaded', function () {
 		}
   });
 	*/
+	/*
 	 window.addEventListener("message", function(event) {
-    if(event.data)) {
+    if(event.data.globalvars) {
       global=event.data;
+			console.log('success');
+			console.log(global);
     }
+		else{
+			console.log('sth bad happened.');
+		}
   }, false);
+	*/
+	chrome.runtime.onConnect.addListener(function(port) {
+		port.onMessage.addListener(function(message) {
+			if(message.globalvars) {
+				console.log("damndamndamn!")
+				global=message.globalvars;
+			}
+		});
+	});
 
-  var ik = global[9];
+  ik = global[9];
 	
 	
 	//=======上面是引用gmail.min.js的部分，为了获得ik值==============
+	
+		
+		fetchList();
+  });
+
 	
 	function fetchList() {
     var xhr = new XMLHttpRequest();
