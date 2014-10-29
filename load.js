@@ -14,8 +14,4 @@ window.onload = function () {
   }, false);
 */
 
-chrome.runtime.sendMessage(GLOBALS, function(response) {
-  console.log('GLOBALS sent'+response.farewell);
-});
-
 }
