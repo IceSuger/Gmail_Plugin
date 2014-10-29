@@ -99,7 +99,11 @@ document.addEventListener('DOMContentLoaded', function () {
 		});
 	});*/
 
-  ik = tttrackers.global[9];
+	chrome.runtime.sendMessage('Hello', function(response){
+			ik = response;
+	});
+
+ 
 	
 	
 	//=======上面是引用gmail.min.js的部分，为了获得ik值==============

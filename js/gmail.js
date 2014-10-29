@@ -52,7 +52,7 @@ var Gmail = function(localJQuery) {
   }
 
 
-  api.get.user_email = function() {
+  api.get.user_ik = function() {
     return api.tracker.globals[9];
   };
 

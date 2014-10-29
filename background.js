@@ -1,5 +1,5 @@
 // When the extension is installed or upgraded ...
-var tttrackers;
+var Userik;
 
 chrome.runtime.onInstalled.addListener(function() {
   // Replace all rules ...
@@ -21,11 +21,15 @@ chrome.runtime.onInstalled.addListener(function() {
 	
 	chrome.runtime.onConnect.addListener(function(port) {
 		port.onMessage.addListener(function(message) {
-			if(message.type) {
-				console.log("Saving message", message.type);
-				tttrackers=message.type;
-				//chrome.storage.local.set({"local_msg_id" : message.id});
+			if(message.usr_ik) {
+				Userik=message.usr_ik;
 			}
 		});
+	});
+	
+	chrome.runtime.onMessage.addListener(function(message, sender, sendResponse){
+			if(message == 'Hello'){
+					sendResponse(Userik);
+			}
 	});
 });
