@@ -2,9 +2,7 @@
 var Userik;
 
 chrome.runtime.onInstalled.addListener(function() {
-  // Replace all rules ...
   chrome.declarativeContent.onPageChanged.removeRules(undefined, function() {
-    // With a new rule ...
     chrome.declarativeContent.onPageChanged.addRules([
       {
         // That fires when the URL matchs gmail...
