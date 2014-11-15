@@ -2,13 +2,8 @@
 var LIST_FETCH_URL = 'https://www.googleapis.com/gmail/v1/users/me/messages';
 var MESSAGE_FETCH_URL_prefix = 'https://www.googleapis.com/gmail/v1/users/me/messages/';//messageId
 var ATTACHMENT_FETCH_URL = 'https://www.googleapis.com/gmail/v1/users/me/messages/MessageId/attachments/AttId';
-//-------全局变量----
-var form = document.getElementById('form');
-  var success = document.getElementById('success');
-	var MsgList = null;
-	var token = '';
-	var global;
-	var ik;
+
+
 
 //===================授权/取消授权模块======================
 var google = new OAuth2('google', {
@@ -49,8 +44,38 @@ function checkAuthorized() {
       }
     });
 }
-//====获取邮箱信息（ik）===
-function fetchList() {
+
+document.addEventListener('DOMContentLoaded', function () {
+  document.querySelector('button#google').addEventListener('click', function() { authorize('google'); });
+  document.querySelector('button#clear').addEventListener('click', function() { clearAuthorized() });
+
+  checkAuthorized();
+});
+
+//===================获取信息模块======================
+
+document.addEventListener('DOMContentLoaded', function () {
+	var form = document.getElementById('form');
+  var success = document.getElementById('success');
+	var MsgList = null;
+	var token = '';
+	var global;
+	var ik;
+	
+  form.addEventListener('submit', function(event) {
+    event.preventDefault();
+		
+		//=======下面是引用gmail.min.js的部分，为了获得ik值==============
+	chrome.runtime.sendMessage('Hello', function(response){
+			ik = response; 
+	});
+	//=======上面是引用gmail.min.js的部分，为了获得ik值==============
+	
+		fetchList();
+  });
+
+	
+	function fetchList() {
     var xhr = new XMLHttpRequest();
 		//var msg = gapi.client.gmail.users.messages.get({"id":list.messages[i].id});
     xhr.onreadystatechange = function(event) {
@@ -89,10 +114,9 @@ function fetchList() {
     xhr.setRequestHeader('Authorization', 'OAuth ' + token);
 
     xhr.send(null);
-}
-
-//====获取附件列表======
-function getMessage(MessageId) {
+  }
+	
+	function getMessage(MessageId) {
     var xhr = new XMLHttpRequest();
     xhr.onreadystatechange = function(event) {
       if (xhr.readyState == 4) {
@@ -153,29 +177,6 @@ function getMessage(MessageId) {
     xhr.setRequestHeader('Authorization', 'OAuth ' + token);
 
     xhr.send(null);
-}
-
-document.addEventListener('DOMContentLoaded', function () {
-  document.querySelector('button#google').addEventListener('click', function() { authorize('google'); });
-  document.querySelector('button#clear').addEventListener('click', function() { clearAuthorized() });
-
-  checkAuthorized();
-});
-
-//===================获取信息模块======================
-
-document.addEventListener('DOMContentLoaded', function () {
-	
-  form.addEventListener('submit', function(event) {
-    event.preventDefault();
-		
-		//=======下面是引用gmail.min.js的部分，为了获得ik值==============
-	chrome.runtime.sendMessage('Hello', function(response){
-			ik = response; 
-	});
-	//=======上面是引用gmail.min.js的部分，为了获得ik值==============
-	
-		fetchList();
-  });
+  }
 
 });
