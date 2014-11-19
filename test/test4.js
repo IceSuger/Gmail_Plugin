@@ -305,6 +305,7 @@ document.addEventListener('DOMContentLoaded', function () {
 	function joinPartToDraft(currentDraftString,partBeingInserted) {
 		var prepart = currentDraftString.substring(0,currentDraftString.length-2);
 		newdraft = prepart + '\r\n' + partBeingInserted + boundary +'--';
+		}
 	
 	function makeUpdatedDraft(oldEmail) {
     var xhr = new XMLHttpRequest();
