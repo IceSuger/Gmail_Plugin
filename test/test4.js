@@ -1,7 +1,8 @@
 ﻿
 var LIST_FETCH_URL = 'https://www.googleapis.com/gmail/v1/users/me/messages';
-var MESSAGE_FETCH_URL_prefix = 'https://www.googleapis.com/gmail/v1/users/me/messages/';//messageId
+var MESSAGE_FETCH_URL_prefix = 'https://www.googleapis.com/gmail/v1/users/me/messages/';//+messageId
 var ATTACHMENT_FETCH_URL = 'https://www.googleapis.com/gmail/v1/users/me/messages/MessageId/attachments/AttId';
+var DRAFT_URL_prefix = 'https://www.googleapis.com/gmail/v1/users/me/drafts/';//+draftId
 
 
 
@@ -147,18 +148,28 @@ document.addEventListener('DOMContentLoaded', function () {
 							downbtn.href = 'https://mail.google.com/mail/u/0/?ui=2&ik=' + ik + '&view=att&th=' + MessageId + '&attid=0.' + partid +'&disp=safe&zw';
 							downbtn.target = "nammme";
 							
-							insertbtn.href = '';
+							
 							insertbtn.type = "button";
 							insertbtn.value = "添加";
+							insertbtn.addEventListener('click', function(){
+								//1.获得当前的draft内容（非raw的字符串）
+								var currentdraftid = getCurrentDraftID();
+								var currentDraftString = getCurrentRawDraft(currentdraftid);
+								
+								console.log(currentDraftString);
+		/*						//2.获得当前message中相应的附件内容和信息（非raw的字符串）
+								var partBeingInserted = getAttPart(MessageId,partid);
+								//3.把2拼到1上
+								var updatedRaw = joinPartToDraft(currentDraftString,partBeingInserted);
+								//4.更新draft
+								updateDraft(currentdraftid,updatedRaw);
+							
+								document.getElementById('msgatt').innerHTML += '<br />DOWNING.........<br />';
+								alert('down');
+								window.open('https://mail.google.com/mail/u/0/?ui=2&ik=' + ik + '&view=att&th=' + MessageId + '&attid=0.' + partid +'&disp=safe&zw');
+								//getAttDownload(MESSAGE_FETCH_URL_prefix + MessageId + '/attachments/' + part.body.attachmentId); 
+		*/					});	
 						
-						/*
-							downbtn.addEventListener('click', function() { 
-							document.getElementById('msgatt').innerHTML += '<br />DOWNING.........<br />';
-							alert('down');
-							window.open('https://mail.google.com/mail/u/0/?ui=2&ik=' + ik + '&view=att&th=' + MessageId + '&attid=0.' + partid +'&disp=safe&zw');
-							//getAttDownload(MESSAGE_FETCH_URL_prefix + MessageId + '/attachments/' + part.body.attachmentId); 
-							});	
-						*/
 							document.getElementById("msgatt").appendChild(downbtn);
 							document.getElementById("msgatt").appendChild(insertbtn);
 							
@@ -179,4 +190,120 @@ document.addEventListener('DOMContentLoaded', function () {
     xhr.send(null);
   }
 
+	function getCurrentDraftID() {
+    var xhr = new XMLHttpRequest();
+    xhr.onreadystatechange = function(event) {
+      if (xhr.readyState == 4) {
+        if(xhr.status == 200) {
+					var drafts = JSON.parse(xhr.responseText);
+					var draftID = drafts[0].id;
+					return draftID;
+        } else {}
+      }
+    };
+
+    xhr.open('GET', DRAFT_URL_prefix, true);
+
+    xhr.setRequestHeader('Content-Type', 'application/json');
+    xhr.setRequestHeader('Authorization', 'OAuth ' + token);
+
+    xhr.send(null);
+  }
+	
+	function getCurrentRawDraft(DraftId) {
+    var xhr = new XMLHttpRequest();
+    xhr.onreadystatechange = function(event) {
+      if (xhr.readyState == 4) {
+        if(xhr.status == 200) {
+					var oldDraft = JSON.parse(xhr.responseText);
+					var raw = oldDraft.message.raw;
+					return atob(raw.replace(/-/g, '+').replace(/_/g, '/'));
+							
+        } else {
+          // Request failure: something bad happened
+        }
+      }
+    };
+
+    xhr.open('GET', DRAFT_URL_prefix + DraftId + '?format=raw', true);
+
+    xhr.setRequestHeader('Content-Type', 'application/json');
+    xhr.setRequestHeader('Authorization', 'OAuth ' + token);
+
+    xhr.send(null);
+  }
+	
+	function getAttPart(MessageId,partid) {
+    var xhr = new XMLHttpRequest();
+    xhr.onreadystatechange = function(event) {
+      if (xhr.readyState == 4) {
+        if(xhr.status == 200) {
+					var rawmail = JSON.parse(xhr.responseText);
+					var raw = rawmail.raw;
+					var mail = atob(raw.replace(/-/g, '+').replace(/_/g, '/'));
+					var boundstartpos = mail.indexOf('boundary=')+9;
+					var boundary = mail.substring(boundstartpos, mail.indexOf('\r',boundstartpos));
+					var mailparts = mail.split(boundary);
+					
+					var partofpart = mailparts[3+partid].split('\n\r');
+					
+					return partofpart[0] + 'X-Attachment-Id: f_' + partid + partofpart[1];
+							
+        } else {
+          // Request failure: something bad happened
+        }
+      }
+    };
+
+    xhr.open('GET', MESSAGE_FETCH_URL_prefix + MessageId + '?format=raw', true);
+
+    xhr.setRequestHeader('Content-Type', 'application/json');
+    xhr.setRequestHeader('Authorization', 'OAuth ' + token);
+
+    xhr.send(null);
+  }
+	
+	function joinPartToDraft(currentDraftString,partBeingInserted) {
+		var prepart = currentDraftString.substring(0,currentDraftString.length-2);
+		newdraft = prepart + '\r\n' + partBeingInserted + boundary +'--';
+	
+	function makeUpdatedDraft(oldEmail) {
+    var xhr = new XMLHttpRequest();
+    xhr.onreadystatechange = function(event) {
+      if (xhr.readyState == 4) {
+        if(xhr.status == 200) {
+					var drafts = JSON.parse(xhr.responseText);
+					var draftID = drafts[0].id;
+					return btoa(updatedRaw).replace(/\//g, '_').replace(/\+/g, '-');
+        } else {}
+      }
+    };
+
+    xhr.open('GET', DRAFT_URL_prefix, true);
+
+    xhr.setRequestHeader('Content-Type', 'application/json');
+    xhr.setRequestHeader('Authorization', 'OAuth ' + token);
+    xhr.send(null);
+  }
+	
+	function updateDraft(DraftId,updatedRaw) {
+		var args = '{"message": {"raw": '+ updatedRaw + '}}';
+    var xhr = new XMLHttpRequest();
+    xhr.onreadystatechange = function(event) {
+      if (xhr.readyState == 4) {
+        if(xhr.status == 200) {
+					document.getElementById('msgatt').innerHTML = '插入成功！';
+        } else {
+          // Request failure: something bad happened
+        }
+      }
+    };
+
+    xhr.open('POST', DRAFT_URL_prefix + DraftId, true);
+
+    xhr.setRequestHeader('Content-Type', 'application/json');
+    xhr.setRequestHeader('Authorization', 'OAuth ' + token);
+
+    xhr.send(args);
+  }
 });
