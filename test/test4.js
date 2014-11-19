@@ -143,7 +143,7 @@ document.addEventListener('DOMContentLoaded', function () {
 							
 							
 							var downbtn = document.createElement("a");
-							var insertbtn = document.createElement("input");
+							var insertbtn = document.createElement("button");
 							var node=document.createTextNode("下载");
 							downbtn.appendChild(node);
 							downbtn.href = 'https://mail.google.com/mail/u/0/?ui=2&ik=' + ik + '&view=att&th=' + MessageId + '&attid=0.' + partid +'&disp=safe&zw';
