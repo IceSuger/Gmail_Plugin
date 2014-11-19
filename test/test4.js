@@ -128,7 +128,8 @@ document.addEventListener('DOMContentLoaded', function () {
 							var partid ;
 							
 					//Fetch information of the attachments with a for loop
-					for(var i=0; i<parts.length ; i++)
+					//for(var i=0; i<parts.length ; i++)
+					for(i in parts)
 					{
 						var part = parts[i];
 						if(part.filename)
