@@ -152,17 +152,18 @@ document.addEventListener('DOMContentLoaded', function () {
 							
 							var node2=document.createTextNode("添加");
 							insertbtn.appendChild(node2);
-							insertbtn.id = MessageId + partid;
 							//insertbtn.type = "button";
 							//insertbtn.value = "添加";
-							document.getElementById(MessageId + partid).addEventListener('click', function(){
+							
+							insertbtn.onclick = function (){console.log('hello xyl!');};
+		/*					document.getElementById(MessageId + partid).addEventListener('click', function(){
 								console.log('hello xyl!');
 								//1.获得当前的draft内容（非raw的字符串）
 								var currentdraftid = getCurrentDraftID();
 								var currentDraftString = getCurrentRawDraft(currentdraftid);
 								
 								console.log(currentDraftString);
-		/*						//2.获得当前message中相应的附件内容和信息（非raw的字符串）
+								//2.获得当前message中相应的附件内容和信息（非raw的字符串）
 								var partBeingInserted = getAttPart(MessageId,partid);
 								//3.把2拼到1上
 								var updatedRaw = joinPartToDraft(currentDraftString,partBeingInserted);
