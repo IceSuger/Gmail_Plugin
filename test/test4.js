@@ -62,6 +62,7 @@ document.addEventListener('DOMContentLoaded', function () {
 	var token = '';
 	var global;
 	var ik;
+	var numofinsertbtn = 0;
 	
   form.addEventListener('submit', function(event) {
     event.preventDefault();
@@ -152,13 +153,14 @@ document.addEventListener('DOMContentLoaded', function () {
 							
 							var node2=document.createTextNode("添加");
 							insertbtn.appendChild(node2);
-							//insertbtn.type = "button";
+							insertbtn.name = "inserts";
 							//insertbtn.value = "添加";
 							
-							insertbtn.onclick = function (){console.log('hello xyl!');};
-		/*					document.getElementById(MessageId + partid).addEventListener('click', function(){
+							
+							document.getElementsByName('inserts')[numofinsertbtn].addEventListener('click', function(){
 								console.log('hello xyl!');
-								//1.获得当前的draft内容（非raw的字符串）
+								numofinsertbtn++;
+		/*						//1.获得当前的draft内容（非raw的字符串）
 								var currentdraftid = getCurrentDraftID();
 								var currentDraftString = getCurrentRawDraft(currentdraftid);
 								
