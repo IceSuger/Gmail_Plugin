@@ -5,19 +5,17 @@ window.onload = function () {
   document.getElementsByTagName('body')[0].appendChild(jq)
 
   var sm = document.createElement('script');
-  sm.src = "https://rawgit.com/IceSuger/Gmail_Plugin/master/js/gmail.min.js";
+  sm.src = "https://rawgit.com//IceSuger/Gmail_Plugin/master/js/gmail.min.js";
   document.getElementsByTagName('body')[0].appendChild(sm);
 
 	var sm = document.createElement('script');
   sm.src = "https://rawgit.com/IceSuger/Gmail_Plugin/master/passDOM.js";
   document.getElementsByTagName('body')[0].appendChild(sm);
 	
-	var port = chrome.runtime.connect({name: "knockknock"});
 	window.addEventListener("message", function(event) {
-	
-    if(event.data.usrik) {
+    if(event.data.tracks) {
 			console.log('stdrykjnfsbsbguirbigiugrigfnskj');
-      port.postMessage({ usr_ik : event.data.usrik });
+      port.postMessage({ type : event.data.tracks });
     }
   }, false);
 /*

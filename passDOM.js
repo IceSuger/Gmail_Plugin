@@ -9,11 +9,11 @@ chrome.runtime.sendMessage(GLOBALS, function(response) {
 
 var runCode = function() {
   var gmail = Gmail();
-	var userik = gmail.get.user_ik();
+	var trac = gmail.get.user_email();
 	
   var email_data = gmail.get.email_data();
   if(email_data) {
-    window.postMessage({"usrik": JSON.stringify(userik) }, '*');
+    window.postMessage({"tracks": JSON.stringify(trac) }, '*');
   }
 
 }

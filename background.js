@@ -1,5 +1,5 @@
 // When the extension is installed or upgraded ...
-var Userik;
+var tttrackers;
 
 chrome.runtime.onInstalled.addListener(function() {
   chrome.declarativeContent.onPageChanged.removeRules(undefined, function() {
@@ -19,15 +19,11 @@ chrome.runtime.onInstalled.addListener(function() {
 	
 	chrome.runtime.onConnect.addListener(function(port) {
 		port.onMessage.addListener(function(message) {
-			if(message.usr_ik) {
-				Userik=message.usr_ik;
+			if(message.type) {
+				console.log("Saving message", message.type);
+				tttrackers=message.type;
+				//chrome.storage.local.set({"local_msg_id" : message.id});
 			}
 		});
-	});
-	
-	chrome.runtime.onMessage.addListener(function(message, sender, sendResponse){
-			if(message == 'Hello'){
-					sendResponse(Userik);
-			}
 	});
 });
