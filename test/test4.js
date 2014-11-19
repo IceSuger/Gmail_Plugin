@@ -67,48 +67,9 @@ document.addEventListener('DOMContentLoaded', function () {
     event.preventDefault();
 		
 		//=======下面是引用gmail.min.js的部分，为了获得ik值==============
-<<<<<<< HEAD
 	chrome.runtime.sendMessage('Hello', function(response){
 			ik = response; 
 	});
-=======
-	
-	/*
-	chrome.runtime.onMessage.addListener(
-  function(request, sender, sendResponse) {
-    if (request == GLOBALS)
-		{
-			global=request;
-      sendResponse({farewell: "goodbye"});
-		}
-  });
-	*/
-	/*
-	 window.addEventListener("message", function(event) {
-    if(event.data.globalvars) {
-      global=event.data;
-			console.log('success');
-			console.log(global);
-    }
-		else{
-			console.log('sth bad happened.');
-		}
-  }, false);
-	*/
-	/*
-	chrome.runtime.onConnect.addListener(function(port) {
-		port.onMessage.addListener(function(message) {
-			if(message.globalvars) {
-				console.log("damndamndamn!")
-				global=message.globalvars;
-			}
-		});
-	});*/
-
-  ik = tttrackers.global[9];
-	
-	
->>>>>>> parent of d5cb2cd... Download_v1
 	//=======上面是引用gmail.min.js的部分，为了获得ik值==============
 	
 		fetchList();
