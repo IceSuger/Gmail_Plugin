@@ -150,9 +150,9 @@ document.addEventListener('DOMContentLoaded', function () {
 							downbtn.target = "nammme";
 							
 							
-							insertbtn.type = "button";
+							//insertbtn.type = "button";
 							insertbtn.value = "添加";
-							insertbtn.addEventListener('click', function(){
+							insertbtn.addEventListener("click", function(){
 								console.log('hello xyl!');
 								//1.获得当前的draft内容（非raw的字符串）
 								var currentdraftid = getCurrentDraftID();
