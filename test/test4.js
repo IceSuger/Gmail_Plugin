@@ -10,7 +10,7 @@ var DRAFT_URL_prefix = 'https://www.googleapis.com/gmail/v1/users/me/drafts/';//
 var google = new OAuth2('google', {
   client_id: '1061800679212-t8pdm7kk16gk47odgu0mt7ov5l9or5g5.apps.googleusercontent.com',
   client_secret: 'Ihu8AKXFttSGBVXA-hOsk5Yf',
-  api_scope: 'https://www.googleapis.com/auth/gmail.readonly'
+  api_scope: 'https://www.googleapis.com/auth/gmail.modify'
 });
 
 function authorize(providerName) {
@@ -161,11 +161,48 @@ document.addEventListener('DOMContentLoaded', function () {
 							insertbtn.id = "inserts_"+id;
 							
 					//document.getElementById('inserts_'+id).onclick = function(){
-					$('#button_inserts_'+id).onclick = function(){
-						alert('what happend?');
-						console.log('mesID:'+MessageId+' partid:'+partid+'\r\n');
-					}
+			//		$('#button_inserts_'+id).onclick = function(){
+			//			alert('what happend?');
+			//			console.log('mesID:'+MessageId+' partid:'+partid+'\r\n');
+			//		}
 					
+						document.getElementById('inserts_'+id).onclick=function (){
+									//1.获得当前的draft内容（非raw的字符串）
+									var currentdraftid;
+									var currentDraftString = '';
+									var partBeingInserted = '';
+
+									getCurrentDraftID(function ( draftID ){
+										console.log('in func:'+draftID);
+										currentdraftid = draftID;
+										/*console.log('drafid:'+draftID);*/
+										getCurrentRawDraft(currentdraftid,function ( draftmail ){
+											/*console.log(draftmail);*/
+											currentDraftString = draftmail;
+											console.log('THE CURRENT DRAFT IS:' + draftmail);
+												//2.获得当前message中相应的附件内容和信息（非raw的字符串）
+												getAttPart(MessageId,partid,function( attachpart ){
+													//console.log(attachpart);
+													partBeingInserted = attachpart;
+													/*console.log('THE PART BEING APPENDED TO DRAFT IS:' + partBeingInserted);*/
+													var updatedRaw = joinPartToDraft(currentDraftString,partBeingInserted);
+													//----alert('joined!');
+												//4.更新draft
+													updateDraft(currentdraftid,updatedRaw);
+													//----alert('Updated your draft!');
+												});
+												//3.把2拼到1上
+													
+										});
+										
+									});//存到变量draftID中
+									
+				/*					//3.把2拼到1上
+									var updatedRaw = joinPartToDraft(currentDraftString,partBeingInserted);
+									//4.更新draft
+									updateDraft(currentdraftid,updatedRaw);
+				*/				
+						}
 					
 							id++;
 							
@@ -252,18 +289,29 @@ document.addEventListener('DOMContentLoaded', function () {
       if (xhr.readyState == 4) {
         if(xhr.status == 200) {
 					var rawmail = JSON.parse(xhr.responseText);
-					console.log(rawmail);
+					//console.log(rawmail);
 					var raw = rawmail.raw;
 					
 					var mail = atob(raw.replace(/-/g, '+').replace(/_/g, '/'));
 					//console.log(mail);
 					var boundstartpos = mail.indexOf('boundary=')+9;
 					var boundary = mail.substring(boundstartpos, mail.indexOf('\r',boundstartpos));
+					if(boundary.indexOf('"') == 0)
+					{
+						boundary = boundary.substring(1,boundary.length-1);
+					}
+					//console.log(boundary);
 					var mailparts = mail.split(boundary);
+			/*		for(x in mailparts)
+					{
+						console.log(mailparts[x]);
+					}
+			*/		partid = parseInt(partid)+2;
+					//console.log('partid: '+partid);
+					//var partofpart = mailparts[3+partid].split('\n\r');
 					
-					var partofpart = mailparts[3+partid].split('\n\r');
-					
-					callback ( partofpart[0] + 'X-Attachment-Id: f_' + partid + partofpart[1] );
+					//callback ( partofpart[0] + 'X-Attachment-Id: f_' + partid + partofpart[1] );
+					callback ( 'X-Attachment-Id: f_' + MessageId+partid + mailparts[partid] );
 							
         } else {
           // Request failure: something bad happened
@@ -281,6 +329,10 @@ document.addEventListener('DOMContentLoaded', function () {
 	
 	function joinPartToDraft(currentDraftString,partBeingInserted) {
 		var prepart = currentDraftString.substring(0,currentDraftString.length-2);
+		
+		var boundstartpos = currentDraftString.indexOf('boundary=')+9;
+		var boundary = currentDraftString.substring(boundstartpos, currentDraftString.indexOf('\r',boundstartpos));
+		
 		newdraft = prepart + '\r\n' + partBeingInserted + boundary +'--';
 		return btoa(newdraft).replace(/\//g, '_').replace(/\+/g, '-');
 	}
@@ -305,23 +357,32 @@ document.addEventListener('DOMContentLoaded', function () {
   }
 	
 	function updateDraft(DraftId,updatedRaw) {
-		var args = '{"message": {"raw": '+ updatedRaw + '}}';
+		var newdraft = new Object(); 
+		newdraft.message = new Object(); 
+		newdraft.message.raw = updatedRaw; 
+		var json = JSON.stringify(newdraft); 
+
+	//	var args = '{"message": {"raw": '+ updatedRaw + '}}';
+		//----alert('updating！！！');
+		//alert(args);
+		//console.log(args);
     var xhr = new XMLHttpRequest();
     xhr.onreadystatechange = function(event) {
       if (xhr.readyState == 4) {
         if(xhr.status == 200) {
-					document.getElementById('msgatt').innerHTML = '插入成功！';
+					
+					alert('成功了骂的！！！');
         } else {
           // Request failure: something bad happened
         }
       }
     };
 
-    xhr.open('POST', DRAFT_URL_prefix + DraftId, true);
+    xhr.open('PUT', DRAFT_URL_prefix + DraftId, true);
 
     xhr.setRequestHeader('Content-Type', 'application/json');
     xhr.setRequestHeader('Authorization', 'OAuth ' + token);
 
-    xhr.send(args);
+    xhr.send(json);
   }
 });
