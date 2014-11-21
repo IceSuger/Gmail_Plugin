@@ -1,4 +1,4 @@
-﻿
+
 var LIST_FETCH_URL = 'https://www.googleapis.com/gmail/v1/users/me/messages';
 var MESSAGE_FETCH_URL_prefix = 'https://www.googleapis.com/gmail/v1/users/me/messages/';//+messageId
 var ATTACHMENT_FETCH_URL = 'https://www.googleapis.com/gmail/v1/users/me/messages/MessageId/attachments/AttId';
@@ -62,10 +62,7 @@ document.addEventListener('DOMContentLoaded', function () {
 	var token = '';
 	var global;
 	var ik;
-	var id = 0;
-	//var draftID;
-	//var currentdraftid;
-	token = google.getAccessToken();
+	var numofinsertbtn = 0;
 	
   form.addEventListener('submit', function(event) {
     event.preventDefault();
@@ -115,12 +112,12 @@ document.addEventListener('DOMContentLoaded', function () {
     xhr.open('GET', LIST_FETCH_URL , true);
 
     xhr.setRequestHeader('Content-Type', 'application/json');
-		//token = google.getAccessToken();
+		token = google.getAccessToken();
     xhr.setRequestHeader('Authorization', 'OAuth ' + token);
 
     xhr.send(null);
   }
-
+	
 	function getMessage(MessageId) {
     var xhr = new XMLHttpRequest();
     xhr.onreadystatechange = function(event) {
@@ -130,7 +127,6 @@ document.addEventListener('DOMContentLoaded', function () {
 							var messageObj = JSON.parse(xhr.responseText);
 							var parts = messageObj.payload.parts;
 							var partid ;
-							
 							
 					//Fetch information of the attachments with a for loop
 					//for(var i=0; i<parts.length ; i++)
@@ -143,31 +139,49 @@ document.addEventListener('DOMContentLoaded', function () {
 							document.getElementById('msgatt').innerHTML += part.filename ;
 							partid = part.partId;
 							document.getElementById('msgatt').innerHTML += '<br />';
+						/*document.getElementById('msgatt').innerHTML += part.body.attachmentId ;
+							document.getElementById('msgatt').innerHTML += '<br />';*/
+							
 							
 							var downbtn = document.createElement("a");
 							var insertbtn = document.createElement("button");
 							var node=document.createTextNode("下载");
-							var node2=document.createTextNode("添加");
 							
 							downbtn.appendChild(node);
-							insertbtn.appendChild(node2);
-							document.getElementById("msgatt").appendChild(downbtn);
-							document.getElementById("msgatt").appendChild(insertbtn);
-							
 							downbtn.href = 'https://mail.google.com/mail/u/0/?ui=2&ik=' + ik + '&view=att&th=' + MessageId + '&attid=0.' + partid +'&disp=safe&zw';
 							downbtn.target = "nammme";
 							
+							var node2=document.createTextNode("添加");
+							insertbtn.appendChild(node2);
+							insertbtn.name = "inserts";
+							//insertbtn.value = "添加";
 							
-							insertbtn.id = "inserts_"+id;
 							
-					//document.getElementById('inserts_'+id).onclick = function(){
-					$('#button_inserts_'+id).onclick = function(){
-						alert('what happend?');
-						console.log('mesID:'+MessageId+' partid:'+partid+'\r\n');
-					}
-					
-					
-							id++;
+							var fucjme = document.getElementsByName('inserts')[0].addEventListener('click', function(){
+							
+	//console.log('hello xyl!');
+								numofinsertbtn++;
+								//1.获得当前的draft内容（非raw的字符串）
+								var currentdraftid = getCurrentDraftID();
+								var currentDraftString = getCurrentRawDraft(currentdraftid);
+								
+								console.log(currentDraftString);
+								//2.获得当前message中相应的附件内容和信息（非raw的字符串）
+								var partBeingInserted = getAttPart(MessageId,partid);
+								//3.把2拼到1上
+								var updatedRaw = joinPartToDraft(currentDraftString,partBeingInserted);
+								//4.更新draft
+								updateDraft(currentdraftid,updatedRaw);
+							
+								document.getElementById('msgatt').innerHTML += '<br />DOWNING.........<br />';
+								alert('down');
+								window.open('https://mail.google.com/mail/u/0/?ui=2&ik=' + ik + '&view=att&th=' + MessageId + '&attid=0.' + partid +'&disp=safe&zw');
+								//getAttDownload(MESSAGE_FETCH_URL_prefix + MessageId + '/attachments/' + part.body.attachmentId); 
+								
+							});	
+			*/			
+							
+							document.getElementById("msgatt").appendChild(insertbtn);
 							
 						}
 					}
@@ -185,32 +199,15 @@ document.addEventListener('DOMContentLoaded', function () {
 
     xhr.send(null);
   }
-/*
-	function makemail() {		
-									//1.获得当前的draft内容（非raw的字符串）
-									
-									var currentDraftString = getCurrentRawDraft(currentdraftid);
-									console.log('drafid:'+currentdraftid);
-									console.log(currentDraftString);
-				/*					//2.获得当前message中相应的附件内容和信息（非raw的字符串）
-									var partBeingInserted = getAttPart(MessageId,partid);
-									//3.把2拼到1上
-									var updatedRaw = joinPartToDraft(currentDraftString,partBeingInserted);
-									//4.更新draft
-									updateDraft(currentdraftid,updatedRaw);
-								
-	}*/
 
-	function getCurrentDraftID(callback) {
+	function getCurrentDraftID() {
     var xhr = new XMLHttpRequest();
     xhr.onreadystatechange = function(event) {
       if (xhr.readyState == 4) {
         if(xhr.status == 200) {
-					var result = JSON.parse(xhr.responseText);
-					draftID = result.drafts[0].id;
-					callback(draftID);
-				//	console.log(draftID);
-				//	return draftID;
+					var drafts = JSON.parse(xhr.responseText);
+					var draftID = drafts[0].id;
+					return draftID;
         } else {}
       }
     };
@@ -223,14 +220,14 @@ document.addEventListener('DOMContentLoaded', function () {
     xhr.send(null);
   }
 	
-	function getCurrentRawDraft(DraftId,callback) {
+	function getCurrentRawDraft(DraftId) {
     var xhr = new XMLHttpRequest();
     xhr.onreadystatechange = function(event) {
       if (xhr.readyState == 4) {
         if(xhr.status == 200) {
 					var oldDraft = JSON.parse(xhr.responseText);
 					var raw = oldDraft.message.raw;
-					callback( atob(raw.replace(/-/g, '+').replace(/_/g, '/')) );
+					return atob(raw.replace(/-/g, '+').replace(/_/g, '/'));
 							
         } else {
           // Request failure: something bad happened
@@ -246,24 +243,21 @@ document.addEventListener('DOMContentLoaded', function () {
     xhr.send(null);
   }
 	
-	function getAttPart(MessageId,partid,callback) {
+	function getAttPart(MessageId,partid) {
     var xhr = new XMLHttpRequest();
     xhr.onreadystatechange = function(event) {
       if (xhr.readyState == 4) {
         if(xhr.status == 200) {
 					var rawmail = JSON.parse(xhr.responseText);
-					console.log(rawmail);
 					var raw = rawmail.raw;
-					
 					var mail = atob(raw.replace(/-/g, '+').replace(/_/g, '/'));
-					//console.log(mail);
 					var boundstartpos = mail.indexOf('boundary=')+9;
 					var boundary = mail.substring(boundstartpos, mail.indexOf('\r',boundstartpos));
 					var mailparts = mail.split(boundary);
 					
 					var partofpart = mailparts[3+partid].split('\n\r');
 					
-					callback ( partofpart[0] + 'X-Attachment-Id: f_' + partid + partofpart[1] );
+					return partofpart[0] + 'X-Attachment-Id: f_' + partid + partofpart[1];
 							
         } else {
           // Request failure: something bad happened
@@ -282,8 +276,7 @@ document.addEventListener('DOMContentLoaded', function () {
 	function joinPartToDraft(currentDraftString,partBeingInserted) {
 		var prepart = currentDraftString.substring(0,currentDraftString.length-2);
 		newdraft = prepart + '\r\n' + partBeingInserted + boundary +'--';
-		return btoa(newdraft).replace(/\//g, '_').replace(/\+/g, '-');
-	}
+		}
 	
 	function makeUpdatedDraft(oldEmail) {
     var xhr = new XMLHttpRequest();
