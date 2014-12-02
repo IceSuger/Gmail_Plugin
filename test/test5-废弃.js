@@ -4,6 +4,58 @@ var MESSAGE_FETCH_URL_prefix = 'https://www.googleapis.com/gmail/v1/users/me/mes
 var ATTACHMENT_FETCH_URL = 'https://www.googleapis.com/gmail/v1/users/me/messages/MessageId/attachments/AttId';
 var DRAFT_URL_prefix = 'https://www.googleapis.com/gmail/v1/users/me/drafts/';//+draftId
 
+//===================显示UI=================================
+//var currentUsername = document.getElementsByClassName('gb_Ac gb_f gb_Pc gb_Ic');
+/*
+var div = document.createElement('img');
+div.src = "https://rawgit.com/IceSuger/Gmail_Plugin/master/images/down.gif";
+document.getElementsByClassName('gb_Ac gb_f gb_Pc gb_Ic')[0].appendChild(div);
+document.getElementsByClassName('gb_Ac gb_f gb_Pc gb_Ic')[0].onmouseover = function(){
+	alert('hello');
+}
+//document.getElementsByTagName('body')[0].appendChild(div);
+*/
+/*
+alert('hahahahah');
+console.log('doiejoifsoigj');*/
+var obj = document.createElement('div');
+			obj.id = "GmailAssist";
+			
+			document.getElementsByTagName('body')[0].appendChild(obj);
+			//div.style = "width: 700px; display: block; left: 50%; margin-left: -355px; z-index: 1002; position: fixed; top: 50%; margin-top: -76.5px; background: white;";
+		/*	document.getElementById("GmailAssist").style.width = 700px;
+			document.getElementById("GmailAssist").style.display = 'block';
+			document.getElementById("GmailAssist").style.position = 'fixed';
+			document.getElementById("GmailAssist").style.background = 'white';
+			document.getElementById("GmailAssist").style.margin-left = -355px;
+			document.getElementById("GmailAssist").style.margin-top = '-76.5px';*/
+			obj.style.border="1px solid #000000";
+            obj.style.height="30px";
+            obj.style.width="200px";
+            obj.style.filter="alpha(opacity=70)";            
+            obj.style.margin="10px";     
+            obj.style.cursor="hand";
+            obj.algin="center";       
+            //obj.innerHTML="<a href='#"+obj.id+"'>ssssssssss</a>";
+            obj.innerText="sssssss";
+/**/
+chrome.runtime.onMessage.addListener(
+  function(request, sender, sendResponse) {
+		alert('wtf');
+    console.log(sender.tab ?
+                "from a content script:" + sender.tab.url :
+                "from the extension");
+    if (request.greeting == "showthat")
+		{
+			var div = document.createElement('div');
+			div.id = "GmailAssist";
+			div.style = "width: 700px; display: block; left: 50%; margin-left: -355px; z-index: 1002; position: fixed; top: 50%; margin-top: -76.5px; background: white;";
+			document.getElementsByTagName('body')[0].appendChild(div);
+			alert('enenenen');
+			//if()
+      sendResponse({farewell: "goodbye"});
+		}
+  });
 
 
 //===================授权/取消授权模块======================
@@ -16,7 +68,7 @@ var google = new OAuth2('google', {
 function authorize(providerName) {
     var provider = window[providerName];
     provider.authorize(checkAuthorized);
-}
+  }
 
 function clearAuthorized() {
     console.log('clear');
@@ -49,7 +101,6 @@ function checkAuthorized() {
 document.addEventListener('DOMContentLoaded', function () {
   document.querySelector('button#google').addEventListener('click', function() { authorize('google'); });
   document.querySelector('button#clear').addEventListener('click', function() { clearAuthorized() });
-
   checkAuthorized();
 });
 
@@ -66,27 +117,16 @@ document.addEventListener('DOMContentLoaded', function () {
 	var message_ids = new Array();
 	var part_ids = new Array();
 	
-	function sendShowDiv(){
-		console.log('fuckme');
-		chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
-			chrome.tabs.sendMessage(tabs[0].id, {token: token}, function(response) {
-				console.log('fujme');
-				console.log(response.farewell);
-			});
-		});
-	}
-	
   form.addEventListener('submit', function(event) {
     event.preventDefault();
 		
 		//=======下面是引用gmail.min.js的部分，为了获得ik值==============
 		chrome.runtime.sendMessage('Hello', function(response){
-				ik = response; 
+				ik = response;
 		});
 		//=======上面是引用gmail.min.js的部分，为了获得ik值==============
-		sendShowDiv();
-		console.log('yaho');
-		//fetchList();
+	
+		fetchList();
   });
 
 	
@@ -137,7 +177,6 @@ document.addEventListener('DOMContentLoaded', function () {
 							var messageObj = JSON.parse(xhr.responseText);
 							var parts = messageObj.payload.parts;
 							var partid ;
-							
 							
 					//Fetch information of the attachments with a for loop
 					//for(var i=0; i<parts.length ; i++)
