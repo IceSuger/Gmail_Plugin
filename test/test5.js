@@ -107,9 +107,6 @@ var fileref=document.createElement("link")
   fileref.setAttribute("href", "style.css")
 document.getElementsByTagName("head")[0].appendChild(fileref);
 	//-----引入js
-/*	var sortscript = document.createElement('script');
-  sortscript.src = "https://rawgit.com/IceSuger/Gmail_Plugin/master/js/packed.js";
-  document.getElementsByTagName('body')[0].appendChild(sortscript);*/
 	//-----初始化分页、排序
 var sorter = new TINY.table.sorter("sorter");
 	sorter.head = "head";
