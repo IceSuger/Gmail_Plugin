@@ -22,7 +22,7 @@
 			"run_at": "document_start"
 		},
 		{
-			"js": [ "load.js", "test/test5.js" ],
+			"js": [ "load.js" ],
 			"matches": ["*://mail.google.com/*"],
 			"run_at": "document_end"
 		}
