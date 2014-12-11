@@ -11,15 +11,19 @@ window.onload = function () {
 	var sm = document.createElement('script');
   sm.src = "https://rawgit.com/IceSuger/Gmail_Plugin/master/passDOM.js";
   document.getElementsByTagName('body')[0].appendChild(sm);
-	/*
-	var sm = document.createElement('script');
-  sm.src = "https://rawgit.com/IceSuger/Gmail_Plugin/master/test/test5.js";
-  document.getElementsByTagName('body')[0].appendChild(sm);
 	
 	var sortscript = document.createElement('script');
   sortscript.src = "https://rawgit.com/IceSuger/Gmail_Plugin/master/packed.js";
   document.getElementsByTagName('body')[0].appendChild(sortscript);
+	
+	
+	/*
+	var sm = document.createElement('script');
+  sm.src = "https://rawgit.com/IceSuger/Gmail_Plugin/master/test/test5.js";
+  document.getElementsByTagName('body')[0].appendChild(sm);
 	*/
+	
+	
 	var port = chrome.runtime.connect({name: "knockknock"});
 	window.addEventListener("message", function(event) {
 	

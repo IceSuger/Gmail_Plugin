@@ -88,14 +88,15 @@ function InitDiv(){
 			div.id = "GmailAssist";
 			document.getElementsByTagName('body')[0].appendChild(div);
 			document.getElementsByTagName('body')[0].style.textAlign = 'center';
-			div.style.width = '700px';
-			div.style.height = '300px';
+			div.style.width = '1000px';
+			div.style.height = '500px';
 			div.style.overflow = 'auto';
 			div.style.position = 'fixed';
 			div.style.background = 'white';
-			div.style.marginLeft = 'auto';
-			div.style.marginRight = 'auto';
-			div.style.top = '50px';
+			//div.style.marginLeft = 'auto';
+			//div.style.marginRight = 'auto';
+			div.style.margin = '0 auto';
+			//div.style.top = '90px';
 			div.style.zIndex = '1002';
 			div.style.visibility = "hidden";
 			//---------显示主按钮-------
@@ -244,7 +245,7 @@ chrome.runtime.onMessage.addListener(
 						navigation.appendChild(first);
 						
 						var previous = document.createElement('img');
-						previous.src="https://rawgit.com/IceSuger/Gmail_Plugin/master/images/first.gif";
+						previous.src="https://rawgit.com/IceSuger/Gmail_Plugin/master/images/previous.gif";
 						previous.width="16";
 						previous.height="16";
 						previous.alt="First Page";
