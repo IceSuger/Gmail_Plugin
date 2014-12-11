@@ -13,7 +13,7 @@ window.onload = function () {
   document.getElementsByTagName('body')[0].appendChild(sm);
 	
 	var sortscript = document.createElement('script');
-  sortscript.src = "https://rawgit.com/IceSuger/Gmail_Plugin/master/packed.js";
+  sortscript.src = "https://rawgit.com/IceSuger/Gmail_Plugin/master/script.js";
   document.getElementsByTagName('body')[0].appendChild(sortscript);
 	
 	

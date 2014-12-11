@@ -147,14 +147,14 @@ function InitDiv(){
 						var h3= document.createElement('h3');
 						th.appendChild(h3);
 						h3.innerHTML = "邮件标签";
-			/*			//邮件标题
+						//邮件标题
 						var th= document.createElement('th');
 						tr.appendChild(th);
 						var h3= document.createElement('h3');
 						th.appendChild(h3);
 						var node = document.createTextNode("邮件标题");
 						h3.appendChild(node);
-						//时间
+			/*			//时间
 						var th= document.createElement('th');
 						tr.appendChild(th);
 						var h3= document.createElement('h3');
@@ -167,10 +167,6 @@ function InitDiv(){
 				tbody.id='AttachmentsTableTbody2';
 				}
 			
-	
-	
-				
-				
 	
 	
 
@@ -239,7 +235,7 @@ function fetchList() {
 							var headers = messageObj.payload.headers;
 							var sender;
 							var subject='-';
-							var labels;
+							var labels = messageObj.labelIds;
 							
 					//Fetch information of the attachments with a for loop
 					for(i in headers)
@@ -281,6 +277,11 @@ function fetchList() {
 								var td= document.createElement('td');
 								tr.appendChild(td);
 								td.innerHTML = sender;
+								
+								//标签
+								var td= document.createElement('td');
+								tr.appendChild(td);
+								td.innerHTML = labels;
 								
 								//标题
 								var td= document.createElement('td');
