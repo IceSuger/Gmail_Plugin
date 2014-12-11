@@ -120,7 +120,7 @@ chrome.runtime.onMessage.addListener(
     if (request.token != '')
 		{
 			token = request.token;
-			alert(token);
+			//alert(token);
 			document.getElementById('GmailAssist').style.visibility = "visible";
 			fetchList();
 			

@@ -1,5 +1,6 @@
 * {margin:0; padding:0; outline:none}
-/*body {font:10px Verdana,Arial; margin:25px; background:#fff url(images/bg.gif) repeat-x; color:#091f30}*/
+
+#GmailAssist {font:10px Verdana,Arial; margin:25px; background:#fff url(images/bg.gif) repeat-x; color:#091f30}
 
 .sortable {font:10px Verdana,Arial; width:1080px; border-left:1px solid #c6d5e1; border-top:1px solid #c6d5e1; border-bottom:none; margin:0 auto 15px}
 .sortable th {background:url(images/header-bg.gif); text-align:left; color:#cfdce7; border:1px solid #fff; border-right:none}
@@ -14,6 +15,8 @@
 .sortable .oddrow td {background:#ecf2f6}
 .sortable td.evenselected {background:#ecf2f6}
 .sortable td.oddselected {background:#dce6ee}
+
+.asc {padding:0}
 
 #controls {width:980px; margin:0 auto; height:20px}
 #perpage {float:left; width:200px}
