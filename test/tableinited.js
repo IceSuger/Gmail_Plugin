@@ -11,11 +11,11 @@
 	sorter.currentid = "currentpage";
 	sorter.limitid = "pagelimit";
 	sorter.init("table_to_sort",1);
-	
+	alert('mlgb');
 	var controls = document.createElement('div');
 			controls.id = 'controls';
 			document.getElementById('GmailAssist').appendChild(controls);
-			
+		alert('mb');
 	{//controlsÄÚÈİ
 					var perpage = document.createElement('div');
 					controls.appendChild(perpage);
