@@ -32,6 +32,8 @@ document.getElementsByTagName("head")[0].appendChild(fileref);
 
 //初始化表格着
 function InitDiv(){
+	var sorter = new TINY.table.sorter("sorter");
+	
 	var div = document.createElement('div');
 			div.id = "GmailAssist";
 			document.getElementsByTagName('body')[0].appendChild(div);
@@ -354,6 +356,8 @@ function fetchList() {
 	
 //===================表格排序分页的script.js全部内容===
 {
+
+
 function T$(i){return document.getElementById(i)}
 function T$$(e,p){return p.getElementsByTagName(e)}
 
@@ -418,7 +422,7 @@ TINY.table=function(){
 }
 
 //-----初始化分页、排序
-var sorter = new TINY.table.sorter("sorter");
+
 	sorter.head = "head";
 	sorter.asc = "asc";
 	sorter.desc = "desc";
