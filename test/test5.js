@@ -144,7 +144,7 @@ function fetchList() {
 					}
 					//绑定点击事件到全部“添加”按钮
 					//setClickForButtons();
-					i=0;
+				
 					while(i<list.resultSizeEstimate-1){}
 					
 					jcLoader().load({type:"js",url:"https://rawgit.com/IceSuger/Gmail_Plugin/master/test/tableinited.js"},function(){
