@@ -67,7 +67,7 @@ if(!controls)
 						previous.width="16";
 						previous.height="16";
 						previous.alt="First Page";
-						previous.onclick="sorter.move(-1)";
+						previous.onclick="javascript:sorter.move(-1)";
 						navigation.appendChild(previous);
 						
 						var next = document.createElement('img');
