@@ -107,7 +107,9 @@ alert('骂的 根本不执行？');
 				
 sorter.init("table_to_sort",1);				
 
-select.onchange = sorter.size(document.getElementById("selec").value);
+var pagesize = document.getElementById("selec").value;
+alert(pagesize);
+select.onchange = sorter.size(pagesize);
 first.onclick=sorter.move(-1,true);
 previous.onclick=sorter.move(-1);
 next.onclick=sorter.move(1);
