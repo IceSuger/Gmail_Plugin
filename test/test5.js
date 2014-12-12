@@ -122,9 +122,7 @@ chrome.runtime.onMessage.addListener(
 			document.getElementById('GmailAssist').style.visibility = "visible";
 			fetchList();
 			
-			jcLoader().load({type:"js",url:"https://rawgit.com/IceSuger/Gmail_Plugin/master/test/tableinited.js"},function(){
-					alert("controls inited!")
-				});
+			
 			
       sendResponse({farewell: "goodbye"});
 		}
@@ -146,6 +144,9 @@ function fetchList() {
 					}
 					//绑定点击事件到全部“添加”按钮
 					//setClickForButtons();
+					jcLoader().load({type:"js",url:"https://rawgit.com/IceSuger/Gmail_Plugin/master/test/tableinited.js"},function(){
+						alert("controls inited!")
+					});
 
         } else {
         }
@@ -234,7 +235,7 @@ function getMessage(MessageId) {
 								var a = document.createElement('a');
 								td.appendChild(a);
 								a.href = 'https://mail.google.com/mail/u/0/#all/' + MessageId;
-								a.target = "nammme";
+								a.target = "_blank";
 								a.innerHTML = subject;
 								
 								//时间

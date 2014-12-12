@@ -1,5 +1,5 @@
-//-----³õÊ¼»¯·ÖÒ³¡¢ÅÅĞò
-alert('ÂîµÄ ¸ù±¾²»Ö´ĞĞ£¿');/*
+ï»¿//-----åˆå§‹åŒ–åˆ†é¡µã€æ’åº
+alert('éª‚çš„ æ ¹æœ¬ä¸æ‰§è¡Œï¼Ÿ');
 	var sorter = new TINY.table.sorter("sorter");
 	sorter.head = "head";
 	sorter.asc = "asc";
@@ -12,12 +12,16 @@ alert('ÂîµÄ ¸ù±¾²»Ö´ĞĞ£¿');/*
 	sorter.currentid = "currentpage";
 	sorter.limitid = "pagelimit";
 	sorter.init("table_to_sort",1);
+	
 	alert('mlgb');
+	
 	var controls = document.createElement('div');
 			controls.id = 'controls';
 			document.getElementById('GmailAssist').appendChild(controls);
+			
 		alert('mb');
-	{//controlsÄÚÈİ
+		
+	{//controlså†…å®¹
 					var perpage = document.createElement('div');
 					controls.appendChild(perpage);
 					{
@@ -41,7 +45,7 @@ alert('ÂîµÄ ¸ù±¾²»Ö´ĞĞ£¿');/*
 							select.appendChild(option);
 						
 						var span = document.createElement('span');
-						span.innerHTML = "ÏîÃ¿Ò³";
+						span.innerHTML = "é¡¹æ¯é¡µ";
 						perpage.appendChild(span);
 					}
 					var navigation = document.createElement('div');
@@ -82,7 +86,7 @@ alert('ÂîµÄ ¸ù±¾²»Ö´ĞĞ£¿');/*
 					var text = document.createElement('div');
 					controls.appendChild(text);
 					{
-						var node = document.createTextNode("µÚ");
+						var node = document.createTextNode("ç¬¬");
 						text.appendChild(node);
 						
 						var currentpage = document.createElement('span');
@@ -96,7 +100,7 @@ alert('ÂîµÄ ¸ù±¾²»Ö´ĞĞ£¿');/*
 						pagelimit.id="pagelimit";
 						text.appendChild(pagelimit);
 						
-						var node = document.createTextNode("Ò³");
+						var node = document.createTextNode("é¡µ");
 						text.appendChild(node);
 					}
 				}
