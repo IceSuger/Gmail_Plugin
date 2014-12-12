@@ -108,8 +108,6 @@ window.onload = function () {
 		});
 	}).load({type:"css",url:"https://rawgit.com/IceSuger/Gmail_Plugin/master/style.css"},function(){
 		//alert("jquery js loaded")
-	}).load({type:"js",url:"https://rawgit.com/IceSuger/Gmail_Plugin/master/test/tableinited.js"},function(){
-		console.log('controls initing js loaded.');
 	});
 	/*	
 	var jq = document.createElement('script');
@@ -127,7 +125,7 @@ window.onload = function () {
 	var sortscript = document.createElement('script');
   sortscript.src = "https://rawgit.com/IceSuger/Gmail_Plugin/master/script.js";
   document.getElementsByTagName('body')[0].appendChild(sortscript);
-	*/
+	*/ 
 /*	$.getScript("https://rawgit.com/IceSuger/Gmail_Plugin/master/script.js", function(){
   alert("Script loaded and executed.");
 }); */

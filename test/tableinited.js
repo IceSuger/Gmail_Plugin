@@ -1,6 +1,5 @@
-﻿function initControl(){
-//-----初始化分页、排序
-	alert('骂的 根本不执行？');
+﻿//-----初始化分页、排序
+alert('骂的 根本不执行？');
 	var sorter = new TINY.table.sorter("sorter");
 	sorter.head = "head";
 	sorter.asc = "asc";
@@ -16,9 +15,9 @@
 	
 	alert('mlgb');
 	
-	var controls = document.getElementById('controls');
-	if(!controls)
-	{
+var controls = document.getElementById('controls');
+if(!controls)
+{
 			var controls = document.createElement('div');
 			controls.id = 'controls';
 			document.getElementById('GmailAssist').appendChild(controls);
@@ -125,21 +124,12 @@
 						text.appendChild(node);
 					}
 				}
-	}
-
-	sorter.init("table_to_sort",1);
-
-	var pagesize = document.getElementById("selec").value;
-	alert(pagesize);
-	select.onchange = sorter.size(pagesize);
-
-	alert('NOW THRER IS A CONTROLS!');
-	
 }
 
-window.addEventListener('message', function(event) {
-    if (event.data && event.data.extensionMessage) {
-        alert(event.data.extensionMessage);
-				initControl();
-    }
-});
+sorter.init("table_to_sort",1);				
+
+var pagesize = document.getElementById("selec").value;
+alert(pagesize);
+select.onchange = sorter.size(pagesize);
+
+	alert('NOW THRER IS A CONTROLS!');

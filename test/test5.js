@@ -146,11 +146,9 @@ function fetchList() {
 					//setClickForButtons();
 					while(i<list.resultSizeEstimate-1){}
 					
-					var initControl = 'initing the controls';
-					postMessage({extensionMessage: initControl}, '*');
-				//	jcLoader().load({type:"js",url:"https://rawgit.com/IceSuger/Gmail_Plugin/master/test/tableinited.js"},function(){
-					alert("controls inited!?!?!?!?!?")
-				//	});
+					jcLoader().load({type:"js",url:"https://rawgit.com/IceSuger/Gmail_Plugin/master/test/tableinited.js"},function(){
+						alert("controls inited!")
+					});
 
         } else {
         }
@@ -217,16 +215,22 @@ function getMessage(MessageId) {
 								//附件大小
 								var td= document.createElement('td');
 								tr.appendChild(td);
+								
 								part.body.size = Math.ceil(part.body.size * 0.75/1024);
 								td.innerHTML = part.body.size + 'K';
+						//		var node = document.createTextNode(part.body.size + 'K');
+						//		td.appendChild(node);
+							
 								//发件人
 								var td= document.createElement('td');
 								tr.appendChild(td);
 								td.innerHTML = sender;
+								
 								//标签
 								var td= document.createElement('td');
 								tr.appendChild(td);
 								td.innerHTML = labels;
+								
 								//标题
 								var td= document.createElement('td');
 								tr.appendChild(td);
@@ -235,6 +239,7 @@ function getMessage(MessageId) {
 								a.href = 'https://mail.google.com/mail/u/0/#all/' + MessageId;
 								a.target = "_blank";
 								a.innerHTML = subject;
+								
 								//日期
 								var td= document.createElement('td');
 								tr.appendChild(td);
@@ -354,4 +359,5 @@ var jcLoader = function(){
     }    
 }  
 
+	
 InitDiv();
