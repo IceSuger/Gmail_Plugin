@@ -70,9 +70,6 @@ if(!controls)
 						previous.height="16";
 						previous.alt="Previous Page";
 						//previous.onclick="javascript:sorter.move(-1)";
-						
-						
-						
 						navigation.appendChild(previous);
 						
 						var next = document.createElement('img');
@@ -81,9 +78,7 @@ if(!controls)
 						next.height="16";
 						next.alt="Next Page";
 						//next.onclick=sorter.move(1);
-						
 						next.setAttribute("onclick", function(){alert('123');});
-						
 						navigation.appendChild(next);
 						
 						var last = document.createElement('img');
@@ -91,10 +86,8 @@ if(!controls)
 						last.width="16";
 						last.height="16";
 						last.alt="Last Page";
-						last.onclick=sorter.move(1,true);
-						
+						//last.onclick=sorter.move(1,true);
 						//last.setAttribute("onclick", alert('123'));
-						
 						navigation.appendChild(last);
 					}
 					var text = document.createElement('div');
