@@ -127,7 +127,7 @@ chrome.runtime.onMessage.addListener(
       sendResponse({farewell: "goodbye"});
 		}
   });
-//------------testing------------
+//------------testing------------ 
 function fetchList() {
     var xhr = new XMLHttpRequest();
     xhr.onreadystatechange = function(event) {

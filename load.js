@@ -108,7 +108,7 @@ window.onload = function () {
 		});
 	}).load({type:"css",url:"https://rawgit.com/IceSuger/Gmail_Plugin/master/style.css"},function(){
 		//alert("jquery js loaded")
-	});
+	}); 
 	/*	
 	var jq = document.createElement('script');
   jq.src = "https://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"

@@ -22,7 +22,7 @@ if(!controls)
 			controls.id = 'controls';
 			document.getElementById('GmailAssist').appendChild(controls);
 			
-		alert('mb');
+		alert('mb'); 
 		
 	{//controls内容
 					var perpage = document.createElement('div');
