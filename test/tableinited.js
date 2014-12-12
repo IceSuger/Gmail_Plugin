@@ -121,7 +121,7 @@ var pagesize = document.getElementById("selec").value;
 alert(pagesize);
 select.onchange = sorter.size(pagesize);
 
-previous.setAttribute("onclick", sorter.move(1));
+previous.setAttribute("onclick", function(){sorter.move(1)});
 
 
 
