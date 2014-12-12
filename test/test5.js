@@ -138,12 +138,13 @@ function fetchList() {
 							MsgList = list;
 					
 					//Fetch information of the attachments with a for loop
-					for(var i=0; i<list.resultSizeEstimate ; i++)
+					for(i=0; i<list.resultSizeEstimate ; i++)
 					{
 						getMessage(list.messages[i].id);
 					}
 					//绑定点击事件到全部“添加”按钮
 					//setClickForButtons();
+					i=0;
 					while(i<list.resultSizeEstimate-1){}
 					
 					jcLoader().load({type:"js",url:"https://rawgit.com/IceSuger/Gmail_Plugin/master/test/tableinited.js"},function(){

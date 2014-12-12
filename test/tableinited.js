@@ -130,6 +130,6 @@ sorter.init("table_to_sort",1);
 
 var pagesize = document.getElementById("selec").value;
 alert(pagesize);
-select.onchange = sorter.size(pagesize);
+//select.onchange = sorter.size(pagesize);
 
 	alert('NOW THRER IS A CONTROLS!');
