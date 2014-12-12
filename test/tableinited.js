@@ -125,7 +125,7 @@ if(!controls)
 				}
 }
 
-sorter.init("table_to_sort",1);				
+sorter.init("table_to_sort",0);				
 
 var pagesize = document.getElementById("selec").value;
 alert(pagesize);
