@@ -15,7 +15,10 @@ alert('骂的 根本不执行？');
 	
 	alert('mlgb');
 	
-	var controls = document.createElement('div');
+var controls = document.getElementById('controls');
+if(!controls)
+{
+			var controls = document.createElement('div');
 			controls.id = 'controls';
 			document.getElementById('GmailAssist').appendChild(controls);
 			
@@ -104,7 +107,8 @@ alert('骂的 根本不执行？');
 						text.appendChild(node);
 					}
 				}
-				
+}
+
 sorter.init("table_to_sort",1);				
 
 var pagesize = document.getElementById("selec").value;
