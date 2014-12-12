@@ -82,7 +82,7 @@ if(!controls)
 						next.alt="Next Page";
 						//next.onclick=sorter.move(1);
 						
-						next.setAttribute("onclick", function{alert('123');});
+						next.setAttribute("onclick", function(){alert('123');});
 						
 						navigation.appendChild(next);
 						
