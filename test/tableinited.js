@@ -87,7 +87,7 @@ if(!controls)
 						last.height="16";
 						last.alt="Last Page";
 						last.onclick = function(){
-							alert('为啥啊骂的！');
+							sorter.move(1,true);
 						}
 						//last.onclick=sorter.move(1,true);
 						//last.setAttribute("onclick", alert('123'));
