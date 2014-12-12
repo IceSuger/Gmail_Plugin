@@ -68,6 +68,9 @@ if(!controls)
 						previous.height="16";
 						previous.alt="Previous Page";
 						previous.onclick="javascript:sorter.move(-1)";
+						
+						previous.setAttribute("onclick", sorter.move(1));
+						
 						navigation.appendChild(previous);
 						
 						var next = document.createElement('img');
@@ -77,7 +80,7 @@ if(!controls)
 						next.alt="Next Page";
 						//next.onclick=sorter.move(1);
 						
-						next.setAttribute("onclick", function(){alert('123'); });
+						next.setAttribute("onclick", function(){alert('123');});
 						
 						navigation.appendChild(next);
 						
