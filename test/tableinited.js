@@ -67,9 +67,9 @@ if(!controls)
 						previous.width="16";
 						previous.height="16";
 						previous.alt="Previous Page";
-						previous.onclick="javascript:sorter.move(-1)";
+						//previous.onclick="javascript:sorter.move(-1)";
 						
-						previous.setAttribute("onclick", sorter.move(1));
+						
 						
 						navigation.appendChild(previous);
 						
@@ -121,7 +121,7 @@ var pagesize = document.getElementById("selec").value;
 alert(pagesize);
 select.onchange = sorter.size(pagesize);
 
-
+previous.setAttribute("onclick", sorter.move(1));
 
 
 
