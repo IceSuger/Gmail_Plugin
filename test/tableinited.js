@@ -66,7 +66,7 @@ if(!controls)
 						previous.src="https://rawgit.com/IceSuger/Gmail_Plugin/master/images/previous.gif";
 						previous.width="16";
 						previous.height="16";
-						previous.alt="First Page";
+						previous.alt="Previous Page";
 						previous.onclick="javascript:sorter.move(-1)";
 						navigation.appendChild(previous);
 						
@@ -74,8 +74,11 @@ if(!controls)
 						next.src="https://rawgit.com/IceSuger/Gmail_Plugin/master/images/next.gif";
 						next.width="16";
 						next.height="16";
-						next.alt="First Page";
-						next.onclick=sorter.move(1);
+						next.alt="Next Page";
+						//next.onclick=sorter.move(1);
+						
+						imag.setAttribute("onclick", function(){alert('123'); });
+						
 						navigation.appendChild(next);
 						
 						var last = document.createElement('img');
