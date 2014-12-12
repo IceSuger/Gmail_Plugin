@@ -92,12 +92,12 @@ function InitDiv(){
 						th.appendChild(h3);
 						var node = document.createTextNode("邮件标题");
 						h3.appendChild(node);
-						//时间
+						//日期
 						var th= document.createElement('th');
 						tr.appendChild(th);
 						var h3= document.createElement('h3');
 						th.appendChild(h3);
-						var node = document.createTextNode("时间");
+						var node = document.createTextNode("日期");
 						h3.appendChild(node);
 				
 				var tbody = document.createElement('tbody');
@@ -133,7 +133,7 @@ function fetchList() {
     xhr.onreadystatechange = function(event) {
       if (xhr.readyState == 4) {
         if(xhr.status == 200) {
-					
+							var i=0;
 							var list = JSON.parse(xhr.responseText);
 							MsgList = list;
 					
@@ -144,6 +144,7 @@ function fetchList() {
 					}
 					//绑定点击事件到全部“添加”按钮
 					//setClickForButtons();
+					while(i<list.resultSizeEstimate-1){}
 					jcLoader().load({type:"js",url:"https://rawgit.com/IceSuger/Gmail_Plugin/master/test/tableinited.js"},function(){
 						alert("controls inited!")
 					});
@@ -238,11 +239,12 @@ function getMessage(MessageId) {
 								a.target = "_blank";
 								a.innerHTML = subject;
 								
-								//时间
+								//日期
 								var td= document.createElement('td');
 								tr.appendChild(td);
-								td.innerHTML = date;
-							
+								var d = new Date(Date.parse(date));
+								td.innerHTML = d.toLocaleDateString();
+								
 							
 				/*			
 							//-----下面是以前的

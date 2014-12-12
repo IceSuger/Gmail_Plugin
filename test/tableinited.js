@@ -61,7 +61,7 @@ if(!controls)
 						first.width="16";
 						first.height="16";
 						first.alt="First Page";
-						first.onclick="sorter.move(-1,true)";
+						//first.onclick="sorter.move(-1,true)";
 						navigation.appendChild(first);
 						
 						var previous = document.createElement('img');
@@ -82,7 +82,7 @@ if(!controls)
 						next.alt="Next Page";
 						//next.onclick=sorter.move(1);
 						
-						next.setAttribute("onclick", function(){alert('123');});
+						next.setAttribute("onclick", function{alert('123');});
 						
 						navigation.appendChild(next);
 						
@@ -92,6 +92,9 @@ if(!controls)
 						last.height="16";
 						last.alt="Last Page";
 						last.onclick=sorter.move(1,true);
+						
+						//last.setAttribute("onclick", alert('123'));
+						
 						navigation.appendChild(last);
 					}
 					var text = document.createElement('div');
