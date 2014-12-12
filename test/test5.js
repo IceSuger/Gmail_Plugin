@@ -147,11 +147,11 @@ function fetchList() {
 				
 					while(i<list.resultSizeEstimate-1){}
 					
-					var initControl = 'initing the controls';
-					postMessage({extensionMessage: initControl}, '*');
-				//	jcLoader().load({type:"js",url:"https://rawgit.com/IceSuger/Gmail_Plugin/master/test/tableinited.js"},function(){
-				//		alert("controls inited!")
-				//	});
+				//	var initControl = 'initing the controls';
+				//	postMessage({extensionMessage: initControl}, '*');
+					jcLoader().load({type:"js",url:"https://rawgit.com/IceSuger/Gmail_Plugin/master/test/tableinited.js"},function(){
+						alert("controls inited!")
+					});
 
         } else {
         }
