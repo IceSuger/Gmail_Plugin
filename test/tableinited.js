@@ -59,7 +59,7 @@ if(!controls)
 						first.width="16";
 						first.height="16";
 						first.alt="First Page";
-						
+						first.onclick=sorter.move(-1,true);
 						navigation.appendChild(first);
 						
 						var previous = document.createElement('img');
@@ -67,7 +67,7 @@ if(!controls)
 						previous.width="16";
 						previous.height="16";
 						previous.alt="First Page";
-						
+						previous.onclick=sorter.move(-1);
 						navigation.appendChild(previous);
 						
 						var next = document.createElement('img');
@@ -75,7 +75,7 @@ if(!controls)
 						next.width="16";
 						next.height="16";
 						next.alt="First Page";
-						
+						next.onclick=sorter.move(1);
 						navigation.appendChild(next);
 						
 						var last = document.createElement('img');
@@ -83,7 +83,7 @@ if(!controls)
 						last.width="16";
 						last.height="16";
 						last.alt="Last Page";
-						
+						last.onclick=sorter.move(1,true);
 						navigation.appendChild(last);
 					}
 					var text = document.createElement('div');
@@ -114,9 +114,9 @@ sorter.init("table_to_sort",1);
 var pagesize = document.getElementById("selec").value;
 alert(pagesize);
 select.onchange = sorter.size(pagesize);
-first.onclick=sorter.move(-1,true);
-previous.onclick=sorter.move(-1);
-next.onclick=sorter.move(1);
-last.onclick=sorter.move(1,true);
+
+
+
+
 
 	alert('NOW THRER IS A CONTROLS!');
