@@ -59,7 +59,7 @@ if(!controls)
 						first.width="16";
 						first.height="16";
 						first.alt="First Page";
-						first.onclick=sorter.move(-1,true);
+						first.onclick="sorter.move(-1,true)";
 						navigation.appendChild(first);
 						
 						var previous = document.createElement('img');
@@ -67,7 +67,7 @@ if(!controls)
 						previous.width="16";
 						previous.height="16";
 						previous.alt="First Page";
-						previous.onclick=sorter.move(-1);
+						previous.onclick="sorter.move(-1)";
 						navigation.appendChild(previous);
 						
 						var next = document.createElement('img');
