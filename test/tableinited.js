@@ -1,4 +1,5 @@
-﻿//-----初始化分页、排序
+﻿function initControl(){
+//-----初始化分页、排序
 alert('骂的 根本不执行？');
 	var sorter = new TINY.table.sorter("sorter");
 	sorter.head = "head";
@@ -133,3 +134,11 @@ alert(pagesize);
 select.onchange = sorter.size(pagesize);
 
 	alert('NOW THRER IS A CONTROLS!');
+	
+}
+
+chrome.runtime.onMessage.addListener(function(message, sender, sendResponse){
+    if(message == 'initControl'){
+        initControl();
+    }
+});

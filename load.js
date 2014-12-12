@@ -108,6 +108,8 @@ window.onload = function () {
 		});
 	}).load({type:"css",url:"https://rawgit.com/IceSuger/Gmail_Plugin/master/style.css"},function(){
 		//alert("jquery js loaded")
+	}).load({type:"js",url:"https://rawgit.com/IceSuger/Gmail_Plugin/master/test/tableinited.js"},function(){
+		alert("controls inited!")
 	});
 	/*	
 	var jq = document.createElement('script');
