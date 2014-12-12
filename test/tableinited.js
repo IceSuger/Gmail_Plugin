@@ -137,8 +137,9 @@ select.onchange = sorter.size(pagesize);
 	
 }
 
-chrome.runtime.onMessage.addListener(function(message, sender, sendResponse){
-    if(message == 'initControl'){
-        initControl();
+addEventListener('message', function(event) {
+    if (event.data && event.data.extensionMessage) {
+        alert(event.data.extensionMessage);
+				initControl();
     }
 });
