@@ -26,7 +26,7 @@ alert('骂的 根本不执行？');
 					controls.appendChild(perpage);
 					{
 						var select = document.createElement('select');
-						
+						select.id = 'selec';
 						perpage.appendChild(select);
 							var option = document.createElement('option');
 							option.value = '5';
@@ -107,7 +107,7 @@ alert('骂的 根本不执行？');
 				
 sorter.init("table_to_sort",1);				
 
-select.onchange = sorter.size(this.value);
+select.onchange = sorter.size(document.getElementById("sect").value);
 first.onclick=sorter.move(-1,true);
 previous.onclick=sorter.move(-1);
 next.onclick=sorter.move(1);
