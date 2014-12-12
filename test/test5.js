@@ -147,15 +147,16 @@ function fetchList() {
 					while(i<list.resultSizeEstimate-1){}
 					
 					var initControl = 'initing the controls';
-					chrome.extension.onMessage.addListener(function(message) {
+			//	chrome.extension.onMessage.addListener(function(message) {
 							postMessage({extensionMessage: initControl}, '*');
-					});
+			//		});
+					
 					//initControl()；
 		//			chrome.runtime.sendMessage('initControl', function(){
 							//document.write(response);
 		//			});
 				//	jcLoader().load({type:"js",url:"https://rawgit.com/IceSuger/Gmail_Plugin/master/test/tableinited.js"},function(){
-				//		alert("controls inited!")
+						alert("controls inited!?!?!?!?!?")
 				//	});
 
         } else {
