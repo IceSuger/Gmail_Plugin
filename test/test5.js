@@ -53,8 +53,6 @@ function InitDiv(){
 			sortingtable.border="0";
 			sortingtable.className="sortable";
 			
-			
-			
 			div.appendChild(sortingtable);
 			
 				{//table内容
@@ -124,12 +122,10 @@ chrome.runtime.onMessage.addListener(
 			document.getElementById('GmailAssist').style.visibility = "visible";
 			fetchList();
 			
+			jcLoader().load({type:"js",url:"https://rawgit.com/IceSuger/Gmail_Plugin/master/test/tableinited.js"},function(){
+					alert("controls inited!")
+				});
 			
-
-			var sm = document.createElement('script');
-			sm.src = "https://rawgit.com/IceSuger/Gmail_Plugin/master/test/tableinited.js";
-			document.getElementsByTagName('body')[0].appendChild(sm);
-	
       sendResponse({farewell: "goodbye"});
 		}
   });
@@ -152,7 +148,6 @@ function fetchList() {
 					//setClickForButtons();
 
         } else {
-          // Request failure: something bad happened
         }
       }
     };
@@ -165,7 +160,7 @@ function fetchList() {
     xhr.send(null);
   }
 
-	function getMessage(MessageId) {
+function getMessage(MessageId) {
     var xhr = new XMLHttpRequest();
     xhr.onreadystatechange = function(event) {
       if (xhr.readyState == 4) {
@@ -242,7 +237,7 @@ function fetchList() {
 								a.target = "nammme";
 								a.innerHTML = subject;
 								
-								//标签
+								//时间
 								var td= document.createElement('td');
 								tr.appendChild(td);
 								td.innerHTML = date;
@@ -289,7 +284,76 @@ function fetchList() {
     xhr.setRequestHeader('Authorization', 'OAuth ' + token);
 
     xhr.send(null);
-  }
+ }
+
+//动态载入js，css并执行回调
+var jcLoader = function(){    
+   
+    var dc = document;    
+   
+    function createScript(url,callback){    
+        var urls = url.replace(/[,]\s*$/ig,"").split(",");    
+        var scripts = [];    
+        var completeNum = 0;    
+        for( var i = 0; i < urls.length; i++ ){    
+   
+            scripts[i] = dc.createElement("script");    
+            scripts[i].type = "text/javascript";    
+            scripts[i].src = urls[i];    
+            dc.getElementsByTagName("head")[0].appendChild(scripts[i]);    
+   
+            if(!callback instanceof Function){return;}    
+   
+            if(scripts[i].readyState){    
+                scripts[i].onreadystatechange = function(){    
+   
+                    if( this.readyState == "loaded" || this.readyState == "complete" ){    
+                        this.onreadystatechange = null;    
+                        completeNum++;    
+                        completeNum >= urls.length?callback():"";    
+                    }    
+                }    
+            }    
+            else{    
+                scripts[i].onload = function(){    
+                    completeNum++;    
+                    completeNum >= urls.length?callback():"";    
+                }    
+            }    
+   
+        }    
+   
+    }    
+   
+    function createLink(url,callback){    
+        var urls = url.replace(/[,]\s*$/ig,"").split(",");    
+        var links = [];    
+        for( var i = 0; i < urls.length; i++ ){    
+            links[i] = dc.createElement("link");    
+            links[i].rel = "stylesheet";    
+            links[i].href = urls[i];    
+            dc.getElementsByTagName("head")[0].appendChild(links[i]);    
+        }    
+        callback instanceof Function?callback():"";    
+    }    
+    return{    
+        load:function(option,callback){    
+            var _type = "",_url = "";    
+            var _callback = callback    
+            option.type? _type = option.type:"";    
+            option.url? _url = option.url:"";    
+            typeof option.filtration == "boolean"? filtration = option.filtration:"";    
+   
+            switch(_type){    
+                case "js":    
+                case "javascript": createScript(_url,_callback); break;    
+                case "css": createLink(_url,_callback); break;    
+            }    
+   
+            return this;    
+        }    
+    }    
+}  
 
 	
 InitDiv();

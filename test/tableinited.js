@@ -1,4 +1,5 @@
 //-----初始化分页、排序
+alert('骂的 根本不执行？');/*
 	var sorter = new TINY.table.sorter("sorter");
 	sorter.head = "head";
 	sorter.asc = "asc";
@@ -99,3 +100,5 @@
 						text.appendChild(node);
 					}
 				}
+				
+				*/
