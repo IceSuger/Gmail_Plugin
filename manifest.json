@@ -1,0 +1,44 @@
+﻿{
+    "manifest_version": 2,
+    "name": "Gmail邮箱附件处理助手",
+    "version": "1.0",
+    "description": "最帅的人",
+		
+  "page_action": {  
+		"default_icon": "icon19.png" ,
+		"default_title" : "WE ARE IN GMAIL!",
+		"default_popup": "popup.html"
+	},
+	
+	"background": {
+		"scripts": ["background.js"],
+		"persistent": false
+	},
+	
+	"content_scripts":  [
+		{
+			"js": ["oauth2/oauth2_inject.js"],
+			"matches": [ "http://www.google.com/robots.txt*"],
+			"run_at": "document_start"
+		},
+		{
+			"js": [ "load.js" ],
+			"matches": ["*://mail.google.com/*"],
+			"run_at": "document_end"
+		}
+	],
+	 
+	"content_security_policy":
+		"script-src 'self' https://apis.google.com https://rawgit.com; object-src 'self'",
+	
+	"permissions" : [
+		"declarativeContent",
+		"*://mail.google.com/*",
+		"https://accounts.google.com/o/oauth2/token",
+		"https://www.googleapis.com/"
+	],
+	
+	"web_accessible_resources" : [
+    "oauth2/oauth2.html"
+  ]
+}
