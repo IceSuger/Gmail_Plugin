@@ -21,11 +21,7 @@ jcLoader().load({
 简单版:   
 jcLoader().load({type:"js",url:"temp/demojs01.js"},function(){alert("all file loaded")});   
 jcLoader().load({type:"css",url:"temp/democss01.css"},function(){alert("all css file loaded")});   
-  
- * ---------------------------------------------------   
- * power by jackNEss   
- * date:2011-11-10(光棍节前夕)   
- * ver 1.0   
+
  */   
 var jcLoader = function(){    
    
