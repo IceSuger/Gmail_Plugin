@@ -26,6 +26,7 @@ if(!controls)
 		
 	{//controls内容
 					var perpage = document.createElement('div');
+					perpage.id = 'perpage';
 					controls.appendChild(perpage);
 					{
 						var select = document.createElement('select');
@@ -52,6 +53,7 @@ if(!controls)
 						perpage.appendChild(span);
 					}
 					var navigation = document.createElement('div');
+					navigation.id = 'navigation';
 					controls.appendChild(navigation);
 					{
 						var first = document.createElement('img');
@@ -93,6 +95,7 @@ if(!controls)
 						navigation.appendChild(last);
 					}
 					var text = document.createElement('div');
+					text.id = 'text';
 					controls.appendChild(text);
 					{
 						var node = document.createTextNode("第");
