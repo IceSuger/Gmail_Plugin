@@ -11,7 +11,7 @@ alert('骂的 根本不执行？');
 	sorter.paginate = true;
 	sorter.currentid = "currentpage";
 	sorter.limitid = "pagelimit";
-	sorter.init("table_to_sort",1);
+	
 	
 	alert('mlgb');
 	
@@ -105,4 +105,5 @@ alert('骂的 根本不执行？');
 					}
 				}
 				
-				
+sorter.init("table_to_sort",1);				
+	alert('NOW THRER IS A CONTROLS!');
