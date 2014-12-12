@@ -1,4 +1,4 @@
-﻿//-----初始化分页、排序
+﻿//-----初始化分页、排序------------git什么jb玩意啊！！
 alert('骂的 根本不执行？');
 	var sorter = new TINY.table.sorter("sorter");
 	sorter.head = "head";
@@ -11,7 +11,6 @@ alert('骂的 根本不执行？');
 	sorter.paginate = true;
 	sorter.currentid = "currentpage";
 	sorter.limitid = "pagelimit";
-	
 	
 	alert('mlgb');
 	
