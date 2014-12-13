@@ -26,7 +26,7 @@ chrome.runtime.onInstalled.addListener(function() {
 	});
 	
 	chrome.runtime.onMessage.addListener(function(message, sender, sendResponse){
-			if(message != 'Hello'){
+			if(message != 'Hello' && message != 'alljsloaded'){
 			alert(message);
 					chrome.downloads.download({
             url: message,

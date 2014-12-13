@@ -44,10 +44,19 @@ function InitDiv(){
 			loading.style.width = '32px';
 			loading.style.visibility = "hidden";
 			div.appendChild(loading);
+		//-----接收信息alljsloaded，使按钮们可用
+			chrome.runtime.onMessage.addListener(function(message, sender, sendResponse){
+				if(message == 'alljsloaded'){
+						button.disabled = false;
+						btndown.disabled = false;
+						btninsert.disabled = false;
+				}
+			});
 		//---------显示主按钮-------
 			var button = document.createElement('button');
 			button.id = 'form';
 			button.innerHTML = '获取附件列表着';
+			button.disabled = true;
 			button.onclick = function(){
 				loading.style.visibility = "visible";
 				id = 0;//附件编号（按获取到的顺序）
@@ -57,6 +66,7 @@ function InitDiv(){
 		//---------显示下载按钮-------
 			var btndown = document.createElement('button');
 			btndown.id = 'btndown';
+			btndown.disabled = true;
 			btndown.innerHTML = '下载';
 			btndown.onclick = function(){
 				var id2;
@@ -79,6 +89,7 @@ function InitDiv(){
 		//---------显示添加按钮-------
 			var btninsert = document.createElement('button');
 			btninsert.id = 'btninsert';
+			btninsert.disabled = true;
 			btninsert.innerHTML = '添加';
 			btninsert.onclick = function(){
 				var id2;
@@ -515,7 +526,7 @@ function makenewdraft(passed){
       }
     };
 
-    xhr.open('GET', DRAFT_URL_prefix, true);
+    xhr.open('GET', DRAFT_URL_prefix, false);
 
     xhr.setRequestHeader('Content-Type', 'application/json');
     xhr.setRequestHeader('Authorization', 'OAuth ' + token);
@@ -533,7 +544,7 @@ function makenewdraft(passed){
       if (xhr.readyState == 4) {
         if(xhr.status == 200) {
 					
-					alert('添加附件成功！');
+					console.log('添加附件成功！');
         } else {
           // Request failure: something bad happened
         }
