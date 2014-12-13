@@ -24,8 +24,8 @@ function InitDiv(){
 	var div = document.createElement('div');
 			div.id = "GmailAssist";
 			document.getElementsByTagName('body')[0].appendChild(div);
-			div.style.width = '1200px';
-			div.style.height = '500px';
+			//div.style.width = '1100px';
+			//div.style.height = '500px';
 			div.style.overflow = 'auto';
 			div.style.position = 'fixed';
 			div.style.background = 'white';
