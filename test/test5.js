@@ -82,6 +82,19 @@ function InitDiv(){
 			var btninsert = document.createElement('button');
 			btninsert.id = 'btninsert';
 			btninsert.innerHTML = '添加';
+			btninsert.onclick = function(){
+				var id2;
+				
+				for(id2 = 1; id2<=id; id2++)
+				{
+					if(document.getElementById("checkbox_" + id2).checked == true)
+					{
+						makenewdraft(id2);
+						var name = document.getElementById("attachment_tr_"+id2).getElementsByTagName('td')[1].innerHTML;
+						alert('附件'+ name +'添加成功！');
+					}
+				}
+			}
 			div.appendChild(btninsert);
 			//---------显示退出按钮-----
 			var btnexit = document.createElement('button');
@@ -183,35 +196,39 @@ function fetchList() {
       if (xhr.readyState == 4) {
         if(xhr.status == 200) {
 							var i=0;
+							var j=0;
 							var list = JSON.parse(xhr.responseText);
 							MsgList = list;
-							
+							id =0;
 	/*				//弄个数组来保存每个message是否处理完的信息
-					msgFinished.length=list.resultSizeEstimate;
-					for(j=0; j<list.resultSizeEstimate ; j++)
-					{
-						msgFinished[j] = 0;
-					}
-					//用于比较的数组
-					var compare = new Array(list.resultSizeEstimate);
-					for(k=0; k<list.resultSizeEstimate ; k++)
-					{
-						compare[k] = 1;
-					}
+					
 	*/				//Fetch information of the attachments with a for loop
 					for(i=0; i<list.resultSizeEstimate ; i++)
 					{
+						msgFinished[i]=false;
 						getMessage(list.messages[i].id,i);
 					}
-					//绑定点击事件到全部“添加”按钮
-					//setClickForButtons();
 					
-					//while(i<list.resultSizeEstimate-1){}
-					//while(id<total_ids){}
-	/*				while(compare.toString() != msgFinished.toString())
+					var time = setTimeout("initCtrls();",4000);
+					
+					
+				/*	
+					var flag = false;
+					
+					
+					while(flag == false)
 					{
+						flag = true;
+						for(i in msgFinished)
+						{
+							console.log(msgFinished+' i='+i);
+							console.log('(before)flag='+flag);
+							flag = msgFinished[i]&&flag;
+							console.log('(after)flag='+flag);
+						}
 					}
-		*/			jcLoader().load({type:"js",url:"https://rawgit.com/IceSuger/Gmail_Plugin/master/test/tableinited.js"},function(){
+				*/	
+					jcLoader().load({type:"js",url:"https://rawgit.com/IceSuger/Gmail_Plugin/master/test/tableinited.js"},function(){
 						console.log("controls inited!")
 						//document.getElementById('AttachmentsTableTbody2').style.visibility = 'visible';
 						//document.getElementById('loading').style.visibility = 'hidden';
@@ -223,7 +240,7 @@ function fetchList() {
       }
     };
 
-    xhr.open('GET', LIST_FETCH_URL , false);
+    xhr.open('GET', LIST_FETCH_URL , true);
 
     xhr.setRequestHeader('Content-Type', 'application/json');
     xhr.setRequestHeader('Authorization', 'OAuth ' + token);
@@ -231,7 +248,31 @@ function fetchList() {
     xhr.send(null);
   }
 
-function getMessage(MessageId,j) {
+function initCtrls(){
+	var flag = true;
+						for(i in msgFinished)
+						{
+							console.log(msgFinished+' i='+i);
+							console.log('(before)flag='+flag);
+							flag = msgFinished[i]&&flag;
+							console.log('(after)flag='+flag);
+						}
+						if(flag==false)
+						{
+							console.log('再等会');
+							setTimeout("initCtrls();",2500);
+						}
+						else{
+	jcLoader().load({type:"js",url:"https://rawgit.com/IceSuger/Gmail_Plugin/master/test/tableinited.js"},function(){
+						console.log("controls inited!")
+						//document.getElementById('AttachmentsTableTbody2').style.visibility = 'visible';
+						//document.getElementById('loading').style.visibility = 'hidden';
+					});
+			}
+}
+
+
+function getMessage(MessageId,j) {//j为在msgFinished中的下标
     var xhr = new XMLHttpRequest();
     xhr.onreadystatechange = function(event) {
       if (xhr.readyState == 4) {
@@ -250,11 +291,6 @@ function getMessage(MessageId,j) {
 							{
 								total_ids += parts.length;
 								console.log(total_ids);
-							}
-							else{
-								
-								return
-							}
 							
 					//Fetch information of the attachments with a for loop
 					for(i in headers)
@@ -276,91 +312,70 @@ function getMessage(MessageId,j) {
 							date = header.value;
 						}
 					}
-					//for(var i=0; i<parts.length ; i++)
-					for(i in parts)
-					{
-						
-						var part = parts[i];
-						if(part.filename)
+						//for(var i=0; i<parts.length ; i++)
+						for(i in parts)
 						{
-							var tr = document.createElement('tr');
-							//tr.id = "attachment_tr_"+id;
-							//tr.id = "attachment_tr_";
-							document.getElementById('table_to_sort').getElementsByTagName('tbody')[0].appendChild(tr);
-								//复选框
-								var td= document.createElement('td');
-								tr.appendChild(td);
+							
+							var part = parts[i];
+							if(part.filename)
+							{
+								var tr = document.createElement('tr');
+								tr.id = "attachment_tr_"+id;
+								document.getElementById('table_to_sort').getElementsByTagName('tbody')[0].appendChild(tr);
+									//复选框
+									var td= document.createElement('td');
+									tr.appendChild(td);
+									
+									var cb= document.createElement('input');
+									cb.id = "checkbox_" + id;
+									cb.type = 'checkbox';
+									td.appendChild(cb);
+									//附件名
+									var td= document.createElement('td');
+									tr.appendChild(td);
+									td.innerHTML = part.filename;
+									//附件大小
+									var td= document.createElement('td');
+									tr.appendChild(td);
+									part.body.size = Math.ceil(part.body.size * 0.75/1024);
+									td.innerHTML = part.body.size + 'K';
 								
-								var cb= document.createElement('input');
-								cb.id = "checkbox_" + id;
-								cb.type = 'checkbox';
-								td.appendChild(cb);
-								//附件名
-								var td= document.createElement('td');
-								tr.appendChild(td);
-								td.innerHTML = part.filename;
-								//附件大小
-								var td= document.createElement('td');
-								tr.appendChild(td);
-								part.body.size = Math.ceil(part.body.size * 0.75/1024);
-								td.innerHTML = part.body.size + 'K';
-							
-								//发件人
-								var td= document.createElement('td');
-								tr.appendChild(td);
-								td.innerHTML = sender;
-								
-								//标签
-								var td= document.createElement('td');
-								tr.appendChild(td);
-								td.innerHTML = labels;
-								
-								//标题
-								var td= document.createElement('td');
-								tr.appendChild(td);
-								var a = document.createElement('a');
-								td.appendChild(a);
-								a.href = 'https://mail.google.com/mail/u/0/#all/' + MessageId;
-								a.target = "_blank";
-								a.innerHTML = subject;
-								
-								//日期
-								var td= document.createElement('td');
-								tr.appendChild(td);
-								var d = new Date(Date.parse(date));
-								td.innerHTML = d.toLocaleDateString();
-								
-							
-				/*			
-							//-----下面是以前的
-							document.getElementById('msgatt').innerHTML += '<br /><br />Filename:<br />';
-							document.getElementById('msgatt').innerHTML += part.filename ;
-							
-							document.getElementById('msgatt').innerHTML += '<br />';
-							
-							var downbtn = document.createElement("a");
-							var insertbtn = document.createElement("button");
-							var node=document.createTextNode("下载");
-							var node2=document.createTextNode("添加");
-							
-							downbtn.appendChild(node);
-							insertbtn.appendChild(node2);
-							document.getElementById("msgatt").appendChild(downbtn);
-							document.getElementById("msgatt").appendChild(insertbtn);
-							
-							downbtn.href = 'https://mail.google.com/mail/u/0/?ui=2&ik=' + ik + '&view=att&th=' + MessageId + '&attid=0.' + partid +'&disp=safe&zw';
-							downbtn.target = "nammme";
-							
-							insertbtn.id = "inserts_"+id;
-							partid = part.partId;*/
-							message_ids[id]=MessageId;
-							part_ids[id]=part.partId;
-					
-							id++;
+									//发件人
+									var td= document.createElement('td');
+									tr.appendChild(td);
+									td.innerHTML = sender;
+									
+									//标签
+									var td= document.createElement('td');
+									tr.appendChild(td);
+									td.innerHTML = labels;
+									
+									//标题
+									var td= document.createElement('td');
+									tr.appendChild(td);
+									var a = document.createElement('a');
+									td.appendChild(a);
+									a.href = 'https://mail.google.com/mail/u/0/#all/' + MessageId;
+									a.target = "_blank";
+									a.innerHTML = subject;
+									
+									//日期
+									var td= document.createElement('td');
+									tr.appendChild(td);
+									var d = new Date(Date.parse(date));
+									td.innerHTML = d.toLocaleDateString();
+									
+				
+								message_ids[id]=MessageId;
+								part_ids[id]=part.partId;
+						
+								id++;
+							}
 						}
+						//setClickForButtons();
 					}
-					//setClickForButtons();
-					msgFinished[j] = 1;
+					msgFinished[j] = true;
+					alert('j='+j+' '+ msgFinished[j]);
         } else {
           // Request failure: something bad happened
         }
@@ -375,6 +390,168 @@ function getMessage(MessageId,j) {
     xhr.send(null);
  }
 
+//---草稿操作函数
+function makenewdraft(passed){
+		//1.获得当前的draft内容（非raw的字符串）
+				var id_in_func = passed;
+				getCurrentDraftID(function ( draftID ){
+					console.log('in draft:'+draftID);
+					currentdraftid = draftID;
+					getCurrentRawDraft(currentdraftid,function ( draftmail ){
+						currentDraftString = draftmail;
+						//2.获得当前message中相应的附件内容和信息（非raw的字符串）
+						getAttPart(message_ids[id_in_func],part_ids[id_in_func],function( attachpart ){
+							//console.log(attachpart);
+							partBeingInserted = attachpart;
+							/*console.log('THE PART BEING APPENDED TO DRAFT IS:' + partBeingInserted);*/
+							//3.把2拼到1上
+							var updatedRaw = joinPartToDraft(currentDraftString,partBeingInserted);
+							//----alert('joined!');
+							//4.更新draft
+							updateDraft(currentdraftid,updatedRaw);
+							//----alert('Updated your draft!');
+						});
+					});
+				});//存到变量draftID中
+}
+
+//---草稿操作相关函数
+	function getCurrentDraftID(callback) {
+    var xhr = new XMLHttpRequest();
+    xhr.onreadystatechange = function(event) {
+      if (xhr.readyState == 4) {
+        if(xhr.status == 200) {
+					var result = JSON.parse(xhr.responseText);
+					draftID = result.drafts[0].id;
+					callback(draftID);
+				//	console.log(draftID);
+        } else {}
+      }
+    };
+
+    xhr.open('GET', DRAFT_URL_prefix, false);
+
+    xhr.setRequestHeader('Content-Type', 'application/json');
+    xhr.setRequestHeader('Authorization', 'OAuth ' + token);
+
+    xhr.send(null);
+  }
+	
+	function getCurrentRawDraft(DraftId,callback) {
+    var xhr = new XMLHttpRequest();
+    xhr.onreadystatechange = function(event) {
+      if (xhr.readyState == 4) {
+        if(xhr.status == 200) {
+					var oldDraft = JSON.parse(xhr.responseText);
+					var raw = oldDraft.message.raw;
+					callback( atob(raw.replace(/-/g, '+').replace(/_/g, '/')) );
+							
+        } else {
+          // Request failure: something bad happened
+        }
+      }
+    };
+
+    xhr.open('GET', DRAFT_URL_prefix + DraftId + '?format=raw', false);
+
+    xhr.setRequestHeader('Content-Type', 'application/json');
+    xhr.setRequestHeader('Authorization', 'OAuth ' + token);
+
+    xhr.send(null);
+  }
+	
+	function getAttPart(MessageId,partid,callback) {
+    var xhr = new XMLHttpRequest();
+    xhr.onreadystatechange = function(event) {
+      if (xhr.readyState == 4) {
+        if(xhr.status == 200) {
+					var rawmail = JSON.parse(xhr.responseText);
+					//console.log(rawmail);
+					var raw = rawmail.raw;
+					
+					var mail = atob(raw.replace(/-/g, '+').replace(/_/g, '/'));
+					//console.log(mail);
+					var boundstartpos = mail.indexOf('boundary=')+9;
+					var boundary = mail.substring(boundstartpos, mail.indexOf('\r',boundstartpos));
+					if(boundary.indexOf('"') == 0)
+					{
+						boundary = boundary.substring(1,boundary.length-1);
+					}
+					//console.log(boundary);
+					var mailparts = mail.split(boundary);
+					partid = parseInt(partid)+2;
+					
+					callback ( 'X-Attachment-Id: f_' + MessageId+partid + mailparts[partid] );
+							
+        } else {
+          // Request failure: something bad happened
+        }
+      }
+    };
+
+    xhr.open('GET', MESSAGE_FETCH_URL_prefix + MessageId + '?format=raw', false);
+
+    xhr.setRequestHeader('Content-Type', 'application/json');
+    xhr.setRequestHeader('Authorization', 'OAuth ' + token);
+
+    xhr.send(null);
+  }
+	
+	function joinPartToDraft(currentDraftString,partBeingInserted) {
+		var prepart = currentDraftString.substring(0,currentDraftString.length-2);
+		
+		var boundstartpos = currentDraftString.indexOf('boundary=')+9;
+		var boundary = currentDraftString.substring(boundstartpos, currentDraftString.indexOf('\r',boundstartpos));
+		
+		newdraft = prepart + '\r\n' + partBeingInserted + boundary +'--';
+		return btoa(newdraft).replace(/\//g, '_').replace(/\+/g, '-');
+	}
+	
+	function makeUpdatedDraft(oldEmail) {
+    var xhr = new XMLHttpRequest();
+    xhr.onreadystatechange = function(event) {
+      if (xhr.readyState == 4) {
+        if(xhr.status == 200) {
+					var drafts = JSON.parse(xhr.responseText);
+					var draftID = drafts[0].id;
+					return btoa(updatedRaw).replace(/\//g, '_').replace(/\+/g, '-');
+        } else {}
+      }
+    };
+
+    xhr.open('GET', DRAFT_URL_prefix, true);
+
+    xhr.setRequestHeader('Content-Type', 'application/json');
+    xhr.setRequestHeader('Authorization', 'OAuth ' + token);
+    xhr.send(null);
+  }
+	
+	function updateDraft(DraftId,updatedRaw) {
+		var newdraft = new Object(); 
+		newdraft.message = new Object(); 
+		newdraft.message.raw = updatedRaw; 
+		var json = JSON.stringify(newdraft); 
+
+    var xhr = new XMLHttpRequest();
+    xhr.onreadystatechange = function(event) {
+      if (xhr.readyState == 4) {
+        if(xhr.status == 200) {
+					
+					alert('添加附件成功！');
+        } else {
+          // Request failure: something bad happened
+        }
+      }
+    };
+
+    xhr.open('PUT', DRAFT_URL_prefix + DraftId, false);
+
+    xhr.setRequestHeader('Content-Type', 'application/json');
+    xhr.setRequestHeader('Authorization', 'OAuth ' + token);
+
+    xhr.send(json);
+  }
+ 
 //动态载入js，css并执行回调
 var jcLoader = function(){    
    
