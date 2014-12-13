@@ -12,8 +12,6 @@
 	sorter.currentid = "currentpage";
 	sorter.limitid = "pagelimit";
 	
-	alert('mlgb');
-	
 var controls = document.getElementById('controls');
 if(!controls)
 {
@@ -21,8 +19,6 @@ if(!controls)
 			controls.id = 'controls';
 			document.getElementById('GmailAssist').appendChild(controls);
 			
-		alert('mb');
-		
 	{//controls内容
 					var perpage = document.createElement('div');
 					perpage.id = 'perpage';
@@ -126,9 +122,3 @@ if(!controls)
 }
 
 sorter.init("table_to_sort",0);				
-
-//var pagesize = document.getElementById("selec").value;
-//alert(pagesize);
-//select.onchange = sorter.size(pagesize);
-
-	alert('NOW THRER IS A CONTROLS!');
