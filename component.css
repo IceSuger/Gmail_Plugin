@@ -8,10 +8,10 @@
 	cursor: pointer;
 	padding: 25px 80px;
 	display: inline-block;
-	margin: 15px 30px;
+	margin: 5px 10px;
 	text-transform: uppercase;
 	letter-spacing: 1px;
-	font-weight: 700;
+	font-weight: 1000;
 	outline: none;
 	position: relative;
 	-webkit-transition: all 0.3s;
@@ -47,8 +47,8 @@
 	height: 0;
 	top: 50%;
 	left: 50%;
-	background: #fff;
-	opacity: 50;
+	background: #597d98;
+	opacity: 0;
 	-webkit-transform: translateX(-50%) translateY(-50%) rotate(45deg);
 	-moz-transform: translateX(-50%) translateY(-50%) rotate(45deg);
 	-ms-transform: translateX(-50%) translateY(-50%) rotate(45deg);
