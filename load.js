@@ -99,6 +99,10 @@ window.onload = function () {
 			jcLoader().load({type:"js",url:"https://rawgit.com/IceSuger/Gmail_Plugin/master/passDOM.js"},function(){
 				jcLoader().load({type:"js",url:"https://rawgit.com/IceSuger/Gmail_Plugin/master/script.js"},function(){
 					console.log('all js loaded.');
+					console.log('按钮可用起来！');
+					document.getElementById('form').disabled = false;
+					document.getElementById('btndown').disabled = false;
+					document.getElementById('btninsert').disabled = false;
 				});
 			});
 		});

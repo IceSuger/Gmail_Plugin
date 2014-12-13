@@ -44,14 +44,7 @@ function InitDiv(){
 			loading.style.width = '32px';
 			loading.style.visibility = "hidden";
 			div.appendChild(loading);
-		//-----接收信息alljsloaded，使按钮们可用
-			chrome.runtime.onMessage.addListener(function(message, sender, sendResponse){
-				if(message == 'alljsloaded'){
-						button.disabled = false;
-						btndown.disabled = false;
-						btninsert.disabled = false;
-				}
-			});
+		
 		//---------显示主按钮-------
 			var button = document.createElement('button');
 			button.id = 'form';
@@ -133,6 +126,11 @@ function InitDiv(){
 						//复选框
 						var th= document.createElement('th');
 						tr.appendChild(th);
+						var cb= document.createElement('input');
+									cb.id = "toggle_all";
+									cb.type = 'checkbox';
+									th.appendChild(cb);
+									cb.onchange=toggleAll;
 						//附件名
 						var th= document.createElement('th');
 						tr.appendChild(th);
@@ -558,7 +556,14 @@ function makenewdraft(passed){
 
     xhr.send(json);
   }
- 
+
+//全选功能
+function toggleAll() {
+  var checked = document.getElementById('toggle_all').checked;
+  for (var k = 0; k < id; k++) {
+    document.getElementById("checkbox_" + k).checked = checked;
+  }
+}
 //动态载入js，css并执行回调
 var jcLoader = function(){    
    
