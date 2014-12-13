@@ -31,7 +31,8 @@ function InitDiv(){
 			div.style.background = 'white';
 			//div.style.marginLeft = 'auto';
 			//div.style.marginRight = 'auto';
-			div.style.margin = '0 auto';
+			div.style.margin = '10px';
+			div.style.padding = '16px';
 			//div.style.top = '90px';
 			div.style.zIndex = '1000';
 			div.style.visibility = "hidden";
