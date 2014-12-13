@@ -2,16 +2,16 @@
 .btn {
 	border: none;
 	font-family: inherit;
-	font-size: inherit;
+	font-size: 20px;
 	color: #597d98;
 	background: none;
 	cursor: pointer;
-	padding: 25px 80px;
+	padding: 15px 50px;
 	display: inline-block;
-	margin: 5px 10px;
+	margin: 10px 50px;
 	text-transform: uppercase;
 	letter-spacing: 1px;
-	font-weight: 1000;
+	font-weight: 700;
 	outline: none;
 	position: relative;
 	-webkit-transition: all 0.3s;
