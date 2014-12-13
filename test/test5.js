@@ -5,7 +5,10 @@ var ATTACHMENT_FETCH_URL = 'https://www.googleapis.com/gmail/v1/users/me/message
 var DRAFT_URL_prefix = 'https://www.googleapis.com/gmail/v1/users/me/drafts/';//+draftId
 var token = '';
 var sortingtable;
-	
+var id = 0;//附件编号（按获取到的顺序）
+var total_ids=0;//总共多少个附件，用于结合id来阻塞获取列表的过程，从而给controls init留出时间
+var message_ids = new Array();
+var part_ids = new Array();
 
 //===================表格排序相关代码==========================
 var fileref=document.createElement("link");
@@ -29,13 +32,34 @@ function InitDiv(){
 			//div.style.marginRight = 'auto';
 			div.style.margin = '0 auto';
 			//div.style.top = '90px';
-			div.style.zIndex = '1002';
+			div.style.zIndex = '1000';
 			div.style.visibility = "hidden";
+			//---------生成loading.gif----
+			var loading = document.createElement('img');
+			loading.id = 'loading';
+			loading.src = 'loading.gif';
+			loading.style.zIndex = '1001';
+			loading.style.visibility = "hidden";
+			div.appendChild(loading);
 			//---------显示主按钮-------
 			var button = document.createElement('button');
 			button.id = 'form';
 			button.innerHTML = '获取附件列表着';
+			button.onclick = function(){
+				loading.style.visibility = "visible";
+				fetchList();
+			}
 			div.appendChild(button);
+			//---------显示下载按钮-------
+			var btndown = document.createElement('button');
+			btndown.id = 'btndown';
+			btndown.innerHTML = '下载';
+			div.appendChild(btndown);
+			//---------显示下载按钮-------
+			var btninsert = document.createElement('button');
+			btninsert.id = 'btninsert';
+			btninsert.innerHTML = '添加';
+			div.appendChild(btninsert);
 			//---------显示退出按钮-----
 			var btnexit = document.createElement('button');
 			btnexit.id = 'btnexit';
@@ -44,7 +68,7 @@ function InitDiv(){
 				div.style.visibility = "hidden";
 			}
 			div.appendChild(btnexit);
-			
+								
 			//---------显示table------
 			sortingtable = document.createElement('table');
 			sortingtable.id = 'table_to_sort';
@@ -61,6 +85,9 @@ function InitDiv(){
 				sortingtable.appendChild(thead);
 					var tr= document.createElement('tr');
 					thead.appendChild(tr);
+						//复选框
+						var th= document.createElement('th');
+						tr.appendChild(th);
 						//附件名
 						var th= document.createElement('th');
 						tr.appendChild(th);
@@ -103,6 +130,7 @@ function InitDiv(){
 				var tbody = document.createElement('tbody');
 				sortingtable.appendChild(tbody);
 				tbody.id='AttachmentsTableTbody2';
+				tbody.style.visibility = 'hidden';
 				}
 			
 	
@@ -120,8 +148,6 @@ chrome.runtime.onMessage.addListener(
 			token = request.token;
 			//alert(token);
 			document.getElementById('GmailAssist').style.visibility = "visible";
-			fetchList();
-			
 			
 			
       sendResponse({farewell: "goodbye"});
@@ -145,10 +171,13 @@ function fetchList() {
 					//绑定点击事件到全部“添加”按钮
 					//setClickForButtons();
 					
-					while(i<list.resultSizeEstimate-1){}
+					//while(i<list.resultSizeEstimate-1){}
+					while(id<total_ids){}
 					
 					jcLoader().load({type:"js",url:"https://rawgit.com/IceSuger/Gmail_Plugin/master/test/tableinited.js"},function(){
 						alert("controls inited!")
+						document.getElementById('AttachmentsTableTbody2').style.visibility = 'visible';
+						document.getElementById('loading').style.visibility = 'hidden';
 					});
 
         } else {
@@ -179,6 +208,9 @@ function getMessage(MessageId) {
 							var labels = messageObj.labelIds;
 							var date;
 							
+							total_ids += parts.length;
+							console.log(total_ids);
+							
 					//Fetch information of the attachments with a for loop
 					for(i in headers)
 					{
@@ -207,8 +239,16 @@ function getMessage(MessageId) {
 						{
 							var tr = document.createElement('tr');
 							//tr.id = "attachment_tr_"+id;
-							tr.id = "attachment_tr_";
+							//tr.id = "attachment_tr_";
 							document.getElementById('table_to_sort').getElementsByTagName('tbody')[0].appendChild(tr);
+								//复选框
+								var td= document.createElement('td');
+								tr.appendChild(td);
+								
+								var cb= document.createElement('input');
+								cb.id = "checkbox_" + id;
+								cb.type = 'checkbox';
+								td.appendChild(cb);
 								//附件名
 								var td= document.createElement('td');
 								tr.appendChild(td);
@@ -216,11 +256,8 @@ function getMessage(MessageId) {
 								//附件大小
 								var td= document.createElement('td');
 								tr.appendChild(td);
-								
 								part.body.size = Math.ceil(part.body.size * 0.75/1024);
 								td.innerHTML = part.body.size + 'K';
-						//		var node = document.createTextNode(part.body.size + 'K');
-						//		td.appendChild(node);
 							
 								//发件人
 								var td= document.createElement('td');
@@ -269,10 +306,10 @@ function getMessage(MessageId) {
 							downbtn.target = "nammme";
 							
 							insertbtn.id = "inserts_"+id;
-							message_ids[id]=MessageId;
+					*/	message_ids[id]=MessageId;
 							part_ids[id]=partid;
 					
-							id++;*/
+							id++;
 						}
 					}
 					//setClickForButtons();

@@ -31,22 +31,22 @@ if(!controls)
 						var select = document.createElement('select');
 						select.id = 'selec';
 						perpage.appendChild(select);
-							var option = document.createElement('option');
+						/*	var option = document.createElement('option');
 							option.value = '5';
 							option.innerHTML = 5;
 							select.appendChild(option);
-							
+						*/	
 							var option = document.createElement('option');
 							option.value = '10';
 							option.selected="selected";
 							option.innerHTML = 10;
 							select.appendChild(option);
-							
+						/*	
 							var option = document.createElement('option');
 							option.value = '15';
 							option.innerHTML = 15;
 							select.appendChild(option);
-						
+						*/
 						var span = document.createElement('span');
 						span.innerHTML = "项每页";
 						perpage.appendChild(span);
