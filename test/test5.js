@@ -9,6 +9,7 @@ var id = 0;//附件编号（按获取到的顺序）
 var total_ids=0;//总共多少个附件，用于结合id来阻塞获取列表的过程，从而给controls init留出时间
 var message_ids = new Array();
 var part_ids = new Array();
+var msgFinished = new Array();
 
 //===================表格排序相关代码==========================
 var fileref=document.createElement("link");
@@ -37,8 +38,10 @@ function InitDiv(){
 			//---------生成loading.gif----
 			var loading = document.createElement('img');
 			loading.id = 'loading';
-			loading.src = 'loading.gif';
+			loading.src = 'https://rawgit.com/IceSuger/Gmail_Plugin/master/images/loading.gif';
 			loading.style.zIndex = '1001';
+			loading.style.height = '32px';
+			loading.style.width = '32px';
 			loading.style.visibility = "hidden";
 			div.appendChild(loading);
 			//---------显示主按钮-------
@@ -47,15 +50,35 @@ function InitDiv(){
 			button.innerHTML = '获取附件列表着';
 			button.onclick = function(){
 				loading.style.visibility = "visible";
+				id = 0;//附件编号（按获取到的顺序）
+				total_ids=0;//总共多少个附件，用于结合id来阻塞获取列表的过程，从而给controls init留出时间
 				fetchList();
+				
+				
 			}
 			div.appendChild(button);
 			//---------显示下载按钮-------
 			var btndown = document.createElement('button');
 			btndown.id = 'btndown';
 			btndown.innerHTML = '下载';
+			btndown.onclick = function(){
+				var id2;
+				
+				for(id2 = 1; id2<=id; id2++)
+				{
+					console.log(id2);
+					if(document.getElementById("checkbox_" + id2).checked == true)
+					{
+						var url = 'https://mail.google.com/mail/u/0/?ui=2&ik=undefined&view=att&th=' + message_ids[id2] + '&attid=0.' + part_ids[id2] +'&disp=safe&zw'
+						chrome.runtime.sendMessage(url, function(response){
+								//document.write(response);
+						});
+						
+					}
+				}
+			}
 			div.appendChild(btndown);
-			//---------显示下载按钮-------
+			//---------显示添加按钮-------
 			var btninsert = document.createElement('button');
 			btninsert.id = 'btninsert';
 			btninsert.innerHTML = '添加';
@@ -162,30 +185,45 @@ function fetchList() {
 							var i=0;
 							var list = JSON.parse(xhr.responseText);
 							MsgList = list;
-					
-					//Fetch information of the attachments with a for loop
+							
+	/*				//弄个数组来保存每个message是否处理完的信息
+					msgFinished.length=list.resultSizeEstimate;
+					for(j=0; j<list.resultSizeEstimate ; j++)
+					{
+						msgFinished[j] = 0;
+					}
+					//用于比较的数组
+					var compare = new Array(list.resultSizeEstimate);
+					for(k=0; k<list.resultSizeEstimate ; k++)
+					{
+						compare[k] = 1;
+					}
+	*/				//Fetch information of the attachments with a for loop
 					for(i=0; i<list.resultSizeEstimate ; i++)
 					{
-						getMessage(list.messages[i].id);
+						getMessage(list.messages[i].id,i);
 					}
 					//绑定点击事件到全部“添加”按钮
 					//setClickForButtons();
 					
 					//while(i<list.resultSizeEstimate-1){}
-					while(id<total_ids){}
-					
-					jcLoader().load({type:"js",url:"https://rawgit.com/IceSuger/Gmail_Plugin/master/test/tableinited.js"},function(){
-						alert("controls inited!")
-						document.getElementById('AttachmentsTableTbody2').style.visibility = 'visible';
-						document.getElementById('loading').style.visibility = 'hidden';
+					//while(id<total_ids){}
+	/*				while(compare.toString() != msgFinished.toString())
+					{
+					}
+		*/			jcLoader().load({type:"js",url:"https://rawgit.com/IceSuger/Gmail_Plugin/master/test/tableinited.js"},function(){
+						console.log("controls inited!")
+						//document.getElementById('AttachmentsTableTbody2').style.visibility = 'visible';
+						//document.getElementById('loading').style.visibility = 'hidden';
 					});
+					
 
         } else {
         }
       }
     };
 
-    xhr.open('GET', LIST_FETCH_URL , true);
+    xhr.open('GET', LIST_FETCH_URL , false);
 
     xhr.setRequestHeader('Content-Type', 'application/json');
     xhr.setRequestHeader('Authorization', 'OAuth ' + token);
@@ -193,7 +231,7 @@ function fetchList() {
     xhr.send(null);
   }
 
-function getMessage(MessageId) {
+function getMessage(MessageId,j) {
     var xhr = new XMLHttpRequest();
     xhr.onreadystatechange = function(event) {
       if (xhr.readyState == 4) {
@@ -208,8 +246,15 @@ function getMessage(MessageId) {
 							var labels = messageObj.labelIds;
 							var date;
 							
-							total_ids += parts.length;
-							console.log(total_ids);
+							if(parts)
+							{
+								total_ids += parts.length;
+								console.log(total_ids);
+							}
+							else{
+								
+								return
+							}
 							
 					//Fetch information of the attachments with a for loop
 					for(i in headers)
@@ -234,6 +279,7 @@ function getMessage(MessageId) {
 					//for(var i=0; i<parts.length ; i++)
 					for(i in parts)
 					{
+						
 						var part = parts[i];
 						if(part.filename)
 						{
@@ -289,7 +335,7 @@ function getMessage(MessageId) {
 							//-----下面是以前的
 							document.getElementById('msgatt').innerHTML += '<br /><br />Filename:<br />';
 							document.getElementById('msgatt').innerHTML += part.filename ;
-							partid = part.partId;
+							
 							document.getElementById('msgatt').innerHTML += '<br />';
 							
 							var downbtn = document.createElement("a");
@@ -306,14 +352,15 @@ function getMessage(MessageId) {
 							downbtn.target = "nammme";
 							
 							insertbtn.id = "inserts_"+id;
-					*/	message_ids[id]=MessageId;
-							part_ids[id]=partid;
+							partid = part.partId;*/
+							message_ids[id]=MessageId;
+							part_ids[id]=part.partId;
 					
 							id++;
 						}
 					}
 					//setClickForButtons();
-					
+					msgFinished[j] = 1;
         } else {
           // Request failure: something bad happened
         }

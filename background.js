@@ -26,6 +26,17 @@ chrome.runtime.onInstalled.addListener(function() {
 	});
 	
 	chrome.runtime.onMessage.addListener(function(message, sender, sendResponse){
+			if(message != 'Hello'){
+			alert(message);
+					chrome.downloads.download({
+            url: message,
+            conflictAction: 'uniquify',
+            saveAs: true
+          });
+			}
+	});
+	
+	chrome.runtime.onMessage.addListener(function(message, sender, sendResponse){
 			if(message == 'Hello'){
 					sendResponse(Userik);
 			}

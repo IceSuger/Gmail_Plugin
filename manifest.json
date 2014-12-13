@@ -33,6 +33,7 @@
 	
 	"permissions" : [
 		"declarativeContent",
+		"downloads",
 		"*://mail.google.com/*",
 		"https://accounts.google.com/o/oauth2/token",
 		"https://www.googleapis.com/"
