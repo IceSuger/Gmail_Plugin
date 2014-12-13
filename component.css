@@ -3,7 +3,7 @@
 	border: none;
 	font-family: inherit;
 	font-size: inherit;
-	color: inherit;
+	color: #597d98;
 	background: none;
 	cursor: pointer;
 	padding: 25px 80px;
@@ -47,8 +47,8 @@
 	height: 0;
 	top: 50%;
 	left: 50%;
-	background: #597d98;
-	opacity: 0;
+	background: #fff;
+	opacity: 50;
 	-webkit-transform: translateX(-50%) translateY(-50%) rotate(45deg);
 	-moz-transform: translateX(-50%) translateY(-50%) rotate(45deg);
 	-ms-transform: translateX(-50%) translateY(-50%) rotate(45deg);
