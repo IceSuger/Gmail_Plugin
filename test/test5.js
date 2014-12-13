@@ -44,30 +44,28 @@ function InitDiv(){
 			loading.style.width = '32px';
 			loading.style.visibility = "hidden";
 			div.appendChild(loading);
-			//---------显示主按钮-------
+		//---------显示主按钮-------
 			var button = document.createElement('button');
 			button.id = 'form';
 			button.innerHTML = '获取附件列表着';
 			button.onclick = function(){
 				loading.style.visibility = "visible";
 				id = 0;//附件编号（按获取到的顺序）
-				total_ids=0;//总共多少个附件，用于结合id来阻塞获取列表的过程，从而给controls init留出时间
 				fetchList();
-				
-				
 			}
 			div.appendChild(button);
-			//---------显示下载按钮-------
+		//---------显示下载按钮-------
 			var btndown = document.createElement('button');
 			btndown.id = 'btndown';
 			btndown.innerHTML = '下载';
 			btndown.onclick = function(){
 				var id2;
-				
-				for(id2 = 1; id2<=id; id2++)
+				console.log('id2: '+id2+' id: '+id);
+				for(id2 = 0; id2<id; id2++)
 				{
-					console.log(id2);
-					if(document.getElementById("checkbox_" + id2).checked == true)
+					var chebox = document.getElementById("checkbox_" + id2);
+					//console.log(chebox);
+					if(chebox.checked == true)
 					{
 						var url = 'https://mail.google.com/mail/u/0/?ui=2&ik=undefined&view=att&th=' + message_ids[id2] + '&attid=0.' + part_ids[id2] +'&disp=safe&zw'
 						chrome.runtime.sendMessage(url, function(response){
@@ -78,14 +76,14 @@ function InitDiv(){
 				}
 			}
 			div.appendChild(btndown);
-			//---------显示添加按钮-------
+		//---------显示添加按钮-------
 			var btninsert = document.createElement('button');
 			btninsert.id = 'btninsert';
 			btninsert.innerHTML = '添加';
 			btninsert.onclick = function(){
 				var id2;
 				
-				for(id2 = 1; id2<=id; id2++)
+				for(id2 = 0; id2<id; id2++)
 				{
 					if(document.getElementById("checkbox_" + id2).checked == true)
 					{
@@ -96,7 +94,7 @@ function InitDiv(){
 				}
 			}
 			div.appendChild(btninsert);
-			//---------显示退出按钮-----
+		//---------显示退出按钮-----
 			var btnexit = document.createElement('button');
 			btnexit.id = 'btnexit';
 			btnexit.innerHTML = 'X';
@@ -105,7 +103,7 @@ function InitDiv(){
 			}
 			div.appendChild(btnexit);
 								
-			//---------显示table------
+		//---------显示table------
 			sortingtable = document.createElement('table');
 			sortingtable.id = 'table_to_sort';
 			sortingtable.cellpadding="0";
@@ -169,9 +167,6 @@ function InitDiv(){
 				tbody.style.visibility = 'hidden';
 				}
 			
-	
-	
-
 }
 
 
@@ -400,6 +395,7 @@ function makenewdraft(passed){
 					getCurrentRawDraft(currentdraftid,function ( draftmail ){
 						currentDraftString = draftmail;
 						//2.获得当前message中相应的附件内容和信息（非raw的字符串）
+						console.log(message_ids[id_in_func]+' '+part_ids[id_in_func])
 						getAttPart(message_ids[id_in_func],part_ids[id_in_func],function( attachpart ){
 							//console.log(attachpart);
 							partBeingInserted = attachpart;
