@@ -33,8 +33,8 @@
 
 /* Button 1 */
 .btn-1 {
-	border: 3px solid #ff3300;
-	color: #ff3300;
+	border: 3px solid #0e83cd;
+	color: #0e83cd;
 }
 
 /* Button 1e */
@@ -47,7 +47,7 @@
 	height: 0;
 	top: 50%;
 	left: 50%;
-	background: #fff;
+	background: #0e83cd;
 	opacity: 0;
 	-webkit-transform: translateX(-50%) translateY(-50%) rotate(45deg);
 	-moz-transform: translateX(-50%) translateY(-50%) rotate(45deg);
