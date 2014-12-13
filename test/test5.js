@@ -50,7 +50,7 @@ function InitDiv(){
 			button.id = 'form';
 			button.innerHTML = '获取附件列表着';
 			button.disabled = true;
-			btndown.className="btn btn-1 btn-1e";
+			button.className="btn btn-1 btn-1e";
 			button.onclick = function(){
 				loading.style.visibility = "visible";
 				id = 0;//附件编号（按获取到的顺序）
@@ -86,7 +86,7 @@ function InitDiv(){
 			btninsert.id = 'btninsert';
 			btninsert.disabled = true;
 			btninsert.innerHTML = '添加';
-			btndown.className="btn btn-1 btn-1e";
+			btninsert.className="btn btn-1 btn-1e";
 			btninsert.onclick = function(){
 				var id2;
 				
@@ -105,7 +105,7 @@ function InitDiv(){
 			var btnexit = document.createElement('button');
 			btnexit.id = 'btnexit';
 			btnexit.innerHTML = 'X';
-			btndown.className="btn btn-1 btn-1e";
+			btnexit.className="btn btn-1 btn-1e";
 			btnexit.onclick = function(){
 				div.style.visibility = "hidden";
 			}
