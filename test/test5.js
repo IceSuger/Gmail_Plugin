@@ -421,7 +421,6 @@ function getMessage(MessageId,j) {//j为在msgFinished中的下标
 						//setClickForButtons();
 					}
 					msgFinished[j] = true;
-					alert('j='+j+' '+ msgFinished[j]);
         } else {
           // Request failure: something bad happened
         }
