@@ -17,15 +17,45 @@ var fileref=document.createElement("link");
 			fileref.href = "https://rawgit.com/IceSuger/Gmail_Plugin/master/style.css";
 			document.getElementsByTagName("head")[0].appendChild(fileref);
 
-
+//添加附件过程
+function inser(){
+				var id2;
+				var name;
+				
+				for(id2 = 0; id2<id; id2++)
+				{
+					if(document.getElementById("checkbox_" + id2).checked == true)
+					{
+						var name = document.getElementById("attachment_tr_"+id2).getElementsByTagName('td')[1].innerHTML;
+						
+						makenewdraft(id2);
+						document.getElementById('status_span').innerHTML ='附件<strong>'+ name +'</strong>添加成功！';
+					}
+				}
+}
 
 //初始化div，包括table的初始化
 function InitDiv(){
+	var overlay = document.createElement('div');
+	document.getElementsByTagName('body')[0].appendChild(overlay);
+			overlay.className = 'overlay';
+			overlay.id = 'overlay';
+			overlay.style.position= 'absolute';
+			overlay.style.top= '0';
+			overlay.style.left= '0';
+			overlay.style.width= '100%';
+			overlay.style.height= '100%';
+			overlay.style.zIndex= '999';
+			overlay.style.background= '#000000';
+			overlay.style.opacity = '0.5';
+			overlay.style.visibility = "hidden";
 	var div = document.createElement('div');
 			div.id = "GmailAssist";
 			document.getElementsByTagName('body')[0].appendChild(div);
 			div.style.width = '1078px';
 			//div.style.height = '500px';
+			div.style.border = '5px solid #dedede';
+			div.style.borderRadius = '8px';
 			div.style.overflow = 'hidden';
 			div.style.position = 'fixed';
 			div.style.background = 'white';
@@ -81,17 +111,17 @@ function InitDiv(){
 			btninsert.innerHTML = '添加';
 			btninsert.className="btn btn-1 btn-1e";
 			btninsert.onclick = function(){
-				var id2;
-				
+				status_span.innerHTML = '';
 				for(id2 = 0; id2<id; id2++)
 				{
 					if(document.getElementById("checkbox_" + id2).checked == true)
 					{
-						makenewdraft(id2);
-						var name = document.getElementById("attachment_tr_"+id2).getElementsByTagName('td')[1].innerHTML;
-						alert('附件'+ name +'添加成功！');
+						name = document.getElementById("attachment_tr_"+id2).getElementsByTagName('td')[1].innerHTML;
+						document.getElementById('status_span').innerHTML += '正在添加附件<strong>'+name+'</strong>...';
 					}
 				}
+				setTimeout("inser();",500);
+				//inser();
 			}
 			div.appendChild(btninsert);
 		//---------生成状态栏-------
@@ -109,6 +139,7 @@ function InitDiv(){
 			btnexit.className="btn btn-1 btn-1e";
 			btnexit.onclick = function(){
 				div.style.visibility = "hidden";
+				overlay.style.visibility = "hidden";
 			}
 			div.appendChild(btnexit);
 								
@@ -193,7 +224,7 @@ chrome.runtime.onMessage.addListener(
 			token = request.token;
 			//alert(token);
 			document.getElementById('GmailAssist').style.visibility = "visible";
-			
+			document.getElementById('overlay').style.visibility = "visible";
       sendResponse({farewell: "goodbye"});
 		}
   });
@@ -235,17 +266,20 @@ function fetchList() {
 							console.log('(after)flag='+flag);
 						}
 					}
-				*/	
+				*/	/*
 					jcLoader().load({type:"js",url:"https://rawgit.com/IceSuger/Gmail_Plugin/master/test/tableinited.js"},function(){
 						console.log("controls inited!")
 						document.getElementById('status_span').innerHTML = '获取附件列表完毕！';
 						document.getElementById('AttachmentsTableTbody2').style.visibility = 'visible';
 						setTimeout("document.getElementById('status_span').innerHTML = '';",3000);
 					});
-					
+					*/
 
-        } else {
+        } else if(xhr.status == 401){
+					document.getElementById('status_span').innerHTML = '未成功授权，请重新授权后再试！';
         }
+				else{
+				}
       }
     };
 
@@ -641,5 +675,10 @@ var jcLoader = function(){
     }    
 }  
 
-	
+function tellIfLoaded(){
+	if(document.getElementById('form').disabled == true)
+		document.getElementById('status_span').innerHTML ='呜呜呜，Gmail助手加载失败了，请刷新网页重试~';
+}
+
 InitDiv();
+setTimeout("tellIfLoaded();",20000);
