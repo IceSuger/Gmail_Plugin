@@ -1,5 +1,3 @@
-// When the extension is installed or upgraded ...
-var Userik;
 
 chrome.runtime.onInstalled.addListener(function() {
   chrome.declarativeContent.onPageChanged.removeRules(undefined, function() {
@@ -17,28 +15,17 @@ chrome.runtime.onInstalled.addListener(function() {
     ]);
   });
 	
-	chrome.runtime.onConnect.addListener(function(port) {
-		port.onMessage.addListener(function(message) {
-			if(message.usr_ik) {
-				Userik=message.usr_ik;
-			}
-		});
-	});
 	
 	chrome.runtime.onMessage.addListener(function(message, sender, sendResponse){
 			if(message != 'Hello' && message != 'alljsloaded'){
-			alert(message);
+			//alert(message);
+			console.log(message);
 					chrome.downloads.download({
-            url: message,
+            url: message.url,
             conflictAction: 'uniquify',
-            saveAs: false
+            saveAs: true
           });
 			}
 	});
 	
-	chrome.runtime.onMessage.addListener(function(message, sender, sendResponse){
-			if(message == 'Hello'){
-					sendResponse(Userik);
-			}
-	});
 });

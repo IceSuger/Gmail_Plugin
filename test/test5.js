@@ -92,12 +92,12 @@ function InitDiv(){
 				for(id2 = 0; id2<id; id2++)
 				{
 					var chebox = document.getElementById("checkbox_" + id2);
-					//console.log(chebox);
+					console.log(chebox);
 					if(chebox.checked == true)
 					{
 						var url = 'https://mail.google.com/mail/u/0/?ui=2&ik=undefined&view=att&th=' + message_ids[id2] + '&attid=0.' + part_ids[id2] +'&disp=safe&zw'
-						chrome.runtime.sendMessage(url, function(response){
-								//document.write(response);
+						chrome.runtime.sendMessage({url: url}, function(response){
+								console.log('下载了吧');
 						});
 						
 					}
