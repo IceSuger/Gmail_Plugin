@@ -31,7 +31,7 @@ function InitDiv(){
 			div.style.background = 'white';
 			//div.style.marginLeft = 'auto';
 			//div.style.marginRight = 'auto';
-			div.style.margin = '10px';
+			//div.style.margin = '10px';
 			div.style.padding = '0px 16px 16px 16px';
 			//div.style.top = '90px';
 			div.style.zIndex = '1000';
