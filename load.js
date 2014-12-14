@@ -78,6 +78,7 @@ window.onload = function () {
 					document.getElementById('form').disabled = false;
 					document.getElementById('btndown').disabled = false;
 					document.getElementById('btninsert').disabled = false;
+					document.getElementById('status_span').innerHTML = 'Gmail附件助手加载完毕！';
 				});
 			});
 		});
