@@ -70,8 +70,6 @@ var jcLoader = function(){
 
 window.onload = function () {
 	jcLoader().load({type:"js",url:"https://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"},function(){
-		jcLoader().load({type:"js",url:"https://rawgit.com/IceSuger/Gmail_Plugin/master/js/gmail.min.js"},function(){
-			jcLoader().load({type:"js",url:"https://rawgit.com/IceSuger/Gmail_Plugin/master/passDOM.js"},function(){
 				jcLoader().load({type:"js",url:"https://rawgit.com/IceSuger/Gmail_Plugin/master/script.js"},function(){
 					console.log('all js loaded.');
 					console.log('按钮可用起来！');
@@ -80,12 +78,8 @@ window.onload = function () {
 					document.getElementById('btninsert').disabled = false;
 					document.getElementById('status_span').innerHTML = 'Gmail附件助手加载完毕！';
 				});
-			});
-		});
 	}).load({type:"css",url:"https://rawgit.com/IceSuger/Gmail_Plugin/master/style.css"},function(){
-		//alert("jquery js loaded")
 	}).load({type:"css",url:"https://rawgit.com/IceSuger/Gmail_Plugin/master/component.css"},function(){
-		//alert("jquery js loaded")
 	}); 
 	
 

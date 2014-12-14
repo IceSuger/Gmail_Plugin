@@ -22,12 +22,12 @@ function inser(){
 				var id2;
 				var name;
 				
-				for(id2 = 0; id2<id; id2++)
+				for(id2 = idnow; id2<id; id2++)
 				{
 					if(document.getElementById("checkbox_" + id2).checked == true)
 					{
 						var name = document.getElementById("attachment_tr_"+id2).getElementsByTagName('td')[1].innerHTML;
-						
+						document.getElementById('status_span').innerHTML += '正在添加附件<strong>'+name+'</strong>...';
 						makenewdraft(id2);
 						document.getElementById('status_span').innerHTML ='附件<strong>'+ name +'</strong>添加成功！';
 					}
@@ -116,10 +116,12 @@ function InitDiv(){
 				status_span.innerHTML = '';
 				for(id2 = 0; id2<id; id2++)
 				{
+					idnow = id2;
 					if(document.getElementById("checkbox_" + id2).checked == true)
 					{
-						name = document.getElementById("attachment_tr_"+id2).getElementsByTagName('td')[1].innerHTML;
+						var name = document.getElementById("attachment_tr_"+id2).getElementsByTagName('td')[1].innerHTML;
 						document.getElementById('status_span').innerHTML += '正在添加附件<strong>'+name+'</strong>...';
+						break;
 					}
 				}
 				setTimeout("inser();",500);

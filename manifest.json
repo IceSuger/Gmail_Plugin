@@ -6,7 +6,7 @@
 		
   "page_action": {  
 		"default_icon": "icon19.png" ,
-		"default_title" : "WE ARE IN GMAIL!",
+		"default_title" : "Gmail邮箱附件处理助手",
 		"default_popup": "popup.html"
 	},
 	
