@@ -25,13 +25,16 @@ chrome.runtime.onInstalled.addListener(function() {
 		});
 	});
 	
+	console.log('laert');
 	chrome.runtime.onMessage.addListener(function(message, sender, sendResponse){
-			if(message != 'Hello' && message != 'alljsloaded'){
-			alert(message);
+			//if(message != 'Hello' && message != 'alljsloaded'){
+			console.log("DOWN !!!!!! is:"+message);
+			if(message.url){
+				console.log("DOWN URL is:"+message.url);
 					chrome.downloads.download({
-            url: message,
+            url: message.url,
             conflictAction: 'uniquify',
-            saveAs: false
+            saveAs: true
           });
 			}
 	});

@@ -95,9 +95,11 @@ function InitDiv(){
 					//console.log(chebox);
 					if(chebox.checked == true)
 					{
-						var url = 'https://mail.google.com/mail/u/0/?ui=2&ik=undefined&view=att&th=' + message_ids[id2] + '&attid=0.' + part_ids[id2] +'&disp=safe&zw'
-						chrome.runtime.sendMessage(url, function(response){
+						var url = 'https://mail.google.com/mail/u/0/?ui=2&ik=undefined&view=att&th=' + message_ids[id2] + '&attid=0.' + part_ids[id2] +'&disp=safe&zw';
+						chrome.runtime.sendMessage({url : url}, function(response){
 								//document.write(response);
+								console.log({url : url});
+								console.log('从background返回了');
 						});
 						
 					}
@@ -295,10 +297,10 @@ function initCtrls(){
 	var flag = true;
 						for(i in msgFinished)
 						{
-							console.log(msgFinished+' i='+i);
-							console.log('(before)flag='+flag);
+							//console.log(msgFinished+' i='+i);
+							//console.log('(before)flag='+flag);
 							flag = msgFinished[i]&&flag;
-							console.log('(after)flag='+flag);
+							//console.log('(after)flag='+flag);
 						}
 						if(flag==false)
 						{
@@ -310,7 +312,7 @@ function initCtrls(){
 						console.log("controls inited!")
 						document.getElementById('status_span').innerHTML = '获取附件列表完毕！';
 						
-						document.getElementById('AttachmentsTableTbody2').style.visibility = 'visible';
+						//document.getElementById('AttachmentsTableTbody2').style.visibility = 'visible';
 						
 						setTimeout("document.getElementById('status_span').innerHTML = '';",3000);
 					});
