@@ -1,6 +1,0 @@
-1.下载文件的HTTP响应，请求。
-
-2.抓包看正常上传小文件的HTTP过程。
-
-3.js实现urlsafebase64 decode。
-

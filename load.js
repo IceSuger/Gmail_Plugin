@@ -88,15 +88,5 @@ window.onload = function () {
 		//alert("jquery js loaded")
 	}); 
 	
-	
-	var port = chrome.runtime.connect({name: "knockknock"});
-	window.addEventListener("message", function(event) {
-	
-    if(event.data.usrik) {
-			console.log('stdrykjnfsbsbguirbigiugrigfnskj');
-      port.postMessage({ usr_ik : event.data.usrik });
-    }
-  }, false);
-
 
 }
