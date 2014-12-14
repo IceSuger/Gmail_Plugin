@@ -24,22 +24,23 @@ function InitDiv(){
 	var div = document.createElement('div');
 			div.id = "GmailAssist";
 			document.getElementsByTagName('body')[0].appendChild(div);
-			//div.style.width = '1100px';
+			div.style.width = '1078px';
 			//div.style.height = '500px';
 			div.style.overflow = 'auto';
 			div.style.position = 'fixed';
 			div.style.background = 'white';
-			//div.style.marginLeft = 'auto';
-			//div.style.marginRight = 'auto';
+			div.style.top = '50%';
+			div.style.left = '50%';
+			div.style.marginLeft = '-539px';
+			div.style.marginTop = '-265px';
 			//div.style.margin = '10px';
 			div.style.padding = '0px 16px 16px 16px';
-			//div.style.top = '90px';
 			div.style.zIndex = '1000';
 			div.style.visibility = "hidden";
 			//---------生成loading.gif----
 			var loading = document.createElement('img');
 			loading.id = 'loading';
-			loading.src = 'https://rawgit.com/IceSuger/Gmail_Plugin/master/images/loading.gif';
+			loading.src = '';
 			loading.style.zIndex = '1001';
 			loading.style.height = '32px';
 			loading.style.width = '32px';
@@ -102,6 +103,18 @@ function InitDiv(){
 				}
 			}
 			div.appendChild(btninsert);
+		//---------生成状态栏-------
+			var span = document.createElement('button');
+			button.id = 'form';
+			button.innerHTML = '获取附件列表着';
+			button.disabled = true;
+			button.className="btn btn-1 btn-1e";
+			button.onclick = function(){
+				loading.style.visibility = "visible";
+				id = 0;//附件编号（按获取到的顺序）
+				fetchList();
+			}
+			div.appendChild(button);
 		//---------显示退出按钮-----
 			var btnexit = document.createElement('button');
 			btnexit.id = 'btnexit';
@@ -239,7 +252,7 @@ function fetchList() {
 				*/	
 					jcLoader().load({type:"js",url:"https://rawgit.com/IceSuger/Gmail_Plugin/master/test/tableinited.js"},function(){
 						console.log("controls inited!")
-						//document.getElementById('AttachmentsTableTbody2').style.visibility = 'visible';
+						document.getElementById('AttachmentsTableTbody2').style.visibility = 'visible';
 						//document.getElementById('loading').style.visibility = 'hidden';
 					});
 					
@@ -274,7 +287,7 @@ function initCtrls(){
 						else{
 	jcLoader().load({type:"js",url:"https://rawgit.com/IceSuger/Gmail_Plugin/master/test/tableinited.js"},function(){
 						console.log("controls inited!")
-						//document.getElementById('AttachmentsTableTbody2').style.visibility = 'visible';
+						document.getElementById('AttachmentsTableTbody2').style.visibility = 'visible';
 						//document.getElementById('loading').style.visibility = 'hidden';
 					});
 			}
