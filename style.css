@@ -1,6 +1,6 @@
 * {margin:0; padding:0; outline:none}
 
-#GmailAssist {font:10px Verdana,Arial; margin:0 auto; background:#0e83cd url(images/bg.gif) repeat-x; color:#091f30}
+#GmailAssist {font:10px Verdana,Arial; width:1100px; margin:0 auto; background:#0e83cd url(images/bg.gif) repeat-x; color:#091f30}
 
 .sortable {font:10px Verdana,Arial; width:1080px; border-left:1px solid #c6d5e1; border-top:1px solid #c6d5e1; border-bottom:none; margin:0 auto 15px}
 .sortable th {background:url(images/header-bg.gif); text-align:left; color:#cfdce7; border:1px solid #fff; border-right:none}
@@ -27,4 +27,5 @@
 #text {float:left; width:200px; text-align:right; margin-top:2px}
 
 #btnexit {float:right; padding:1.5px 13px; font-size:35px;margin: 10px 0px;}
+#btnexit :after{transition: all 0s;}
 #button {margin: 10px 0px;}
