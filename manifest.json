@@ -1,11 +1,18 @@
 ﻿{
     "manifest_version": 2,
     "name": "Gmail邮箱附件处理助手",
-    "version": "1.0",
-    "description": "最帅的人",
+    "version": "1.1",
+    "description": "查询邮箱内全部附件，支持批量下载，支持批量添加至最新的草稿。",
+		"icons": {
+        "48": "images/icon48.png",
+        "128": "images/icon128.png"
+    },
 		
   "page_action": {  
-		"default_icon": "icon19.png" ,
+		 "default_icon": {
+            "19": "images/icon19.png",
+            "38": "images/icon38.png"
+        },
 		"default_title" : "Gmail邮箱附件处理助手",
 		"default_popup": "popup.html"
 	},
@@ -18,6 +25,7 @@
 	"content_scripts":  [
 		{
 			"js": ["oauth2/oauth2_inject.js"],
+			"css": ["css/style.css","component.css"],
 			"matches": [ "http://www.google.com/robots.txt*"],
 			"run_at": "document_start"
 		},
