@@ -77,6 +77,7 @@ window.onload = function () {
 					document.getElementById('btndown').disabled = false;
 					document.getElementById('btninsert').disabled = false;
 					document.getElementById('status_span').innerHTML = 'Gmail附件助手加载完毕！';
+					document.getElementById('load1').style.display = 'none';
 				});
 	}).load({type:"css",url:"https://rawgit.com/IceSuger/Gmail_Plugin/master/style.css"},function(){
 	//}).load({type:"css",url:"https://rawgit.com/IceSuger/Gmail_Plugin/master/component.css"},function(){

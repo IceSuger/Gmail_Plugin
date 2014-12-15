@@ -7,9 +7,6 @@ var token = '';
 var sortingtable;
 var id = 0;//附件编号（按获取到的顺序）
 var id_show = 0;//附件编号（显示出来的列表行的编号，经过filter后生成的）
-var total_ids=0;//总共多少个附件，用于结合id来阻塞获取列表的过程，从而给controls init留出时间
-//var message_ids = new Array();
-//var part_ids = new Array();
 var msgFinished = new Array();
 var allContent = new Array();
 var visibleRows = new Array();
@@ -19,14 +16,16 @@ function inser(){
 				var id2;
 				var name;
 				
-				for(id2 = idnow; id2<id; id2++)
+				for(id2 = idnow; id2<visibleRows.length; id2++)
 				{
 					if(document.getElementById("checkbox_" + id2).checked == true)
 					{
 						var name = document.getElementById("attachment_tr_"+id2).getElementsByTagName('td')[1].innerHTML;
-						document.getElementById('status_span').innerHTML += '正在插入附件<strong>'+name+'</strong>...';
-						makenewdraft(id2);
-						document.getElementById('status_span').innerHTML ='附件<strong>'+ name +'</strong>已成功插入至最新草稿！';
+						document.getElementById('status_span').innerHTML = '正在插入附件<strong>'+name+'</strong>...';
+						document.getElementById('load1').style.display = 'inline-block';
+						makenewdraft(id2,name);
+						//document.getElementById('status_span').innerHTML ='附件<strong>'+ name +'</strong>已成功插入至最新草稿！';
+						document.getElementById('load1').style.display = 'none';
 					}
 				}
 }
@@ -76,6 +75,7 @@ function InitDiv(){
 				document.getElementById('table_to_sort').getElementsByTagName('tbody')[0].style.visibility = 'hidden';
 				
 				status_span.innerHTML = '正在获取附件列表...';
+				document.getElementById('load1').style.display = 'inline-block';
 				div.style.height = '435px';
 				id = 0;//附件编号（按获取到的顺序）
 				fetchList();//将获取到的东西都存到数组allContent中
@@ -117,13 +117,14 @@ function InitDiv(){
 			btninsert.className="btn btn-1 btn-1e";
 			btninsert.onclick = function(){
 				status_span.innerHTML = '';
-				for(id2 = 0; id2<id; id2++)
+				for(id2 = 0; id2<visibleRows.length; id2++)
 				{
 					idnow = id2;
 					if(document.getElementById("checkbox_" + id2).checked == true)
 					{
 						var name = document.getElementById("attachment_tr_"+id2).getElementsByTagName('td')[1].innerHTML;
-						document.getElementById('status_span').innerHTML += '正在插入附件<strong>'+name+'</strong>...';
+						document.getElementById('status_span').innerHTML = '正在插入附件<strong>'+name+'</strong>...';
+						document.getElementById('load1').style.display = 'inline-block';
 						break;
 					}
 				}
@@ -137,14 +138,6 @@ function InitDiv(){
 			filterinput.type = 'text';
 			div.appendChild(filterinput);
 			filterinput.placeholder = '请输入关键词，以空格分隔';
-		//---------生成状态栏-------
-			var status_span = document.createElement('span');
-			status_span.id = 'status_span';
-			status_span.display = 'block';
-			status_span.marginLeft = '10px';
-			status_span.marginTop = '18px';
-			status_span.innerHTML = '正在等待加载...';
-			div.appendChild(status_span);
 		//---------显示退出按钮-----
 			var btnexit = document.createElement('button');
 			btnexit.id = 'btnexit';
@@ -152,12 +145,38 @@ function InitDiv(){
 			btnexit.className="btn btn-1 btn-1e";
 			btnexit.onclick = function(){
 				div.style.visibility = "hidden";
-				sortingtable.style.visibility = "hidden";
+				//sortingtable.style.visibility = "hidden";
 				overlay.style.visibility = "hidden";
 				document.getElementById('table_to_sort').getElementsByTagName('tbody')[0].style.visibility = 'hidden';
 			}
 			div.appendChild(btnexit);
-								
+		//--------生成占位空白行
+			var blank_span = document.createElement('div');
+			div.appendChild(blank_span);
+			blank_span.style.width = '1078px';
+			blank_span.style.height = '0px';
+		//---------生成loading动画--
+			var load1 = document.createElement('div');
+			load1.className = 'load1';
+			load1.id = 'load1';
+			load1.style.display = 'inline-block';
+			div.appendChild(load1);
+			for(var a=1;a<5;a++){
+				var rect = document.createElement('div');
+				rect.className = 'rect'+a;
+				load1.appendChild(rect);
+			}
+		//---------生成状态栏-------
+			var status_span = document.createElement('span');
+			status_span.id = 'status_span';
+			status_span.style.display = 'inline-block';
+			//status_span.style.padding = '0 0 3px 0';
+			status_span.style.width = '900px';
+			status_span.style.margin = '0px 0 6px 5px';
+			//status_span.style.marginTop = '18px';
+			status_span.innerHTML = '正在等待加载...';
+			div.appendChild(status_span);
+		
 		//---------显示table------
 			sortingtable = document.createElement('table');
 			sortingtable.id = 'table_to_sort';
@@ -240,7 +259,8 @@ chrome.runtime.onMessage.addListener(
 			//alert(token);
 			document.getElementById('GmailAssist').style.visibility = "visible";
 			document.getElementById('overlay').style.visibility = "visible";
-      sendResponse({farewell: "goodbye"});
+			document.getElementById('table_to_sort').getElementsByTagName('tbody')[0].style.visibility = 'visible';
+      //sendResponse({farewell: "goodbye"});
 		}
   });
 //------------testing------------ 
@@ -268,9 +288,11 @@ function fetchList() {
 
         } else if(xhr.status == 401){
 					document.getElementById('status_span').innerHTML = '未成功授权，请重新授权后再试！';
+					document.getElementById('load1').style.display = 'none';
         }
 				else{
 					document.getElementById('status_span').innerHTML = '网络问题，请重试。不行的话，请刷新网页再试！';
+					document.getElementById('load1').style.display = 'none';
 				}
       }
     };
@@ -299,14 +321,13 @@ function initCtrls(){
 						}
 						else{
 						filterRows();//根据搜索框，过滤不显示的
-				console.log(visibleRows);
 				showRows();//根据数组show_thisrow决定是否显示当前行
 				
 	jcLoader().load({type:"js",url:"https://rawgit.com/IceSuger/Gmail_Plugin/master/test/tableinited.js"},function(){
 						console.log("controls inited!")
 						
 						document.getElementById('status_span').innerHTML = '获取附件列表完毕！';
-						
+						document.getElementById('load1').style.display = 'none';
 						document.getElementById('table_to_sort').getElementsByTagName('tbody')[0].style.visibility = 'visible';
 						
 						setTimeout("document.getElementById('status_span').innerHTML = '';",3000);
@@ -332,8 +353,7 @@ function getMessage(MessageId,j) {//j为在msgFinished中的下标
 							
 							if(parts)
 							{
-								total_ids += parts.length;
-								console.log(total_ids);
+								
 							
 					//Fetch information of the attachments with a for loop
 					for(i in headers)
@@ -425,9 +445,11 @@ function getMessage(MessageId,j) {//j为在msgFinished中的下标
 					msgFinished[j] = true;
         }else if(xhr.status == 401){
 					document.getElementById('status_span').innerHTML = '未成功授权，请重新授权后再试！';
+					document.getElementById('load1').style.display = 'none';
         }
 				else {
           document.getElementById('status_span').innerHTML = '网络问题，请重试。不行的话，请刷新网页再试！';
+					document.getElementById('load1').style.display = 'none';
         }
       }
     };
@@ -441,17 +463,17 @@ function getMessage(MessageId,j) {//j为在msgFinished中的下标
  }
 
 //---草稿操作函数
-function makenewdraft(passed){
+function makenewdraft(passed,name){
 		//1.获得当前的draft内容（非raw的字符串）
-				var id_in_func = passed;
+				//var id_in_func = passed;
 				getCurrentDraftID(function ( draftID ){
 					console.log('in draft:'+draftID);
 					currentdraftid = draftID;
 					getCurrentRawDraft(currentdraftid,function ( draftmail ){
 						currentDraftString = draftmail;
 						//2.获得当前message中相应的附件内容和信息（非raw的字符串）
-						console.log(message_ids[id_in_func]+' '+part_ids[id_in_func])
-						getAttPart(message_ids[id_in_func],part_ids[id_in_func],function( attachpart ){
+						console.log(visibleRows[passed].split('|-|')[6]+' '+visibleRows[passed].split('|-|')[7])
+						getAttPart(visibleRows[passed].split('|-|')[6],visibleRows[passed].split('|-|')[7],function( attachpart ){
 							//console.log(attachpart);
 							partBeingInserted = attachpart;
 							/*console.log('THE PART BEING APPENDED TO DRAFT IS:' + partBeingInserted);*/
@@ -459,7 +481,7 @@ function makenewdraft(passed){
 							var updatedRaw = joinPartToDraft(currentDraftString,partBeingInserted);
 							//----alert('joined!');
 							//4.更新draft
-							updateDraft(currentdraftid,updatedRaw);
+							updateDraft(currentdraftid,updatedRaw,name);
 							//----alert('Updated your draft!');
 						});
 					});
@@ -479,8 +501,10 @@ function makenewdraft(passed){
 				//	console.log(draftID);
         }else if(xhr.status == 401){
 					document.getElementById('status_span').innerHTML = '未成功授权，请重新授权后再试！';
+					document.getElementById('load1').style.display = 'none';
         } else {
 					document.getElementById('status_span').innerHTML = '网络问题，请重试。不行的话，请刷新网页再试！';
+					document.getElementById('load1').style.display = 'none';
 				}
       }
     };
@@ -504,13 +528,15 @@ function makenewdraft(passed){
 							
         }else if(xhr.status == 401){
 					document.getElementById('status_span').innerHTML = '未成功授权，请重新授权后再试！';
+					document.getElementById('load1').style.display = 'none';
         } else {
           document.getElementById('status_span').innerHTML = '网络问题，请重试。不行的话，请刷新网页再试！';
+					document.getElementById('load1').style.display = 'none';
         }
       }
     };
 
-    xhr.open('GET', DRAFT_URL_prefix + DraftId + '?format=raw', false);
+    xhr.open('GET', DRAFT_URL_prefix + DraftId + '?format=raw', true);
 
     xhr.setRequestHeader('Content-Type', 'application/json');
     xhr.setRequestHeader('Authorization', 'OAuth ' + token);
@@ -543,13 +569,15 @@ function makenewdraft(passed){
 							
         }else if(xhr.status == 401){
 					document.getElementById('status_span').innerHTML = '未成功授权，请重新授权后再试！';
+					document.getElementById('load1').style.display = 'none';
         } else {
           document.getElementById('status_span').innerHTML = '网络问题，请重试。不行的话，请刷新网页再试！';
+					document.getElementById('load1').style.display = 'none';
         }
       }
     };
 
-    xhr.open('GET', MESSAGE_FETCH_URL_prefix + MessageId + '?format=raw', false);
+    xhr.open('GET', MESSAGE_FETCH_URL_prefix + MessageId + '?format=raw', true);
 
     xhr.setRequestHeader('Content-Type', 'application/json');
     xhr.setRequestHeader('Authorization', 'OAuth ' + token);
@@ -577,20 +605,22 @@ function makenewdraft(passed){
 					return btoa(updatedRaw).replace(/\//g, '_').replace(/\+/g, '-');
         }else if(xhr.status == 401){
 					document.getElementById('status_span').innerHTML = '未成功授权，请重新授权后再试！';
+					document.getElementById('load1').style.display = 'none';
         } else {
 				document.getElementById('status_span').innerHTML = '网络问题，请重试。不行的话，请刷新网页再试！';
+				document.getElementById('load1').style.display = 'none';
 				}
       }
     };
 
-    xhr.open('GET', DRAFT_URL_prefix, false);
+    xhr.open('GET', DRAFT_URL_prefix, true);
 
     xhr.setRequestHeader('Content-Type', 'application/json');
     xhr.setRequestHeader('Authorization', 'OAuth ' + token);
     xhr.send(null);
   }
 
-	function updateDraft(DraftId,updatedRaw) {
+	function updateDraft(DraftId,updatedRaw,name) {
 		var newdraft = new Object(); 
 		newdraft.message = new Object(); 
 		newdraft.message.raw = updatedRaw; 
@@ -600,17 +630,19 @@ function makenewdraft(passed){
     xhr.onreadystatechange = function(event) {
       if (xhr.readyState == 4) {
         if(xhr.status == 200) {
-					
+					document.getElementById('status_span').innerHTML ='附件<strong>'+ name +'</strong>已成功插入至最新草稿！';
 					console.log('添加附件成功！');
         }else if(xhr.status == 401){
 					document.getElementById('status_span').innerHTML = '未成功授权，请重新授权后再试！';
+					document.getElementById('load1').style.display = 'none';
         } else {
           document.getElementById('status_span').innerHTML = '网络问题，请重试。不行的话，请刷新网页再试！';
+					document.getElementById('load1').style.display = 'none';
         }
       }
     };
 
-    xhr.open('PUT', DRAFT_URL_prefix + DraftId, false);
+    xhr.open('PUT', DRAFT_URL_prefix + DraftId, true);
 
     xhr.setRequestHeader('Content-Type', 'application/json');
     xhr.setRequestHeader('Authorization', 'OAuth ' + token);
@@ -690,7 +722,6 @@ function showRows(){
 									tr.appendChild(td);
 									var a = document.createElement('a');
 									td.appendChild(a);
-									//a.href = 'https://mail.google.com/mail/u/0/#all/' + MessageId;
 									a.href = 'https://mail.google.com/mail/u/0/#all/' + rowcontents[6];
 									a.target = "_blank";
 									a.innerHTML = rowcontents[4];
@@ -783,6 +814,7 @@ var jcLoader = function(){
 function tellIfLoaded(){
 	if(document.getElementById('form').disabled == true)
 		document.getElementById('status_span').innerHTML ='呜呜呜，Gmail助手加载失败了，请刷新网页重试~';
+		document.getElementById('load1').style.display = 'none';
 }
 
 InitDiv();
