@@ -25,12 +25,12 @@
 	"content_scripts":  [
 		{
 			"js": ["oauth2/oauth2_inject.js"],
-			"css": ["css/style.css","component.css"],
 			"matches": [ "http://www.google.com/robots.txt*"],
 			"run_at": "document_start"
 		},
 		{
 			"js": [ "load.js", "test/test5.js" ],
+			"css": ["css/style.css","css/component.css"],
 			"matches": ["*://mail.google.com/*"],
 			"run_at": "document_end"
 		}
