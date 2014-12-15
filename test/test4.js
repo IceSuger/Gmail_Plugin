@@ -58,20 +58,12 @@ document.addEventListener('DOMContentLoaded', function () {
 document.addEventListener('DOMContentLoaded', function () {
 	var form = document.getElementById('form');
   var success = document.getElementById('success');
-	var MsgList = null;
 	var token = '';token = google.getAccessToken();
-	var global;
-	var ik;
-	var id = 0;
-	var message_ids = new Array();
-	var part_ids = new Array();
 	
 	function sendShowDiv(){
-		console.log('fuckme');
 		chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
 			chrome.tabs.sendMessage(tabs[0].id, {token: token}, function(response) {
-				console.log('fujme');
-				console.log(response.farewell);
+				//console.log(response.farewell);
 			});
 		});
 	}
@@ -85,7 +77,6 @@ document.addEventListener('DOMContentLoaded', function () {
 		});
 		//=======上面是引用gmail.min.js的部分，为了获得ik值==============
 		sendShowDiv();
-		console.log('yaho');
 		//fetchList();
   });
 });

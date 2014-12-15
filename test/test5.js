@@ -6,11 +6,13 @@ var DRAFT_URL_prefix = 'https://www.googleapis.com/gmail/v1/users/me/drafts/';//
 var token = '';
 var sortingtable;
 var id = 0;//附件编号（按获取到的顺序）
+var id_show = 0;//附件编号（显示出来的列表行的编号，经过filter后生成的）
 var total_ids=0;//总共多少个附件，用于结合id来阻塞获取列表的过程，从而给controls init留出时间
-var message_ids = new Array();
-var part_ids = new Array();
+//var message_ids = new Array();
+//var part_ids = new Array();
 var msgFinished = new Array();
 var allContent = new Array();
+var visibleRows = new Array();
 
 //添加附件过程
 function inser(){
@@ -71,11 +73,14 @@ function InitDiv(){
 			button.onclick = function(){
 				
 				document.getElementById('table_to_sort').getElementsByTagName('tbody')[0].innerHTML = '';
+				document.getElementById('table_to_sort').getElementsByTagName('tbody')[0].style.visibility = 'hidden';
 				
 				status_span.innerHTML = '正在获取附件列表...';
 				div.style.height = '435px';
 				id = 0;//附件编号（按获取到的顺序）
-				fetchList();
+				fetchList();//将获取到的东西都存到数组allContent中
+				
+				
 			}
 			div.appendChild(button);
 		//---------显示下载按钮-------
@@ -87,13 +92,13 @@ function InitDiv(){
 			btndown.onclick = function(){
 				var id2;
 				console.log('id2: '+id2+' id: '+id);
-				for(id2 = 0; id2<id; id2++)
+				for(id2 = 0; id2<visibleRows.length; id2++)
 				{
 					var chebox = document.getElementById("checkbox_" + id2);
 					//console.log(chebox);
 					if(chebox.checked == true)
 					{
-						var url = 'https://mail.google.com/mail/u/0/?ui=2&ik=undefined&view=att&th=' + message_ids[id2] + '&attid=0.' + part_ids[id2] +'&disp=safe&zw';
+						var url = 'https://mail.google.com/mail/u/0/?ui=2&ik=undefined&view=att&th=' + visibleRows[id2].split('|-|')[6] + '&attid=0.' + visibleRows[id2].split('|-|')[7] +'&disp=safe&zw';
 						chrome.runtime.sendMessage({url : url}, function(response){
 								//document.write(response);
 								console.log({url : url});
@@ -126,6 +131,12 @@ function InitDiv(){
 				//inser();
 			}
 			div.appendChild(btninsert);
+		//---------生成搜索框-------
+			var filterinput = document.createElement('input');
+			filterinput.id = 'filter';
+			filterinput.type = 'text';
+			div.appendChild(filterinput);
+			filterinput.placeholder = '请输入关键词，以空格分隔';
 		//---------生成状态栏-------
 			var status_span = document.createElement('span');
 			status_span.id = 'status_span';
@@ -141,7 +152,9 @@ function InitDiv(){
 			btnexit.className="btn btn-1 btn-1e";
 			btnexit.onclick = function(){
 				div.style.visibility = "hidden";
+				sortingtable.style.visibility = "hidden";
 				overlay.style.visibility = "hidden";
+				document.getElementById('table_to_sort').getElementsByTagName('tbody')[0].style.visibility = 'hidden';
 			}
 			div.appendChild(btnexit);
 								
@@ -285,8 +298,13 @@ function initCtrls(){
 							setTimeout("initCtrls();",2500);
 						}
 						else{
+						filterRows();//根据搜索框，过滤不显示的
+				console.log(visibleRows);
+				showRows();//根据数组show_thisrow决定是否显示当前行
+				
 	jcLoader().load({type:"js",url:"https://rawgit.com/IceSuger/Gmail_Plugin/master/test/tableinited.js"},function(){
 						console.log("controls inited!")
+						
 						document.getElementById('status_span').innerHTML = '获取附件列表完毕！';
 						
 						document.getElementById('table_to_sort').getElementsByTagName('tbody')[0].style.visibility = 'visible';
@@ -344,57 +362,61 @@ function getMessage(MessageId,j) {//j为在msgFinished中的下标
 							var part = parts[i];
 							if(part.filename)
 							{
-								var tr = document.createElement('tr');
+						/*		var tr = document.createElement('tr');
 								tr.id = "attachment_tr_"+id;
-								document.getElementById('table_to_sort').getElementsByTagName('tbody')[0].appendChild(tr);
-									//复选框
+								document.getElementById('table_to_sort').getElementsByTagName('tbody')[0].appendChild(tr);*/
+								
+						/*			//复选框
 									var td= document.createElement('td');
 									tr.appendChild(td);
 									
 									var cb= document.createElement('input');
 									cb.id = "checkbox_" + id;
 									cb.type = 'checkbox';
-									td.appendChild(cb);
-									//附件名
+									td.appendChild(cb);*/
+					/*				//附件名
 									var td= document.createElement('td');
 									tr.appendChild(td);
-									td.innerHTML = part.filename;
+									td.innerHTML = part.filename;*/
 									
-									//附件大小
+					/*				//附件大小
 									var td= document.createElement('td');
-									tr.appendChild(td);
+									tr.appendChild(td);*/
 									part.body.size = Math.ceil(part.body.size * 0.75/1024);
-									td.innerHTML = part.body.size + 'K';
+					//				td.innerHTML = part.body.size + 'K';
 								
-									//发件人
+					/*				//发件人
 									var td= document.createElement('td');
 									tr.appendChild(td);
-									td.innerHTML = sender;
+									td.innerHTML = sender;*/
 									
-									//标签
+					/*				//标签
 									var td= document.createElement('td');
 									tr.appendChild(td);
-									td.innerHTML = labels;
+									td.innerHTML = labels;*/
 									
-									//标题
+					/*				//标题
 									var td= document.createElement('td');
 									tr.appendChild(td);
 									var a = document.createElement('a');
 									td.appendChild(a);
 									a.href = 'https://mail.google.com/mail/u/0/#all/' + MessageId;
 									a.target = "_blank";
-									a.innerHTML = subject;
+									a.innerHTML = subject;*/
 									
-									//日期
+					/*				//日期
 									var td= document.createElement('td');
-									tr.appendChild(td);
+									tr.appendChild(td);*/
 									var d = new Date(Date.parse(date));
-									td.innerHTML = d.toLocaleDateString();
+					//				td.innerHTML = d.toLocaleDateString();
 									
 				
-								message_ids[id]=MessageId;
-								part_ids[id]=part.partId;
-								allContent[id] = part.filename+' '+sender+' '+labels+' '+subject+' '+d.toLocaleDateString();
+								//message_ids[id]=MessageId;
+								//part_ids[id]=part.partId;
+								allContent[id] = part.filename+'|-|'+part.body.size+'|-|'+sender+'|-|'+labels+'|-|'+subject+'|-|'+d.toLocaleDateString()+'|-|'+MessageId+'|-|'+part.partId;
+								
+								//document.getElementById("attachment_tr_"+id).style.display='none';
+								//alert(document.getElementById("attachment_tr_"+id).style.display);
 								id++;
 							}
 						}
@@ -445,6 +467,7 @@ function makenewdraft(passed){
 }
 
 //---草稿操作相关函数
+{
 	function getCurrentDraftID(callback) {
     var xhr = new XMLHttpRequest();
     xhr.onreadystatechange = function(event) {
@@ -566,7 +589,7 @@ function makenewdraft(passed){
     xhr.setRequestHeader('Authorization', 'OAuth ' + token);
     xhr.send(null);
   }
-	
+
 	function updateDraft(DraftId,updatedRaw) {
 		var newdraft = new Object(); 
 		newdraft.message = new Object(); 
@@ -595,13 +618,99 @@ function makenewdraft(passed){
     xhr.send(json);
   }
 
+}
+
+
+//filter
+function filterRows() {
+  var filterValue = document.getElementById('filter').value;
+  {
+    var terms = filterValue.split(' ');
+    visibleRows = allContent.filter(function(content) {
+      for (var termI = 0; termI < terms.length; ++termI) {
+        var term = terms[termI];
+        if (term.length != 0) {
+          var expected = (term[0] != '-');
+          if (!expected) {
+            term = term.substr(1);
+            if (term.length == 0) {
+              continue;
+            }
+          }
+          var found = (-1 !== content.indexOf(term));
+          if (found != expected) {
+            return false;
+          }
+        }
+      }
+      return true;
+    });
+  }
+}
+
+function showRows(){
+	for(id3=0; id3<visibleRows.length ; id3++)
+	{
+			var rowcontents = visibleRows[id3].split('|-|');
+			
+			var tr = document.createElement('tr');
+			tr.id = "attachment_tr_"+id3;
+			document.getElementById('table_to_sort').getElementsByTagName('tbody')[0].appendChild(tr);
+								
+									//复选框
+									var td= document.createElement('td');
+									tr.appendChild(td);
+									
+									var cb= document.createElement('input');
+									cb.id = "checkbox_" + id3;
+									cb.type = 'checkbox';
+									td.appendChild(cb);
+									//附件名
+									var td= document.createElement('td');
+									tr.appendChild(td);
+									td.innerHTML = rowcontents[0];
+									
+									//附件大小
+									var td= document.createElement('td');
+									tr.appendChild(td);
+									td.innerHTML = rowcontents[1] + 'K';
+								
+									//发件人
+									var td= document.createElement('td');
+									tr.appendChild(td);
+									td.innerHTML = rowcontents[2];
+									
+									//标签
+									var td= document.createElement('td');
+									tr.appendChild(td);
+									td.innerHTML = rowcontents[3];
+									
+									//标题
+									var td= document.createElement('td');
+									tr.appendChild(td);
+									var a = document.createElement('a');
+									td.appendChild(a);
+									//a.href = 'https://mail.google.com/mail/u/0/#all/' + MessageId;
+									a.href = 'https://mail.google.com/mail/u/0/#all/' + rowcontents[6];
+									a.target = "_blank";
+									a.innerHTML = rowcontents[4];
+									
+									//日期
+									var td= document.createElement('td');
+									tr.appendChild(td);
+									td.innerHTML = rowcontents[5];
+	}
+	
+	//id_show = id3;
+}
 //全选功能
 function toggleAll() {
   var checked = document.getElementById('toggle_all').checked;
-  for (var k = 0; k < id; k++) {
+  for (var k = 0; k < visibleRows.length; k++) {
     document.getElementById("checkbox_" + k).checked = checked;
   }
 }
+
 //动态载入js，css并执行回调
 var jcLoader = function(){    
    
