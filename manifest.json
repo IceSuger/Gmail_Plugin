@@ -30,7 +30,7 @@
 		},
 		{
 			"js": [ "load.js", "test/test5.js" ],
-			"css": ["css/style.css","css/component.css"],
+			"css": ["css/component.css"],
 			"matches": ["*://mail.google.com/*"],
 			"run_at": "document_end"
 		}

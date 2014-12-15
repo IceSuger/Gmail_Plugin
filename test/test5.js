@@ -11,12 +11,6 @@ var message_ids = new Array();
 var part_ids = new Array();
 var msgFinished = new Array();
 
-//===================表格排序相关代码==========================
-var fileref=document.createElement("link");
-			fileref.rel = "stylesheet";
-			fileref.href = "https://rawgit.com/IceSuger/Gmail_Plugin/master/style.css";
-			document.getElementsByTagName("head")[0].appendChild(fileref);
-
 //添加附件过程
 function inser(){
 				var id2;
