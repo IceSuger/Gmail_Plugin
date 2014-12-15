@@ -10,6 +10,7 @@ var total_ids=0;//总共多少个附件，用于结合id来阻塞获取列表的
 var message_ids = new Array();
 var part_ids = new Array();
 var msgFinished = new Array();
+var allContent = new Array();
 
 //添加附件过程
 function inser(){
@@ -21,9 +22,9 @@ function inser(){
 					if(document.getElementById("checkbox_" + id2).checked == true)
 					{
 						var name = document.getElementById("attachment_tr_"+id2).getElementsByTagName('td')[1].innerHTML;
-						document.getElementById('status_span').innerHTML += '正在添加附件<strong>'+name+'</strong>...';
+						document.getElementById('status_span').innerHTML += '正在插入附件<strong>'+name+'</strong>...';
 						makenewdraft(id2);
-						document.getElementById('status_span').innerHTML ='附件<strong>'+ name +'</strong>添加成功！';
+						document.getElementById('status_span').innerHTML ='附件<strong>'+ name +'</strong>已成功插入至最新草稿！';
 					}
 				}
 }
@@ -68,6 +69,9 @@ function InitDiv(){
 			button.disabled = true;
 			button.className="btn btn-1 btn-1e";
 			button.onclick = function(){
+				
+				document.getElementById('table_to_sort').getElementsByTagName('tbody')[0].innerHTML = '';
+				
 				status_span.innerHTML = '正在获取附件列表...';
 				div.style.height = '435px';
 				id = 0;//附件编号（按获取到的顺序）
@@ -104,7 +108,7 @@ function InitDiv(){
 			var btninsert = document.createElement('button');
 			btninsert.id = 'btninsert';
 			btninsert.disabled = true;
-			btninsert.innerHTML = '添加';
+			btninsert.innerHTML = '插入草稿';
 			btninsert.className="btn btn-1 btn-1e";
 			btninsert.onclick = function(){
 				status_span.innerHTML = '';
@@ -114,7 +118,7 @@ function InitDiv(){
 					if(document.getElementById("checkbox_" + id2).checked == true)
 					{
 						var name = document.getElementById("attachment_tr_"+id2).getElementsByTagName('td')[1].innerHTML;
-						document.getElementById('status_span').innerHTML += '正在添加附件<strong>'+name+'</strong>...';
+						document.getElementById('status_span').innerHTML += '正在插入附件<strong>'+name+'</strong>...';
 						break;
 					}
 				}
@@ -205,9 +209,9 @@ function InitDiv(){
 						h3.appendChild(node);
 				
 				var tbody = document.createElement('tbody');
-				sortingtable.appendChild(tbody);
-				tbody.id='AttachmentsTableTbody2';
 				tbody.style.visibility = 'hidden';
+				sortingtable.appendChild(tbody);
+				
 				}
 			
 }
@@ -248,35 +252,12 @@ function fetchList() {
 					
 					var time = setTimeout("initCtrls();",4000);
 					
-					
-				/*	
-					var flag = false;
-					
-					
-					while(flag == false)
-					{
-						flag = true;
-						for(i in msgFinished)
-						{
-							console.log(msgFinished+' i='+i);
-							console.log('(before)flag='+flag);
-							flag = msgFinished[i]&&flag;
-							console.log('(after)flag='+flag);
-						}
-					}
-				*/	/*
-					jcLoader().load({type:"js",url:"https://rawgit.com/IceSuger/Gmail_Plugin/master/test/tableinited.js"},function(){
-						console.log("controls inited!")
-						document.getElementById('status_span').innerHTML = '获取附件列表完毕！';
-						document.getElementById('AttachmentsTableTbody2').style.visibility = 'visible';
-						setTimeout("document.getElementById('status_span').innerHTML = '';",3000);
-					});
-					*/
 
         } else if(xhr.status == 401){
 					document.getElementById('status_span').innerHTML = '未成功授权，请重新授权后再试！';
         }
 				else{
+					document.getElementById('status_span').innerHTML = '网络问题，请重试。不行的话，请刷新网页再试！';
 				}
       }
     };
@@ -308,7 +289,7 @@ function initCtrls(){
 						console.log("controls inited!")
 						document.getElementById('status_span').innerHTML = '获取附件列表完毕！';
 						
-						//document.getElementById('AttachmentsTableTbody2').style.visibility = 'visible';
+						document.getElementById('table_to_sort').getElementsByTagName('tbody')[0].style.visibility = 'visible';
 						
 						setTimeout("document.getElementById('status_span').innerHTML = '';",3000);
 					});
@@ -378,6 +359,7 @@ function getMessage(MessageId,j) {//j为在msgFinished中的下标
 									var td= document.createElement('td');
 									tr.appendChild(td);
 									td.innerHTML = part.filename;
+									
 									//附件大小
 									var td= document.createElement('td');
 									tr.appendChild(td);
@@ -412,15 +394,18 @@ function getMessage(MessageId,j) {//j为在msgFinished中的下标
 				
 								message_ids[id]=MessageId;
 								part_ids[id]=part.partId;
-						
+								allContent[id] = part.filename+' '+sender+' '+labels+' '+subject+' '+d.toLocaleDateString();
 								id++;
 							}
 						}
 						//setClickForButtons();
 					}
 					msgFinished[j] = true;
-        } else {
-          // Request failure: something bad happened
+        }else if(xhr.status == 401){
+					document.getElementById('status_span').innerHTML = '未成功授权，请重新授权后再试！';
+        }
+				else {
+          document.getElementById('status_span').innerHTML = '网络问题，请重试。不行的话，请刷新网页再试！';
         }
       }
     };
@@ -469,7 +454,11 @@ function makenewdraft(passed){
 					draftID = result.drafts[0].id;
 					callback(draftID);
 				//	console.log(draftID);
-        } else {}
+        }else if(xhr.status == 401){
+					document.getElementById('status_span').innerHTML = '未成功授权，请重新授权后再试！';
+        } else {
+					document.getElementById('status_span').innerHTML = '网络问题，请重试。不行的话，请刷新网页再试！';
+				}
       }
     };
 
@@ -490,8 +479,10 @@ function makenewdraft(passed){
 					var raw = oldDraft.message.raw;
 					callback( atob(raw.replace(/-/g, '+').replace(/_/g, '/')) );
 							
+        }else if(xhr.status == 401){
+					document.getElementById('status_span').innerHTML = '未成功授权，请重新授权后再试！';
         } else {
-          // Request failure: something bad happened
+          document.getElementById('status_span').innerHTML = '网络问题，请重试。不行的话，请刷新网页再试！';
         }
       }
     };
@@ -527,8 +518,10 @@ function makenewdraft(passed){
 					
 					callback ( 'X-Attachment-Id: f_' + MessageId+partid + mailparts[partid] );
 							
+        }else if(xhr.status == 401){
+					document.getElementById('status_span').innerHTML = '未成功授权，请重新授权后再试！';
         } else {
-          // Request failure: something bad happened
+          document.getElementById('status_span').innerHTML = '网络问题，请重试。不行的话，请刷新网页再试！';
         }
       }
     };
@@ -559,7 +552,11 @@ function makenewdraft(passed){
 					var drafts = JSON.parse(xhr.responseText);
 					var draftID = drafts[0].id;
 					return btoa(updatedRaw).replace(/\//g, '_').replace(/\+/g, '-');
-        } else {}
+        }else if(xhr.status == 401){
+					document.getElementById('status_span').innerHTML = '未成功授权，请重新授权后再试！';
+        } else {
+				document.getElementById('status_span').innerHTML = '网络问题，请重试。不行的话，请刷新网页再试！';
+				}
       }
     };
 
@@ -582,8 +579,10 @@ function makenewdraft(passed){
         if(xhr.status == 200) {
 					
 					console.log('添加附件成功！');
+        }else if(xhr.status == 401){
+					document.getElementById('status_span').innerHTML = '未成功授权，请重新授权后再试！';
         } else {
-          // Request failure: something bad happened
+          document.getElementById('status_span').innerHTML = '网络问题，请重试。不行的话，请刷新网页再试！';
         }
       }
     };
