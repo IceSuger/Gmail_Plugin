@@ -1,8 +1,8 @@
 ﻿{
     "manifest_version": 2,
     "name": "Gmail邮箱附件处理助手",
-    "version": "1.1",
-    "description": "查询邮箱内全部附件，支持批量下载，支持批量添加至最新的草稿。",
+    "version": "1.5",
+    "description": "查询邮箱内全部附件，支持批量下载，支持批量添加至最新的草稿。要开始使用，在登录Gmail后，点击地址栏右端图标，选择“授权”即可。",
 		"icons": {
         "48": "images/icon48.png",
         "128": "images/icon128.png"

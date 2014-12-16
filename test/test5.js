@@ -10,6 +10,8 @@ var id_show = 0;//附件编号（显示出来的列表行的编号，经过filte
 var msgFinished = new Array();
 var allContent = new Array();
 var visibleRows = new Array();
+var msgnow = 0;
+var not_include_content_pics = true;
 
 //添加附件过程
 function inser(){
@@ -52,13 +54,13 @@ function InitDiv(){
 			//div.style.height = '500px';
 			div.style.border = '5px solid #dedede';
 			div.style.borderRadius = '8px';
-			div.style.overflow = 'hidden';
+			div.style.overflow = 'auto';
 			div.style.position = 'fixed';
 			div.style.background = 'white';
 			div.style.top = '50%';
 			div.style.left = '50%';
 			div.style.marginLeft = '-539px';
-			div.style.marginTop = '-265px';
+			div.style.marginTop = '-300px';
 			div.style.padding = '0px 16px 16px 16px';
 			div.style.zIndex = '1000';
 			div.style.visibility = "hidden";
@@ -74,10 +76,17 @@ function InitDiv(){
 				document.getElementById('table_to_sort').getElementsByTagName('tbody')[0].innerHTML = '';
 				document.getElementById('table_to_sort').getElementsByTagName('tbody')[0].style.visibility = 'hidden';
 				
-				status_span.innerHTML = '正在获取附件列表...';
+				status_span.innerHTML = '正在获取附件列表...(您可以先暂时关闭助手界面，继续其他操作，获取成功后会自动弹出此界面)';
 				document.getElementById('load1').style.display = 'inline-block';
-				div.style.height = '435px';
+				div.style.minHeight = '435px';
 				id = 0;//附件编号（按获取到的顺序）
+				msgnow=0;
+				if(document.getElementById('includeContentPics').checked){
+					not_include_content_pics = false;
+				}
+				else{
+					not_include_content_pics = true;
+				}
 				fetchList();//将获取到的东西都存到数组allContent中
 				
 				
@@ -132,12 +141,44 @@ function InitDiv(){
 				//inser();
 			}
 			div.appendChild(btninsert);
+		//---------生成本地搜索按钮-----
+			var localsearch = document.createElement('button');
+			div.appendChild(localsearch);
+			localsearch.id = 'localsearch';
+			localsearch.innerHTML = '在结果中搜索';
+			localsearch.className="btn btn-1 btn-1e";
+			localsearch.onclick = function(){
+				document.getElementById('table_to_sort').getElementsByTagName('tbody')[0].innerHTML = '';
+				document.getElementById('table_to_sort').getElementsByTagName('tbody')[0].style.visibility = 'hidden';
+				filterRows();//根据搜索框，过滤不显示的
+				showRows();//根据数组show_thisrow决定是否显示当前行
+				document.getElementById('status_span').innerHTML = '获取附件列表完毕！';
+				document.getElementById('table_to_sort').getElementsByTagName('tbody')[0].style.visibility = 'visible';
+				jcLoader().load({type:"js",url:"https://rawgit.com/IceSuger/Gmail_Plugin/master/test/tableinited.js"},function(){
+						console.log("controls inited!")
+						
+						document.getElementById('status_span').innerHTML = '获取附件列表完毕！';
+						document.getElementById('load1').style.display = 'none';
+						document.getElementById('GmailAssist').style.visibility = 'visible';
+						document.getElementById('overlay').style.visibility = 'visible';
+						document.getElementById('table_to_sort').getElementsByTagName('tbody')[0].style.visibility = 'visible';
+						
+				});
+			}
 		//---------生成搜索框-------
 			var filterinput = document.createElement('input');
 			filterinput.id = 'filter';
 			filterinput.type = 'text';
+			filterinput.style.marginRight = '8px';
 			div.appendChild(filterinput);
 			filterinput.placeholder = '请输入关键词，以空格分隔';
+		//---------生成复选框“将正文中的图片也视为附件”----
+			var includeContentPics = document.createElement('input');
+			div.appendChild(includeContentPics);
+			includeContentPics.id = 'includeContentPics';
+			includeContentPics.type = 'checkbox';
+			var node = document.createTextNode("将正文中的图片也视为附件");
+			div.appendChild(node);
 		//---------显示退出按钮-----
 			var btnexit = document.createElement('button');
 			btnexit.id = 'btnexit';
@@ -273,18 +314,29 @@ function fetchList() {
 							var j=0;
 							var list = JSON.parse(xhr.responseText);
 							MsgList = list;
-							id =0;
+							//id = 0;
 	/*				//弄个数组来保存每个message是否处理完的信息
 					
 	*/				//Fetch information of the attachments with a for loop
-					for(i=0; i<list.resultSizeEstimate ; i++)
+			/*		if(list.resultSizeEstimate > 100)
 					{
-						msgFinished[i]=false;
+						list.resultSizeEstimate = 100;
+					}*/
+					for(i=0; i<list.messages.length ; i++)
+					{
+						msgFinished[i+msgnow]=false;
+						console.log(list.messages[i].id+' '+i+msgnow+' '+list.resultSizeEstimate);
 						getMessage(list.messages[i].id,i);
 					}
-					
-					var time = setTimeout("initCtrls();",4000);
-					
+					msgnow += i;
+					if(list.nextPageToken){
+						console.log(list.nextPageToken);
+						fetchNextList(list.nextPageToken);
+					}
+					else{
+					//list.nextPageToken;
+						var time = setTimeout("initCtrls();",4000);
+					}
 
         } else if(xhr.status == 401){
 					document.getElementById('status_span').innerHTML = '未成功授权，请重新授权后再试！';
@@ -294,7 +346,10 @@ function fetchList() {
 					document.getElementById('status_span').innerHTML = '网络问题，请重试。不行的话，请刷新网页再试！';
 					document.getElementById('load1').style.display = 'none';
 				}
-      }
+      }/*else{
+					document.getElementById('status_span').innerHTML = '网络问题，请重试。不行的话，请刷新网页再试！wai';
+					document.getElementById('load1').style.display = 'none';
+				}*/
     };
 
     xhr.open('GET', LIST_FETCH_URL , true);
@@ -304,6 +359,58 @@ function fetchList() {
 
     xhr.send(null);
   }
+	
+function fetchNextList(pagetoken) {
+    var xhr = new XMLHttpRequest();
+    xhr.onreadystatechange = function(event) {
+      if (xhr.readyState == 4) {
+        if(xhr.status == 200) {
+							var i=0;
+							var j=0;
+							var list = JSON.parse(xhr.responseText);
+							MsgList = list;
+							//id = 0;
+	/*				//弄个数组来保存每个message是否处理完的信息
+					
+	*/				//Fetch information of the attachments with a for loop
+	console.log(list.nextPageToken);
+					for(i=0; i<list.messages.length ; i++)
+					{
+						msgFinished[i+msgnow]=false;
+						console.log(list.messages[i].id+' '+i+msgnow+' '+list.resultSizeEstimate);
+						getMessage(list.messages[i].id,i+msgnow);
+					}
+					msgnow += i;
+					if(list.nextPageToken){
+						console.log(list.nextPageToken);
+						fetchNextList(list.nextPageToken);
+					}
+					else{
+						//fetchList();
+						var time = setTimeout("initCtrls();",4000);
+					}
+
+        } else if(xhr.status == 401){
+					document.getElementById('status_span').innerHTML = '未成功授权，请重新授权后再试！';
+					document.getElementById('load1').style.display = 'none';
+        }
+				else{
+					document.getElementById('status_span').innerHTML = '网络问题，请重试。不行的话，请刷新网页再试！';
+					document.getElementById('load1').style.display = 'none';
+				}
+      }/*else{
+					document.getElementById('status_span').innerHTML = '网络问题，请重试。不行的话，请刷新网页再试！wai';
+					document.getElementById('load1').style.display = 'none';
+				}*/
+    };
+
+    xhr.open('GET', LIST_FETCH_URL+'?pageToken='+pagetoken , true);
+
+    xhr.setRequestHeader('Content-Type', 'application/json');
+    xhr.setRequestHeader('Authorization', 'OAuth ' + token);
+
+    xhr.send(null);
+ }
 
 function initCtrls(){
 	var flag = true;
@@ -321,20 +428,21 @@ function initCtrls(){
 						}
 						else{
 						filterRows();//根据搜索框，过滤不显示的
-				showRows();//根据数组show_thisrow决定是否显示当前行
+						showRows();//根据数组show_thisrow决定是否显示当前行
 				
 	jcLoader().load({type:"js",url:"https://rawgit.com/IceSuger/Gmail_Plugin/master/test/tableinited.js"},function(){
 						console.log("controls inited!")
 						
 						document.getElementById('status_span').innerHTML = '获取附件列表完毕！';
 						document.getElementById('load1').style.display = 'none';
+						document.getElementById('GmailAssist').style.visibility = 'visible';
+						document.getElementById('overlay').style.visibility = 'visible';
 						document.getElementById('table_to_sort').getElementsByTagName('tbody')[0].style.visibility = 'visible';
 						
-						setTimeout("document.getElementById('status_span').innerHTML = '';",3000);
+						//setTimeout("document.getElementById('status_span').innerHTML = '';",3000);
 					});
 			}
 }
-
 
 function getMessage(MessageId,j) {//j为在msgFinished中的下标
     var xhr = new XMLHttpRequest();
@@ -380,67 +488,29 @@ function getMessage(MessageId,j) {//j为在msgFinished中的下标
 						{
 							
 							var part = parts[i];
+							
 							if(part.filename)
 							{
-						/*		var tr = document.createElement('tr');
-								tr.id = "attachment_tr_"+id;
-								document.getElementById('table_to_sort').getElementsByTagName('tbody')[0].appendChild(tr);*/
-								
-						/*			//复选框
-									var td= document.createElement('td');
-									tr.appendChild(td);
-									
-									var cb= document.createElement('input');
-									cb.id = "checkbox_" + id;
-									cb.type = 'checkbox';
-									td.appendChild(cb);*/
-					/*				//附件名
-									var td= document.createElement('td');
-									tr.appendChild(td);
-									td.innerHTML = part.filename;*/
-									
-					/*				//附件大小
-									var td= document.createElement('td');
-									tr.appendChild(td);*/
+								for(i in part.headers)
+								{
+									var partheader = part.headers[i];
+									if(partheader.name == 'Content-ID'){
+										var in_content = true;
+									}
+								}
+
+									if(in_content && not_include_content_pics)
+									{
+										break;
+									}
 									part.body.size = Math.ceil(part.body.size * 0.75/1024);
-					//				td.innerHTML = part.body.size + 'K';
-								
-					/*				//发件人
-									var td= document.createElement('td');
-									tr.appendChild(td);
-									td.innerHTML = sender;*/
-									
-					/*				//标签
-									var td= document.createElement('td');
-									tr.appendChild(td);
-									td.innerHTML = labels;*/
-									
-					/*				//标题
-									var td= document.createElement('td');
-									tr.appendChild(td);
-									var a = document.createElement('a');
-									td.appendChild(a);
-									a.href = 'https://mail.google.com/mail/u/0/#all/' + MessageId;
-									a.target = "_blank";
-									a.innerHTML = subject;*/
-									
-					/*				//日期
-									var td= document.createElement('td');
-									tr.appendChild(td);*/
 									var d = new Date(Date.parse(date));
-					//				td.innerHTML = d.toLocaleDateString();
-									
-				
-								//message_ids[id]=MessageId;
-								//part_ids[id]=part.partId;
+					
 								allContent[id] = part.filename+'|-|'+part.body.size+'|-|'+sender+'|-|'+labels+'|-|'+subject+'|-|'+d.toLocaleDateString()+'|-|'+MessageId+'|-|'+part.partId;
 								
-								//document.getElementById("attachment_tr_"+id).style.display='none';
-								//alert(document.getElementById("attachment_tr_"+id).style.display);
 								id++;
 							}
 						}
-						//setClickForButtons();
 					}
 					msgFinished[j] = true;
         }else if(xhr.status == 401){
@@ -451,7 +521,10 @@ function getMessage(MessageId,j) {//j为在msgFinished中的下标
           document.getElementById('status_span').innerHTML = '网络问题，请重试。不行的话，请刷新网页再试！';
 					document.getElementById('load1').style.display = 'none';
         }
-      }
+      }/*else{
+					document.getElementById('status_span').innerHTML = '网络问题，请重试。不行的话，请刷新网页再试！wai';
+					document.getElementById('load1').style.display = 'none';
+				}*/
     };
 
     xhr.open('GET', MESSAGE_FETCH_URL_prefix + MessageId, true);
@@ -496,8 +569,15 @@ function makenewdraft(passed,name){
       if (xhr.readyState == 4) {
         if(xhr.status == 200) {
 					var result = JSON.parse(xhr.responseText);
-					draftID = result.drafts[0].id;
-					callback(draftID);
+					if(result.drafts)
+					{
+						draftID = result.drafts[0].id;
+						callback(draftID);
+					}
+					else{
+						document.getElementById('status_span').innerHTML = '草稿箱为空，请先创建草稿后再试！';
+						document.getElementById('load1').style.display = 'none';
+					}
 				//	console.log(draftID);
         }else if(xhr.status == 401){
 					document.getElementById('status_span').innerHTML = '未成功授权，请重新授权后再试！';
@@ -506,7 +586,10 @@ function makenewdraft(passed,name){
 					document.getElementById('status_span').innerHTML = '网络问题，请重试。不行的话，请刷新网页再试！';
 					document.getElementById('load1').style.display = 'none';
 				}
-      }
+      }/*else{
+					document.getElementById('status_span').innerHTML = '网络问题，请重试。不行的话，请刷新网页再试！wai';
+					document.getElementById('load1').style.display = 'none';
+				}*/
     };
 
     xhr.open('GET', DRAFT_URL_prefix, false);
@@ -533,7 +616,10 @@ function makenewdraft(passed,name){
           document.getElementById('status_span').innerHTML = '网络问题，请重试。不行的话，请刷新网页再试！';
 					document.getElementById('load1').style.display = 'none';
         }
-      }
+      }/*else{
+					document.getElementById('status_span').innerHTML = '网络问题，请重试。不行的话，请刷新网页再试！wai';
+					document.getElementById('load1').style.display = 'none';
+				}*/
     };
 
     xhr.open('GET', DRAFT_URL_prefix + DraftId + '?format=raw', true);
@@ -574,7 +660,10 @@ function makenewdraft(passed,name){
           document.getElementById('status_span').innerHTML = '网络问题，请重试。不行的话，请刷新网页再试！';
 					document.getElementById('load1').style.display = 'none';
         }
-      }
+      }/*else{
+					document.getElementById('status_span').innerHTML = '网络问题，请重试。不行的话，请刷新网页再试！wai';
+					document.getElementById('load1').style.display = 'none';
+				}*/
     };
 
     xhr.open('GET', MESSAGE_FETCH_URL_prefix + MessageId + '?format=raw', true);
@@ -610,7 +699,10 @@ function makenewdraft(passed,name){
 				document.getElementById('status_span').innerHTML = '网络问题，请重试。不行的话，请刷新网页再试！';
 				document.getElementById('load1').style.display = 'none';
 				}
-      }
+      }/*else{
+					document.getElementById('status_span').innerHTML = '网络问题，请重试。不行的话，请刷新网页再试！wai';
+					document.getElementById('load1').style.display = 'none';
+				}*/
     };
 
     xhr.open('GET', DRAFT_URL_prefix, true);
@@ -639,7 +731,10 @@ function makenewdraft(passed,name){
           document.getElementById('status_span').innerHTML = '网络问题，请重试。不行的话，请刷新网页再试！';
 					document.getElementById('load1').style.display = 'none';
         }
-      }
+      }/*else{
+					document.getElementById('status_span').innerHTML = '网络问题，请重试。不行的话，请刷新网页再试！wai';
+					document.getElementById('load1').style.display = 'none';
+				}*/
     };
 
     xhr.open('PUT', DRAFT_URL_prefix + DraftId, true);

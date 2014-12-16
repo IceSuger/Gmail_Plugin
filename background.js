@@ -24,7 +24,7 @@ chrome.runtime.onInstalled.addListener(function() {
 					chrome.downloads.download({
             url: message.url,
             conflictAction: 'uniquify',
-            saveAs: true
+            saveAs: false
           });
 			}
 	});

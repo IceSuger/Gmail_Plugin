@@ -6,18 +6,84 @@
 	<script src="test/test4.js" charset="utf-8"></script>
   
 	<style type="text/css">
-		div#success{width:300px}
+		.btn {
+			width: 150px;
+			border: none;
+			font-family: inherit;
+			font-size: 15px;
+			color: #597d98;
+			background: none;
+			cursor: pointer;
+			padding: 5px 20px;
+			margin-top:20px;
+			display: inline-block;
+			margin: 10px 5px 5px 5px;
+			text-transform: uppercase;
+			letter-spacing: 1px;
+			font-weight: 700;
+			outline: none;
+			position: relative;
+			-webkit-transition: all 0.3s;
+			-moz-transition: all 0.3s;
+			transition: all 0.3s;
+		}
 
-    #success { display: none; }
+		.btn:after {
+			content: '';
+			position: absolute;
+			z-index: -1;
+			-webkit-transition: all 0.3s;
+			-moz-transition: all 0.3s;
+			transition: all 0.3s;
+		}
+
+		.btn:before,
+
+		.btn-1 {
+			border: solid #597d98;
+			color: #597d98;
+		}
+
+		.btn-1e {
+			overflow: hidden;
+		}
+
+		.btn-1e:after {
+			width: 100%;
+			height: 0;
+			top: 50%;
+			left: 50%;
+			background: #597d98;
+			opacity: 0;
+			-webkit-transform: translateX(-50%) translateY(-50%) rotate(45deg);
+			-moz-transform: translateX(-50%) translateY(-50%) rotate(45deg);
+			-ms-transform: translateX(-50%) translateY(-50%) rotate(45deg);
+			transform: translateX(-50%) translateY(-50%) rotate(45deg);
+		}
+
+		.btn-1e:hover,
+		.btn-1e:active {
+			color: #fff;
+		}
+
+		.btn-1e:hover:after {
+			height: 260%;
+			opacity: 1;
+		}
+
+		.btn-1e:active:after {
+			height: 400%;
+			opacity: 1;
+		}
   </style>
 </head>
 
 <span>
-<button id="google">授权</button>
-<button id="clear">取消授权</button>
+<button id="google" class="btn btn-1 btn-1e">授权</button>
+<button id="clear" class="btn btn-1 btn-1e">取消授权</button>
 </span>
 <form id="form">
-  <input id="button" type="submit" value="获取附件列表"/>
+  <input id="button"  class="btn btn-1 btn-1e" type="submit" value="显示助手界面"/>
 </form>
 <div id="success">
   <span id="msgatt"></span>.
