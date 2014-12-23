@@ -352,7 +352,7 @@ function fetchList() {
 				}*/
     };
 
-    xhr.open('GET', LIST_FETCH_URL , true);
+    xhr.open('GET', LIST_FETCH_URL+'?q=has%3Aattachment' , true);
 
     xhr.setRequestHeader('Content-Type', 'application/json');
     xhr.setRequestHeader('Authorization', 'OAuth ' + token);
@@ -404,7 +404,7 @@ function fetchNextList(pagetoken) {
 				}*/
     };
 
-    xhr.open('GET', LIST_FETCH_URL+'?pageToken='+pagetoken , true);
+    xhr.open('GET', LIST_FETCH_URL+'?pageToken='+pagetoken +'&q=has%3Aattachment' , true);
 
     xhr.setRequestHeader('Content-Type', 'application/json');
     xhr.setRequestHeader('Authorization', 'OAuth ' + token);
@@ -430,7 +430,8 @@ function initCtrls(){
 						filterRows();//根据搜索框，过滤不显示的
 						showRows();//根据数组show_thisrow决定是否显示当前行
 				
-	jcLoader().load({type:"js",url:"https://rawgit.com/IceSuger/Gmail_Plugin/master/test/tableinited.js"},function(){
+	//jcLoader().load({type:"js",url:"https://rawgit.com/IceSuger/Gmail_Plugin/master/test/tableinited.js"},function(){
+	jcLoader().load({type:"js",url:chrome.extension.getURL("test/tableinited.js")},function(){
 						console.log("controls inited!")
 						
 						document.getElementById('status_span').innerHTML = '获取附件列表完毕！';
@@ -522,7 +523,7 @@ function getMessage(MessageId,j) {//j为在msgFinished中的下标
 					document.getElementById('load1').style.display = 'none';
         }
       }/*else{
-					document.getElementById('status_span').innerHTML = '网络问题，请重试。不行的话，请刷新网页再试！wai';
+					document.getElementById('status_span').innerHTML = '网络请求失败，请重试！';
 					document.getElementById('load1').style.display = 'none';
 				}*/
     };
@@ -586,10 +587,10 @@ function makenewdraft(passed,name){
 					document.getElementById('status_span').innerHTML = '网络问题，请重试。不行的话，请刷新网页再试！';
 					document.getElementById('load1').style.display = 'none';
 				}
-      }/*else{
-					document.getElementById('status_span').innerHTML = '网络问题，请重试。不行的话，请刷新网页再试！wai';
+      }else{
+					document.getElementById('status_span').innerHTML = '网络请求失败，请重试！';
 					document.getElementById('load1').style.display = 'none';
-				}*/
+				}
     };
 
     xhr.open('GET', DRAFT_URL_prefix, false);
@@ -616,13 +617,13 @@ function makenewdraft(passed,name){
           document.getElementById('status_span').innerHTML = '网络问题，请重试。不行的话，请刷新网页再试！';
 					document.getElementById('load1').style.display = 'none';
         }
-      }/*else{
-					document.getElementById('status_span').innerHTML = '网络问题，请重试。不行的话，请刷新网页再试！wai';
+      }else{
+					document.getElementById('status_span').innerHTML = '网络请求失败，请重试！';
 					document.getElementById('load1').style.display = 'none';
-				}*/
+				}
     };
 
-    xhr.open('GET', DRAFT_URL_prefix + DraftId + '?format=raw', true);
+    xhr.open('GET', DRAFT_URL_prefix + DraftId + '?format=raw', false);
 
     xhr.setRequestHeader('Content-Type', 'application/json');
     xhr.setRequestHeader('Authorization', 'OAuth ' + token);
@@ -651,7 +652,13 @@ function makenewdraft(passed,name){
 					var mailparts = mail.split(boundary);
 					partid = parseInt(partid)+2;
 					
-					callback ( 'X-Attachment-Id: f_' + MessageId+partid + mailparts[partid] );
+					if(mailparts[partid].indexOf('X-Attachment-Id') == -1)
+					{
+						callback ( '\nX-Attachment-Id: f_' + MessageId+partid + mailparts[partid] );
+					}
+					else{
+						callback ( mailparts[partid] );
+					}
 							
         }else if(xhr.status == 401){
 					document.getElementById('status_span').innerHTML = '未成功授权，请重新授权后再试！';
@@ -660,13 +667,13 @@ function makenewdraft(passed,name){
           document.getElementById('status_span').innerHTML = '网络问题，请重试。不行的话，请刷新网页再试！';
 					document.getElementById('load1').style.display = 'none';
         }
-      }/*else{
-					document.getElementById('status_span').innerHTML = '网络问题，请重试。不行的话，请刷新网页再试！wai';
+      }else{
+					document.getElementById('status_span').innerHTML = '网络请求失败，请重试！';
 					document.getElementById('load1').style.display = 'none';
-				}*/
+				}
     };
 
-    xhr.open('GET', MESSAGE_FETCH_URL_prefix + MessageId + '?format=raw', true);
+    xhr.open('GET', MESSAGE_FETCH_URL_prefix + MessageId + '?format=raw', false);
 
     xhr.setRequestHeader('Content-Type', 'application/json');
     xhr.setRequestHeader('Authorization', 'OAuth ' + token);
@@ -675,12 +682,38 @@ function makenewdraft(passed,name){
   }
 	
 	function joinPartToDraft(currentDraftString,partBeingInserted) {
-		var prepart = currentDraftString.substring(0,currentDraftString.length-2);
 		
+		
+		var boundstartpos = currentDraftString.indexOf('Content-Type: multipart/mixed; boundary=');
+		if(boundstartpos!=-1)//找到了mix boundary
+		{
+			var prepart = currentDraftString.substring(0,currentDraftString.length-2);//先去掉最后两个--,前提是已经有mix boundary
+			boundstartpos += 40;//移动到boundary的起点
+			var boundary = currentDraftString.substring(boundstartpos, currentDraftString.indexOf('\r',boundstartpos));//获取最高的boundary
+			//newdraft = prepart + '\r\n' + partBeingInserted + boundary +'--';//合并出最终的新草稿
+			newdraft = prepart + partBeingInserted + boundary +'--';//合并出最终的新草稿
+		}
+		else{	
+							//var alterBoundStartPos = prepart.indexOf('boundary=')+9;
+			//在alter boundary起点拆开，prepart1 preapart2
+			var alterBoundStartPos = currentDraftString.indexOf('Content-Type: multipart/alternative; boundary=');
+			var prepart1 = currentDraftString.substring(0,alterBoundStartPos);
+			var prepart2 = currentDraftString.substring(alterBoundStartPos,currentDraftString.length);
+			//构造mix boundary
+		//	var boundary = currentDraftString.substring(alterBoundStartPos, currentDraftString.indexOf('\r',alterBoundStartPos));
+			var boundary = '1218521a9381b1992c2014d0000f'
+			//prepart1+'Content-Type: multipart/mixed; boundary='+boundary+'\n\r\n--'+boundary+'\n'+prepart2;
+			var prepart = prepart1+'Content-Type: multipart/mixed; boundary='+boundary+'\n\r\n--'+boundary+'\n'+prepart2+'\n--'+boundary;
+			//var boundary = currentDraftString.substring(alterBoundStartPos, currentDraftString.indexOf('\r',alterBoundStartPos));//获取alter boundary
+			
+			//newdraft = prepart + '\r\n' + partBeingInserted + boundary +'--';//合并出最终的新草稿
+			newdraft = prepart + partBeingInserted + boundary +'--';//合并出最终的新草稿
+		}
+		/*
 		var boundstartpos = currentDraftString.indexOf('boundary=')+9;
-		var boundary = currentDraftString.substring(boundstartpos, currentDraftString.indexOf('\r',boundstartpos));
+		var boundary = currentDraftString.substring(boundstartpos, currentDraftString.indexOf('\r',boundstartpos));//获取最高的boundary
+		*/
 		
-		newdraft = prepart + '\r\n' + partBeingInserted + boundary +'--';
 		return btoa(newdraft).replace(/\//g, '_').replace(/\+/g, '-');
 	}
 	
@@ -699,13 +732,13 @@ function makenewdraft(passed,name){
 				document.getElementById('status_span').innerHTML = '网络问题，请重试。不行的话，请刷新网页再试！';
 				document.getElementById('load1').style.display = 'none';
 				}
-      }/*else{
-					document.getElementById('status_span').innerHTML = '网络问题，请重试。不行的话，请刷新网页再试！wai';
+      }else{
+					document.getElementById('status_span').innerHTML = '网络请求失败，请重试！';
 					document.getElementById('load1').style.display = 'none';
-				}*/
+				}
     };
 
-    xhr.open('GET', DRAFT_URL_prefix, true);
+    xhr.open('GET', DRAFT_URL_prefix, false);
 
     xhr.setRequestHeader('Content-Type', 'application/json');
     xhr.setRequestHeader('Authorization', 'OAuth ' + token);
@@ -731,13 +764,13 @@ function makenewdraft(passed,name){
           document.getElementById('status_span').innerHTML = '网络问题，请重试。不行的话，请刷新网页再试！';
 					document.getElementById('load1').style.display = 'none';
         }
-      }/*else{
-					document.getElementById('status_span').innerHTML = '网络问题，请重试。不行的话，请刷新网页再试！wai';
+      }else{
+					document.getElementById('status_span').innerHTML = '网络请求失败，请重试！';
 					document.getElementById('load1').style.display = 'none';
-				}*/
+				}
     };
 
-    xhr.open('PUT', DRAFT_URL_prefix + DraftId, true);
+    xhr.open('PUT', DRAFT_URL_prefix + DraftId, false);
 
     xhr.setRequestHeader('Content-Type', 'application/json');
     xhr.setRequestHeader('Authorization', 'OAuth ' + token);

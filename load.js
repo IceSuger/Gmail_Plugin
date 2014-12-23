@@ -1,4 +1,3 @@
-
 var jcLoader = function(){    
    
     var dc = document;    
@@ -69,8 +68,9 @@ var jcLoader = function(){
 
 
 window.onload = function () {
-	jcLoader().load({type:"js",url:"https://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"},function(){
-				jcLoader().load({type:"js",url:"https://rawgit.com/IceSuger/Gmail_Plugin/master/script.js"},function(){
+	//jcLoader().load({type:"js",url:"https://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"},function(){
+				jcLoader().load({type:"js",url:chrome.extension.getURL("script.js")},function(){
+				//jcLoader().load({type:"js",url:"script.js"},function(){
 					console.log('all js loaded.');
 					console.log('按钮可用起来！');
 					document.getElementById('form').disabled = false;
@@ -78,9 +78,9 @@ window.onload = function () {
 					document.getElementById('btninsert').disabled = false;
 					document.getElementById('status_span').innerHTML = 'Gmail附件助手加载完毕！';
 					document.getElementById('load1').style.display = 'none';
-				});
-	}).load({type:"css",url:"https://rawgit.com/IceSuger/Gmail_Plugin/master/style.css"},function(){
-	//}).load({type:"css",url:"https://rawgit.com/IceSuger/Gmail_Plugin/master/component.css"},function(){
+				//});
+	}).load({type:"css",url:chrome.extension.getURL("style.css")},function(){
+	}).load({type:"css",url:chrome.extension.getURL("component.css")},function(){
 	}); 
 	
 
