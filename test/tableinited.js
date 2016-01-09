@@ -1,4 +1,4 @@
-﻿//-----初始化分页、排序------------git什么jb玩意啊！！
+﻿//-----初始化分页、排序
 
 	var sorter = new TINY.table.sorter("sorter");
 	sorter.head = "head";
@@ -44,7 +44,8 @@ if(!controls)
 							select.appendChild(option);
 						*/
 						var span = document.createElement('span');
-						span.innerHTML = "项每页";
+						var ipp = "items/page";//"项每页";
+						span.innerHTML = ipp;
 						perpage.appendChild(span);
 					}
 					var navigation = document.createElement('div');
@@ -101,7 +102,7 @@ if(!controls)
 					text.id = 'text';
 					controls.appendChild(text);
 					{
-						var node = document.createTextNode("第");
+						var node = document.createTextNode("Page");//"第"
 						text.appendChild(node);
 						
 						var currentpage = document.createElement('span');
@@ -115,8 +116,8 @@ if(!controls)
 						pagelimit.id="pagelimit";
 						text.appendChild(pagelimit);
 						
-						var node = document.createTextNode("页");
-						text.appendChild(node);
+						//var node = document.createTextNode(chrome.i18n.getMessage("pageNumEnd"));//"页"
+						//text.appendChild(node);
 					}
 				}
 }

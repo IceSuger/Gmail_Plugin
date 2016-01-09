@@ -15,7 +15,7 @@ chrome.runtime.onInstalled.addListener(function() {
     ]);
   });
 	
-	console.log('laert');
+	//console.log('laert');
 	chrome.runtime.onMessage.addListener(function(message, sender, sendResponse){
 			//if(message != 'Hello' && message != 'alljsloaded'){
 			console.log("DOWN !!!!!! is:"+message);

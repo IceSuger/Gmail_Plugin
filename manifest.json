@@ -1,19 +1,21 @@
 ﻿{
     "manifest_version": 2,
-    "name": "Gmail附件助手",
-    "version": "1.8",
-    "description": "查询邮箱内全部附件，支持批量下载，支持批量添加至最新的草稿。要开始使用，在登录Gmail后，点击地址栏右端图标，选择“授权”即可。",
+    "name": "__MSG_extName__",
+    "version": "1.9",
+	
+	"default_locale": "en",
+    "description": "__MSG_extDescript__",
 		"icons": {
         "48": "images/icon48.png",
         "128": "images/icon128.png"
     },
-		"short_name": "GmailAssist",
-  "page_action": {  
+	"short_name": "GmailAssist",
+	"page_action": {  
 		 "default_icon": {
             "19": "images/icon19.png",
             "38": "images/icon38.png"
         },
-		"default_title" : "Gmail邮箱附件处理助手",
+		"default_title" : "__MSG_extName__",
 		"default_popup": "popup.html"
 	},
 	
@@ -48,7 +50,7 @@
 	],
 	
 	"web_accessible_resources" : [
-    "oauth2/oauth2.html",
+		"oauth2/oauth2.html",
 		"test/tableinited.js",
 		"style.css",
 		"component.css",

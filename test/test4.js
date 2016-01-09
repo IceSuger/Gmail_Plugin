@@ -34,12 +34,12 @@ function checkAuthorized() {
       var button = document.querySelector('#' + providerName);
       if (provider.hasAccessToken()) {
         button.classList.add('authorized');
-				document.getElementById('google').innerHTML = '已授权';
+				document.getElementById('google').innerHTML = chrome.i18n.getMessage("alreadyAuthorized");//'已授权';
 				document.getElementById('form').style.visibility = "visible";
         document.getElementById('success').style.visibility = "visible";
       } else {
         button.classList.remove('authorized');
-				document.getElementById('google').innerHTML = '授权';
+				document.getElementById('google').innerHTML = chrome.i18n.getMessage("Authorize");//'授权';
 				document.getElementById('form').style.visibility = "hidden";
         document.getElementById('success').style.visibility = "hidden";
       }
@@ -57,7 +57,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
 document.addEventListener('DOMContentLoaded', function () {
 	var form = document.getElementById('form');
-  var success = document.getElementById('success');
+	var success = document.getElementById('success');
 	var token = '';token = google.getAccessToken();
 	
 	function sendShowDiv(){
@@ -68,8 +68,9 @@ document.addEventListener('DOMContentLoaded', function () {
 		});
 	}
 	
-  form.addEventListener('submit', function(event) {
-    event.preventDefault();
+	form.addEventListener('submit', function(event) {
+  
+		event.preventDefault();
 		
 		//=======下面是引用gmail.min.js的部分，为了获得ik值==============
 		chrome.runtime.sendMessage('Hello', function(response){

@@ -1,0 +1,109 @@
+﻿{
+	"extName":{
+		"message":"Gmail Attachment Manager"
+	},
+	"extDescript":{
+		"message":"With this extension, you can list all the attachments in your Gmail, and download them in a batch, or add them into your latest DRAFT."
+	},
+	"itemsPerPage":{
+		"message":" items per page"
+	},
+	"pageNum":{
+		"message":"Page "
+	},
+	"pageNumEnd":{
+		"message":""
+	},
+	"download":{
+		"message":"download"
+	},
+	"hintListing":{
+		"message":"Getting the attachments list ... (you can temporarily turn off this interface to continue other operations, it will pop up automatically after forming the list)"
+	},
+	"fetchAttsList":{
+		"message":"List"
+	},
+	"hintInserting":{
+		"message":"Adding the attachment <strong>$name$</strong> into the latest draft...",
+		"placeholders": {
+			"name": {
+				"content": "$1"
+			}
+		}
+	},
+	"finishInsert":{
+		"message":"<strong>$name$</strong> has been successfully added to the latest draft",
+		"placeholders": {
+			"name": {
+				"content": "$1"
+			}
+		}
+	},
+	"insertToDraft":{
+		"message":"add to draft"
+	},
+	"searchTheResults":{
+		"message":"search"
+	},
+	"finishListing":{
+		"message":"Successfully listed the attachments!"
+	},
+	"hintForSearch":{
+		"message":"Input key words to search the list below"
+	},
+	"lookPicsAsAttachments":{
+		"message":"Include images in mail body"
+	},
+	"loading":{
+		"message":"Loading..."
+	},
+	"fileName":{
+		"message":"Filename"
+	},
+	"fileSize":{
+		"message":"Size"
+	},
+	"from":{
+		"message":"From",
+		"description":"sender/发件人"
+	},
+	"label":{
+		"message":"Labels"
+	},
+	"subject":{
+		"message":"Subject"
+	},
+	"date":{
+		"message":"Date"
+	},
+	"errorOfUnauthorized":{
+		"message":"Fail to be authorized, please redo the authorization!"
+	},
+	"errorOfConnection":{
+		"message":"Connection error, please try again, or refresh the current web page!"
+	},
+	"draftBoxEmpty":{
+		"message":"Your DRAFT box is empty, please create a draft first!"
+	},
+	"badRequest":{
+		"message":"Bad request, please try again!"
+	},
+	"failLoading":{
+		"message":"Loading fails. Please press F5 to refresh the page.(It is recommonded to wait for the loading of the gmail page finished to activate the Assist interface.)"
+	},
+	"completeLoading":{
+		"message":"Loading completed!"
+	},
+	"Authorize":{
+		"message":"Authorize"
+	},
+	"DeAuthorize":{
+		"message":"DeAuthorize"
+	},
+	"alreadyAuthorized":{
+		"message":"Authorized"
+	},
+	"displayInterface":{
+		"message":"Show up"
+	}
+}

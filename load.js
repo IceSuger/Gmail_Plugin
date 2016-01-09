@@ -76,8 +76,23 @@ window.onload = function () {
 					document.getElementById('form').disabled = false;
 					document.getElementById('btndown').disabled = false;
 					document.getElementById('btninsert').disabled = false;
-					document.getElementById('status_span').innerHTML = 'Gmail附件助手加载完毕！';
+					document.getElementById('status_span').innerHTML = chrome.i18n.getMessage("completeLoading");//'Gmail附件助手加载完毕！';
 					document.getElementById('load1').style.display = 'none';
+					
+					chrome.runtime.onMessage.addListener(
+					  function(request, sender, sendResponse) {
+					  //alert('TOKEN IS: '+request.token);
+						if (request.token != '')
+							{
+								token = request.token;
+								//alert(token);
+								document.getElementById('GmailAssist').style.visibility = "visible";
+								document.getElementById('overlay').style.visibility = "visible";
+								document.getElementById('table_to_sort').getElementsByTagName('tbody')[0].style.visibility = 'visible';
+						  //sendResponse({farewell: "goodbye"});
+							}
+					});
+					console.log('绑定了监听事件，按下show up按钮，将会显示助手界面');
 				//});
 	}).load({type:"css",url:chrome.extension.getURL("style.css")},function(){
 	}).load({type:"css",url:chrome.extension.getURL("component.css")},function(){

@@ -23,7 +23,7 @@ function inser(){
 					if(document.getElementById("checkbox_" + id2).checked == true)
 					{
 						var name = document.getElementById("attachment_tr_"+id2).getElementsByTagName('td')[1].innerHTML;
-						document.getElementById('status_span').innerHTML = '正在插入附件<strong>'+name+'</strong>...';
+						document.getElementById('status_span').innerHTML = chrome.i18n.getMessage("hintInserting",name);//'正在插入附件<strong>'+name+'</strong>...';
 						document.getElementById('load1').style.display = 'inline-block';
 						makenewdraft(id2,name);
 						//document.getElementById('status_span').innerHTML ='附件<strong>'+ name +'</strong>已成功插入至最新草稿！';
@@ -64,11 +64,19 @@ function InitDiv(){
 			div.style.padding = '0px 16px 16px 16px';
 			div.style.zIndex = '1000';
 			div.style.visibility = "hidden";
+			
+		//----给overlay添加onclick事件-----
+		overlay.onclick = function(){
+				div.style.visibility = "hidden";
+				//sortingtable.style.visibility = "hidden";
+				overlay.style.visibility = "hidden";
+				document.getElementById('table_to_sort').getElementsByTagName('tbody')[0].style.visibility = 'hidden';
+			}
 		
 		//---------显示主按钮-------
 			var button = document.createElement('button');
 			button.id = 'form';
-			button.innerHTML = '获取附件列表';
+			button.innerHTML = chrome.i18n.getMessage("fetchAttsList");//'获取附件列表';
 			button.disabled = true;
 			button.className="btn btn-1 btn-1e";
 			button.onclick = function(){
@@ -76,7 +84,7 @@ function InitDiv(){
 				document.getElementById('table_to_sort').getElementsByTagName('tbody')[0].innerHTML = '';
 				document.getElementById('table_to_sort').getElementsByTagName('tbody')[0].style.visibility = 'hidden';
 				
-				status_span.innerHTML = '正在获取附件列表...(您可以先暂时关闭助手界面，继续其他操作，获取成功后会自动弹出此界面)';
+				status_span.innerHTML = chrome.i18n.getMessage("hintListing");//'正在获取附件列表...(您可以先暂时关闭助手界面，继续其他操作，获取成功后会自动弹出此界面)';
 				document.getElementById('load1').style.display = 'inline-block';
 				div.style.minHeight = '435px';
 				id = 0;//附件编号（按获取到的顺序）
@@ -97,7 +105,7 @@ function InitDiv(){
 			btndown.id = 'btndown';
 			btndown.disabled = true;
 			btndown.className="btn btn-1 btn-1e";
-			btndown.innerHTML = '下载';
+			btndown.innerHTML = chrome.i18n.getMessage("download");//'下载';
 			btndown.onclick = function(){
 				var id2;
 				console.log('id2: '+id2+' id: '+id);
@@ -122,7 +130,7 @@ function InitDiv(){
 			var btninsert = document.createElement('button');
 			btninsert.id = 'btninsert';
 			btninsert.disabled = true;
-			btninsert.innerHTML = '插入草稿';
+			btninsert.innerHTML = chrome.i18n.getMessage("insertToDraft");//'插入草稿';
 			btninsert.className="btn btn-1 btn-1e";
 			btninsert.onclick = function(){
 				status_span.innerHTML = '';
@@ -132,7 +140,7 @@ function InitDiv(){
 					if(document.getElementById("checkbox_" + id2).checked == true)
 					{
 						var name = document.getElementById("attachment_tr_"+id2).getElementsByTagName('td')[1].innerHTML;
-						document.getElementById('status_span').innerHTML = '正在插入附件<strong>'+name+'</strong>...';
+						document.getElementById('status_span').innerHTML = chrome.i18n.getMessage("hintInserting",name);//'正在插入附件<strong>'+name+'</strong>...';
 						document.getElementById('load1').style.display = 'inline-block';
 						break;
 					}
@@ -145,19 +153,19 @@ function InitDiv(){
 			var localsearch = document.createElement('button');
 			div.appendChild(localsearch);
 			localsearch.id = 'localsearch';
-			localsearch.innerHTML = '在结果中搜索';
+			localsearch.innerHTML = chrome.i18n.getMessage("searchTheResults");//'在结果中搜索';
 			localsearch.className="btn btn-1 btn-1e";
 			localsearch.onclick = function(){
 				document.getElementById('table_to_sort').getElementsByTagName('tbody')[0].innerHTML = '';
 				document.getElementById('table_to_sort').getElementsByTagName('tbody')[0].style.visibility = 'hidden';
 				filterRows();//根据搜索框，过滤不显示的
 				showRows();//根据数组show_thisrow决定是否显示当前行
-				document.getElementById('status_span').innerHTML = '获取附件列表完毕！';
+				document.getElementById('status_span').innerHTML = chrome.i18n.getMessage("finishListing");//'获取附件列表完毕！';
 				document.getElementById('table_to_sort').getElementsByTagName('tbody')[0].style.visibility = 'visible';
 				jcLoader().load({type:"js",url:"https://rawgit.com/IceSuger/Gmail_Plugin/master/test/tableinited.js"},function(){
 						console.log("controls inited!")
 						
-						document.getElementById('status_span').innerHTML = '获取附件列表完毕！';
+						document.getElementById('status_span').innerHTML = chrome.i18n.getMessage("finishListing");//'获取附件列表完毕！';
 						document.getElementById('load1').style.display = 'none';
 						document.getElementById('GmailAssist').style.visibility = 'visible';
 						document.getElementById('overlay').style.visibility = 'visible';
@@ -171,14 +179,18 @@ function InitDiv(){
 			filterinput.type = 'text';
 			filterinput.style.marginRight = '8px';
 			div.appendChild(filterinput);
-			filterinput.placeholder = '请输入关键词，以空格分隔';
+			filterinput.placeholder = chrome.i18n.getMessage("hintForSearch");//'请输入关键词，以空格分隔';
 		//---------生成复选框“将正文中的图片也视为附件”----
 			var includeContentPics = document.createElement('input');
 			div.appendChild(includeContentPics);
 			includeContentPics.id = 'includeContentPics';
 			includeContentPics.type = 'checkbox';
-			var node = document.createTextNode("将正文中的图片也视为附件");
+			includeContentPics.height = '60px';
+			includeContentPics.width = '60px';
+			var node = document.createTextNode(chrome.i18n.getMessage("lookPicsAsAttachments"));//"将正文中的图片也视为附件"
+			//node.style.fontSize = '20px';
 			div.appendChild(node);
+		/*
 		//---------显示退出按钮-----
 			var btnexit = document.createElement('button');
 			btnexit.id = 'btnexit';
@@ -191,6 +203,7 @@ function InitDiv(){
 				document.getElementById('table_to_sort').getElementsByTagName('tbody')[0].style.visibility = 'hidden';
 			}
 			div.appendChild(btnexit);
+			*/
 		//--------生成占位空白行
 			var blank_span = document.createElement('div');
 			div.appendChild(blank_span);
@@ -210,12 +223,13 @@ function InitDiv(){
 		//---------生成状态栏-------
 			var status_span = document.createElement('span');
 			status_span.id = 'status_span';
+			status_span.style.fontSize = '16px';
 			status_span.style.display = 'inline-block';
 			//status_span.style.padding = '0 0 3px 0';
 			status_span.style.width = '900px';
 			status_span.style.margin = '0px 0 6px 5px';
 			//status_span.style.marginTop = '18px';
-			status_span.innerHTML = '正在等待加载...';
+			status_span.innerHTML = chrome.i18n.getMessage("loading");//'正在等待加载...';
 			div.appendChild(status_span);
 		
 		//---------显示table------
@@ -247,38 +261,38 @@ function InitDiv(){
 						tr.appendChild(th);
 						var h3= document.createElement('h3');
 						th.appendChild(h3);
-						h3.innerHTML = "附件名";
+						h3.innerHTML = chrome.i18n.getMessage("fileName");//"附件名";
 						//附件大小
 						var th= document.createElement('th');
 						tr.appendChild(th);
 						var h3= document.createElement('h3');
 						th.appendChild(h3);
-						h3.innerHTML = "附件大小";
+						h3.innerHTML = chrome.i18n.getMessage("fileSize");//"附件大小";
 						//发件人
 						var th= document.createElement('th');
 						tr.appendChild(th);
 						var h3= document.createElement('h3');
 						th.appendChild(h3);
-						h3.innerHTML = "发件人";
+						h3.innerHTML = chrome.i18n.getMessage("from");//"发件人";
 						//邮件标签
 						var th= document.createElement('th');
 						tr.appendChild(th);
 						var h3= document.createElement('h3');
 						th.appendChild(h3);
-						h3.innerHTML = "邮件标签";
+						h3.innerHTML = chrome.i18n.getMessage("label");//"邮件标签";
 						//邮件标题
 						var th= document.createElement('th');
 						tr.appendChild(th);
 						var h3= document.createElement('h3');
 						th.appendChild(h3);
-						var node = document.createTextNode("邮件标题");
+						var node = document.createTextNode(chrome.i18n.getMessage("subject"));//"邮件标题"
 						h3.appendChild(node);
 						//日期
 						var th= document.createElement('th');
 						tr.appendChild(th);
 						var h3= document.createElement('h3');
 						th.appendChild(h3);
-						var node = document.createTextNode("日期");
+						var node = document.createTextNode(chrome.i18n.getMessage("date"));//"日期"
 						h3.appendChild(node);
 				
 				var tbody = document.createElement('tbody');
@@ -292,8 +306,10 @@ function InitDiv(){
 
 
 //===================显示UI大块=================================
-chrome.runtime.onMessage.addListener(
+//chrome.extension.onMessage.addListener(
+/*chrome.runtime.onMessage.addListener(
   function(request, sender, sendResponse) {
+  alert('TOKEN IS: '+token);
     if (request.token != '')
 		{
 			token = request.token;
@@ -303,7 +319,7 @@ chrome.runtime.onMessage.addListener(
 			document.getElementById('table_to_sort').getElementsByTagName('tbody')[0].style.visibility = 'visible';
       //sendResponse({farewell: "goodbye"});
 		}
-  });
+  });*/
 //------------testing------------ 
 function fetchList() {
     var xhr = new XMLHttpRequest();
@@ -339,11 +355,11 @@ function fetchList() {
 					}
 
         } else if(xhr.status == 401){
-					document.getElementById('status_span').innerHTML = '未成功授权，请重新授权后再试！';
+					document.getElementById('status_span').innerHTML = chrome.i18n.getMessage("errorOfUnauthorized");//'未成功授权，请重新授权后再试！';
 					document.getElementById('load1').style.display = 'none';
         }
 				else{
-					document.getElementById('status_span').innerHTML = '网络问题，请重试。不行的话，请刷新网页再试！';
+					document.getElementById('status_span').innerHTML = chrome.i18n.getMessage("errorOfConnection");//'网络问题，请重试。不行的话，请刷新网页再试！';
 					document.getElementById('load1').style.display = 'none';
 				}
       }/*else{
@@ -391,11 +407,11 @@ function fetchNextList(pagetoken) {
 					}
 
         } else if(xhr.status == 401){
-					document.getElementById('status_span').innerHTML = '未成功授权，请重新授权后再试！';
+					document.getElementById('status_span').innerHTML = chrome.i18n.getMessage("errorOfUnauthorized");//'未成功授权，请重新授权后再试！';
 					document.getElementById('load1').style.display = 'none';
         }
 				else{
-					document.getElementById('status_span').innerHTML = '网络问题，请重试。不行的话，请刷新网页再试！';
+					document.getElementById('status_span').innerHTML = chrome.i18n.getMessage("errorOfConnection");//'网络问题，请重试。不行的话，请刷新网页再试！';
 					document.getElementById('load1').style.display = 'none';
 				}
       }/*else{
@@ -434,7 +450,7 @@ function initCtrls(){
 	jcLoader().load({type:"js",url:chrome.extension.getURL("test/tableinited.js")},function(){
 						console.log("controls inited!")
 						
-						document.getElementById('status_span').innerHTML = '获取附件列表完毕！';
+						document.getElementById('status_span').innerHTML = chrome.i18n.getMessage("finishListing");//'获取附件列表完毕！';
 						document.getElementById('load1').style.display = 'none';
 						document.getElementById('GmailAssist').style.visibility = 'visible';
 						document.getElementById('overlay').style.visibility = 'visible';
@@ -449,19 +465,17 @@ function getMessage(MessageId,j) {//j为在msgFinished中的下标
     var xhr = new XMLHttpRequest();
     xhr.onreadystatechange = function(event) {
       if (xhr.readyState == 4) {
-        if(xhr.status == 200) {
-					
-							var messageObj = JSON.parse(xhr.responseText);
-							var parts = messageObj.payload.parts;
-							var partid ;
-							var headers = messageObj.payload.headers;
-							var sender;
-							var subject='-';
-							var labels = messageObj.labelIds;
-							var date;
-							
-							if(parts)
-							{
+        if(xhr.status == 200) {		
+			var messageObj = JSON.parse(xhr.responseText);
+			var parts = messageObj.payload.parts;
+			var partid ;
+			var headers = messageObj.payload.headers;
+			var sender;
+			var subject='-';
+			var labels = messageObj.labelIds;
+			var date;
+			if(parts)
+			{
 								
 							
 					//Fetch information of the attachments with a for loop
@@ -512,18 +526,17 @@ function getMessage(MessageId,j) {//j为在msgFinished中的下标
 								id++;
 							}
 						}
-					}
-					msgFinished[j] = true;
+			}
+			msgFinished[j] = true;
         }else if(xhr.status == 401){
-					document.getElementById('status_span').innerHTML = '未成功授权，请重新授权后再试！';
+			document.getElementById('status_span').innerHTML = chrome.i18n.getMessage("errorOfUnauthorized");//'未成功授权，请重新授权后再试！';
+			document.getElementById('load1').style.display = 'none';
+		}else {
+          document.getElementById('status_span').innerHTML = chrome.i18n.getMessage("errorOfConnection");//'网络问题，请重试。不行的话，请刷新网页再试！';
 					document.getElementById('load1').style.display = 'none';
         }
-				else {
-          document.getElementById('status_span').innerHTML = '网络问题，请重试。不行的话，请刷新网页再试！';
-					document.getElementById('load1').style.display = 'none';
-        }
-      }/*else{
-					document.getElementById('status_span').innerHTML = '网络请求失败，请重试！';
+		}/*else{
+					document.getElementById('status_span').innerHTML = chrome.i18n.getMessage("badRequest");//'网络请求失败，请重试！';
 					document.getElementById('load1').style.display = 'none';
 				}*/
     };
@@ -576,19 +589,19 @@ function makenewdraft(passed,name){
 						callback(draftID);
 					}
 					else{
-						document.getElementById('status_span').innerHTML = '草稿箱为空，请先创建草稿后再试！';
+						document.getElementById('status_span').innerHTML = chrome.i18n.getMessage("draftBoxEmpty");//'草稿箱为空，请先创建草稿后再试！';
 						document.getElementById('load1').style.display = 'none';
 					}
 				//	console.log(draftID);
         }else if(xhr.status == 401){
-					document.getElementById('status_span').innerHTML = '未成功授权，请重新授权后再试！';
+					document.getElementById('status_span').innerHTML = chrome.i18n.getMessage("errorOfUnauthorized");//'未成功授权，请重新授权后再试！';
 					document.getElementById('load1').style.display = 'none';
         } else {
-					document.getElementById('status_span').innerHTML = '网络问题，请重试。不行的话，请刷新网页再试！';
+					document.getElementById('status_span').innerHTML = chrome.i18n.getMessage("errorOfConnection");//'网络问题，请重试。不行的话，请刷新网页再试！';
 					document.getElementById('load1').style.display = 'none';
 				}
       }else{
-					document.getElementById('status_span').innerHTML = '网络请求失败，请重试！';
+					document.getElementById('status_span').innerHTML = chrome.i18n.getMessage("badRequest");//'网络请求失败，请重试！';
 					document.getElementById('load1').style.display = 'none';
 				}
     };
@@ -611,14 +624,14 @@ function makenewdraft(passed,name){
 					callback( atob(raw.replace(/-/g, '+').replace(/_/g, '/')) );
 							
         }else if(xhr.status == 401){
-					document.getElementById('status_span').innerHTML = '未成功授权，请重新授权后再试！';
+					document.getElementById('status_span').innerHTML = chrome.i18n.getMessage("errorOfUnauthorized");//'未成功授权，请重新授权后再试！';
 					document.getElementById('load1').style.display = 'none';
         } else {
-          document.getElementById('status_span').innerHTML = '网络问题，请重试。不行的话，请刷新网页再试！';
+          document.getElementById('status_span').innerHTML = chrome.i18n.getMessage("errorOfConnection");//'网络问题，请重试。不行的话，请刷新网页再试！';
 					document.getElementById('load1').style.display = 'none';
         }
       }else{
-					document.getElementById('status_span').innerHTML = '网络请求失败，请重试！';
+					document.getElementById('status_span').innerHTML = chrome.i18n.getMessage("badRequest");//'网络请求失败，请重试！';
 					document.getElementById('load1').style.display = 'none';
 				}
     };
@@ -661,14 +674,14 @@ function makenewdraft(passed,name){
 					}
 							
         }else if(xhr.status == 401){
-					document.getElementById('status_span').innerHTML = '未成功授权，请重新授权后再试！';
+					document.getElementById('status_span').innerHTML = chrome.i18n.getMessage("errorOfUnauthorized");//'未成功授权，请重新授权后再试！';
 					document.getElementById('load1').style.display = 'none';
         } else {
-          document.getElementById('status_span').innerHTML = '网络问题，请重试。不行的话，请刷新网页再试！';
+          document.getElementById('status_span').innerHTML = chrome.i18n.getMessage("errorOfConnection");//'网络问题，请重试。不行的话，请刷新网页再试！';
 					document.getElementById('load1').style.display = 'none';
         }
       }else{
-					document.getElementById('status_span').innerHTML = '网络请求失败，请重试！';
+					document.getElementById('status_span').innerHTML = chrome.i18n.getMessage("badRequest");//'网络请求失败，请重试！';
 					document.getElementById('load1').style.display = 'none';
 				}
     };
@@ -726,14 +739,14 @@ function makenewdraft(passed,name){
 					var draftID = drafts[0].id;
 					return btoa(updatedRaw).replace(/\//g, '_').replace(/\+/g, '-');
         }else if(xhr.status == 401){
-					document.getElementById('status_span').innerHTML = '未成功授权，请重新授权后再试！';
+					document.getElementById('status_span').innerHTML = chrome.i18n.getMessage("errorOfUnauthorized");//'未成功授权，请重新授权后再试！';
 					document.getElementById('load1').style.display = 'none';
         } else {
-				document.getElementById('status_span').innerHTML = '网络问题，请重试。不行的话，请刷新网页再试！';
+				document.getElementById('status_span').innerHTML = chrome.i18n.getMessage("errorOfConnection");//'网络问题，请重试。不行的话，请刷新网页再试！';
 				document.getElementById('load1').style.display = 'none';
 				}
       }else{
-					document.getElementById('status_span').innerHTML = '网络请求失败，请重试！';
+					document.getElementById('status_span').innerHTML = chrome.i18n.getMessage("badRequest");//'网络请求失败，请重试！';
 					document.getElementById('load1').style.display = 'none';
 				}
     };
@@ -755,17 +768,17 @@ function makenewdraft(passed,name){
     xhr.onreadystatechange = function(event) {
       if (xhr.readyState == 4) {
         if(xhr.status == 200) {
-					document.getElementById('status_span').innerHTML ='附件<strong>'+ name +'</strong>已成功插入至最新草稿！';
+					document.getElementById('status_span').innerHTML =chrome.i18n.getMessage("finishInsert",name);//'附件<strong>'+ name +'</strong>已成功插入至最新草稿！';
 					console.log('添加附件成功！');
         }else if(xhr.status == 401){
-					document.getElementById('status_span').innerHTML = '未成功授权，请重新授权后再试！';
+					document.getElementById('status_span').innerHTML = chrome.i18n.getMessage("errorOfUnauthorized");//'未成功授权，请重新授权后再试！';
 					document.getElementById('load1').style.display = 'none';
         } else {
-          document.getElementById('status_span').innerHTML = '网络问题，请重试。不行的话，请刷新网页再试！';
+          document.getElementById('status_span').innerHTML = chrome.i18n.getMessage("errorOfConnection");//'网络问题，请重试。不行的话，请刷新网页再试！';
 					document.getElementById('load1').style.display = 'none';
         }
       }else{
-					document.getElementById('status_span').innerHTML = '网络请求失败，请重试！';
+					document.getElementById('status_span').innerHTML = chrome.i18n.getMessage("badRequest");//'网络请求失败，请重试！';
 					document.getElementById('load1').style.display = 'none';
 				}
     };
@@ -941,9 +954,10 @@ var jcLoader = function(){
 
 function tellIfLoaded(){
 	if(document.getElementById('form').disabled == true)
-		document.getElementById('status_span').innerHTML ='呜呜呜，Gmail助手加载失败了，请刷新网页重试~';
+		document.getElementById('status_span').innerHTML = chrome.i18n.getMessage("failLoading");//'Gmail助手加载失败了，请刷新网页重试。(建议先等页面加载完毕，再打开助手界面)';
 		document.getElementById('load1').style.display = 'none';
 }
 
 InitDiv();
+console.log('Div inited now!');
 setTimeout("tellIfLoaded();",20000);

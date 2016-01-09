@@ -1,7 +1,7 @@
 ﻿<head>
 	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
   <title>OAuth 2.0 Popup</title>
-  <script src="js/jquery-1.11.1.min.js"></script>
+  <script src="test/jquery-1.11.1.min.js"></script>
 	<script src="oauth2/oauth2.js"></script>
 	<script src="test/test4.js" charset="utf-8"></script>
   
@@ -18,7 +18,7 @@
 			margin-top:20px;
 			display: inline-block;
 			margin: 10px 5px 5px 5px;
-			text-transform: uppercase;
+			
 			letter-spacing: 1px;
 			font-weight: 700;
 			outline: none;
@@ -79,12 +79,13 @@
 </head>
 
 <span>
-<button id="google" class="btn btn-1 btn-1e">授权</button>
-<button id="clear" class="btn btn-1 btn-1e">取消授权</button>
+<button id="google" class="btn btn-1 btn-1e" data-i18n-content="Authorize"></button>
+<button id="clear" class="btn btn-1 btn-1e" data-i18n-content="DeAuthorize"></button>
 </span>
 <form id="form">
-  <input id="button"  class="btn btn-1 btn-1e" type="submit" value="显示助手界面"/>
+  <input id="button"  class="btn btn-1 btn-1e" type="submit" data-i18n-value="displayInterface"> <!--value="显示助手界面"/>-->
 </form>
 <div id="success">
   <span id="msgatt"></span>.
 </div>
+<script src="test/generateNameOfBtns.js" charset="utf-8"></script>
