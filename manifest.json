@@ -20,7 +20,7 @@
 	},
 	
 	"background": {
-		"scripts": ["background.js"],
+		"scripts": ["js/background.js"],
 		"persistent": true
 	},
 	
@@ -31,8 +31,8 @@
 			"run_at": "document_start"
 		},
 		{
-			"js": [ "load.js", "test/test5.js" ],
-			"css": ["component.css"],
+			"js": [ "js/load.js", "js/content.js", "js/table_sort_script.js" ],
+			"css": ["css/component.css"],
 			"matches": ["*://mail.google.com/*"],
 			"run_at": "document_end"
 		}
@@ -51,10 +51,14 @@
 	
 	"web_accessible_resources" : [
 		"oauth2/oauth2.html",
-		"test/tableinited.js",
-		"style.css",
-		"component.css",
-		"script.js",
+		"injected-js/tableInited.js",
+		"css/main-UI-style.css",
+		"css/component.css",
+		//"injected-js/table_sort_script.js",
+	  "images/first.gif",
+	  "images/previous.gif",
+	  "images/next.gif",
+	  "images/last.gif",
 		"images/sort.gif",
 		"images/header-selected-bg.gif",
 		"images/desc.gif",

@@ -3,7 +3,7 @@
 		"message":"Gmail Attachment Manager"
 	},
 	"extDescript":{
-		"message":"With this extension, you can list all the attachments in your Gmail, and download them in a batch, or add them into your latest DRAFT."
+		"message":"With this, you can list all the attachments in your Gmail, and download them in a batch, or add them into your latest DRAFT."
 	},
 	"itemsPerPage":{
 		"message":" items per page"
