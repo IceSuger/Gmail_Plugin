@@ -1,68 +1,75 @@
 ﻿{
-    "manifest_version": 2,
-    "name": "__MSG_extName__",
-    "version": "1.9",
-	
-	"default_locale": "en",
-    "description": "__MSG_extDescript__",
-		"icons": {
-        "48": "images/icon48.png",
-        "128": "images/icon128.png"
+  "manifest_version": 2,
+  "name": "__MSG_extName__",
+  "version": "1.9",
+  "default_locale": "en",
+  "description": "__MSG_extDescript__",
+  "icons": {
+    "48": "images/icon48.png",
+    "128": "images/icon128.png"
+  },
+  "short_name": "GmailAssist",
+  "page_action": {
+    "default_icon": {
+      "19": "images/icon19.png",
+      "38": "images/icon38.png"
     },
-	"short_name": "GmailAssist",
-	"page_action": {  
-		 "default_icon": {
-            "19": "images/icon19.png",
-            "38": "images/icon38.png"
-        },
-		"default_title" : "__MSG_extName__",
-		"default_popup": "popup.html"
-	},
-	
-	"background": {
-		"scripts": ["js/background.js"],
-		"persistent": true
-	},
-	
-	"content_scripts":  [
-		{
-			"js": ["oauth2/oauth2_inject.js"],
-			"matches": [ "http://www.google.com/robots.txt*"],
-			"run_at": "document_start"
-		},
-		{
-			"js": [ "js/load.js", "js/content.js", "js/table_sort_script.js" ],
-			"css": ["css/component.css"],
-			"matches": ["*://mail.google.com/*"],
-			"run_at": "document_end"
-		}
-	],
-	 
-	"content_security_policy":
-		"script-src 'self' https://apis.google.com https://rawgit.com 'unsafe-eval'; object-src 'self'",
-	
-	"permissions" : [
-		"declarativeContent",
-		"downloads",
-		"*://mail.google.com/*",
-		"https://accounts.google.com/o/oauth2/token",
-		"https://www.googleapis.com/"
-	],
-	
-	"web_accessible_resources" : [
-		"oauth2/oauth2.html",
-		"injected-js/tableInited.js",
-		"css/main-UI-style.css",
-		"css/component.css",
-		//"injected-js/table_sort_script.js",
-	  "images/first.gif",
-	  "images/previous.gif",
-	  "images/next.gif",
-	  "images/last.gif",
-		"images/sort.gif",
-		"images/header-selected-bg.gif",
-		"images/desc.gif",
-		"images/asc.gif",
-		"images/header-bg.gif"
+    "default_title": "__MSG_extName__",
+    "default_popup": "popup.html"
+  },
+  "background": {
+    "scripts": [
+      "js/background.js"
+    ],
+    "persistent": true
+  },
+  "content_scripts": [
+    {
+      "js": [
+        "oauth2/oauth2_inject.js"
+      ],
+      "matches": [
+        "http://www.google.com/robots.txt*"
+      ],
+      "run_at": "document_start"
+    },
+    {
+      "js": [
+
+        "js/table_sort_script.js","js/load.js",
+        "js/content.js"
+      ],
+      "css": [
+        "css/component.css"
+      ],
+      "matches": [
+        "*://mail.google.com/*"
+      ],
+      "run_at": "document_end"
+    }
+  ],
+  "content_security_policy": "script-src 'self' https://apis.google.com https://rawgit.com 'unsafe-eval'; object-src 'self'",
+  "permissions": [
+    "declarativeContent",
+    "downloads",
+    "*://mail.google.com/*",
+    "https://accounts.google.com/o/oauth2/token",
+    "https://www.googleapis.com/"
+  ],
+  "web_accessible_resources": [
+    "oauth2/oauth2.html",
+    "injected-js/tableInited.js",
+    "css/main-UI-style.css",
+    "css/component.css",
+    //"injected-js/table_sort_script.js",
+    "images/first.gif",
+    "images/previous.gif",
+    "images/next.gif",
+    "images/last.gif",
+    "images/sort.gif",
+    "images/header-selected-bg.gif",
+    "images/desc.gif",
+    "images/asc.gif",
+    "images/header-bg.gif"
   ]
 }

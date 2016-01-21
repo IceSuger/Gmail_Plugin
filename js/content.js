@@ -35,32 +35,32 @@ function InitDiv() {
     overlay.id = 'overlay';
 
     /*overlay.style.position = 'absolute';
-    overlay.style.top = '0';
-    overlay.style.left = '0';
-    overlay.style.width = '100%';
-    overlay.style.height = '100%';
-    overlay.style.zIndex = '999';
-    overlay.style.background = '#000000';
-    overlay.style.opacity = '0.5';
-    overlay.style.visibility = "hidden";*/ //这一段移到了main-UI-style.css里了
+     overlay.style.top = '0';
+     overlay.style.left = '0';
+     overlay.style.width = '100%';
+     overlay.style.height = '100%';
+     overlay.style.zIndex = '999';
+     overlay.style.background = '#000000';
+     overlay.style.opacity = '0.5';
+     overlay.style.visibility = "hidden";*/ //这一段移到了main-UI-style.css里了
 
     var div = document.createElement('div');
     div.id = "GmailAssist";
     document.getElementsByTagName('body')[0].appendChild(div);
     /*div.style.width = '1078px';
-    //div.style.height = '500px';
-    div.style.border = '5px solid #dedede';
-    div.style.borderRadius = '8px';
-    div.style.overflow = 'auto';
-    div.style.position = 'fixed';
-    div.style.background = 'white';
-    div.style.top = '50%';
-    div.style.left = '50%';
-    div.style.marginLeft = '-539px';
-    div.style.marginTop = '-300px';
-    div.style.padding = '0px 16px 16px 16px';
-    div.style.zIndex = '1000';
-    div.style.visibility = "hidden";*/ //这一段也写在main-UI-style.css里了
+     //div.style.height = '500px';
+     div.style.border = '5px solid #dedede';
+     div.style.borderRadius = '8px';
+     div.style.overflow = 'auto';
+     div.style.position = 'fixed';
+     div.style.background = 'white';
+     div.style.top = '50%';
+     div.style.left = '50%';
+     div.style.marginLeft = '-539px';
+     div.style.marginTop = '-300px';
+     div.style.padding = '0px 16px 16px 16px';
+     div.style.zIndex = '1000';
+     div.style.visibility = "hidden";*/ //这一段也写在main-UI-style.css里了
 
     //----给overlay添加onclick事件-----
     overlay.onclick = function () {
@@ -98,7 +98,7 @@ function InitDiv() {
     btndown.className = "btn btn-1 btn-1e";
     btndown.innerHTML = chrome.i18n.getMessage("download");//'下载';
     btndown.onclick = function () {
-        var id2=0;
+        var id2 = 0;
         console.log('id2: ' + id2 + ' id: ' + id);
         for (id2 = 0; id2 < visibleRows.length; id2++) {
             var chebox = document.getElementById("checkbox_" + id2);
@@ -149,21 +149,21 @@ function InitDiv() {
         showRows();//根据数组show_thisrow决定是否显示当前行
         document.getElementById('status_span').innerHTML = chrome.i18n.getMessage("finishListing");//'获取附件列表完毕！';
         document.getElementById('table_to_sort').getElementsByTagName('tbody')[0].style.visibility = 'visible';
-       /* jcLoader().load({
-            type: "js",
-            url: chrome.extension.getURL("../injected-js/tableInited.js")
-        }, function () {*/
-            initPageAndSorting();
-            console.log("controls inited!");
-            alert('controls inited?!');
+        /* jcLoader().load({
+         type: "js",
+         url: chrome.extension.getURL("../injected-js/tableInited.js")
+         }, function () {*/
+        initPageAndSorting();
+        console.log("controls inited!");
+        alert('controls inited?!');
 
-            document.getElementById('status_span').innerHTML = chrome.i18n.getMessage("finishListing");//'获取附件列表完毕！';
-            document.getElementById('load1').style.display = 'none';
-            document.getElementById('GmailAssist').style.visibility = 'visible';
-            document.getElementById('overlay').style.visibility = 'visible';
-            document.getElementById('table_to_sort').getElementsByTagName('tbody')[0].style.visibility = 'visible';
+        document.getElementById('status_span').innerHTML = chrome.i18n.getMessage("finishListing");//'获取附件列表完毕！';
+        document.getElementById('load1').style.display = 'none';
+        document.getElementById('GmailAssist').style.visibility = 'visible';
+        document.getElementById('overlay').style.visibility = 'visible';
+        document.getElementById('table_to_sort').getElementsByTagName('tbody')[0].style.visibility = 'visible';
 
-       // });
+        // });
     };
     //---------生成搜索框-------
     var filterinput = document.createElement('input');
@@ -296,129 +296,201 @@ function InitDiv() {
 }
 
 //-----初始化分页、排序
-function initPageAndSorting(){
-var sorter = new TINY.table.sorter("sorter");
-sorter.head = "head";
-sorter.asc = "asc";
-sorter.desc = "desc";
-sorter.even = "evenrow";
-sorter.odd = "oddrow";
-sorter.evensel = "evenselected";
-sorter.oddsel = "oddselected";
-sorter.paginate = true;
-sorter.currentid = "currentpage";
-sorter.limitid = "pagelimit";
+var sorter_instance={};
+function initPageAndSorting() {
+    {
+        var TINY={};
+//download by http://www.codefans.net
+        function T$(i){return document.getElementById(i)}
+        function T$$(e,p){return p.getElementsByTagName(e)}
 
-var controls = document.getElementById('controls');
-if (!controls) {
-    var controls = document.createElement('div');
-    controls.id = 'controls';
-    document.getElementById('GmailAssist').appendChild(controls);
+        TINY.table=function(){
+            function sorter(n){this.n=n; this.pagesize=10; this.paginate=0}
+            sorter.prototype.init=function(e,f){
+                var t=ge(e), i=0; this.e=e; this.l=t.r.length; t.a=[];
+                t.h=T$$('thead',T$(e))[0].rows[0]; t.w=t.h.cells.length;
+                for(i;i<t.w;i++){
+                    var c=t.h.cells[i];
+                    if(c.className!='nosort'){
+                        c.className=this.head; c.onclick=new Function(this.n+'.wk(this.cellIndex)')
+                    }
+                }
+                for(i=0;i<this.l;i++){t.a[i]={}}
+                if(f!=null){var a=new Function(this.n+'.wk('+f+')'); a()}
+                if(this.paginate){this.g=1; this.pages()}
+            };
+            sorter.prototype.wk=function(y){
+                var t=ge(this.e), x=t.h.cells[y], i=0;
+                for(i;i<this.l;i++){
+                    t.a[i].o=i; var v=t.r[i].cells[y]; t.r[i].style.display='';
+                    while(v.hasChildNodes()){v=v.firstChild}
+                    t.a[i].v=v.nodeValue?v.nodeValue:''
+                }
+                for(i=0;i<t.w;i++){var c=t.h.cells[i]; if(c.className!='nosort'){c.className=this.head}}
+                if(t.p==y){t.a.reverse(); x.className=t.d?this.asc:this.desc; t.d=t.d?0:1}
+                else{t.p=y; t.a.sort(cp); t.d=0; x.className=this.asc}
+                var n=document.createElement('tbody');
+                for(i=0;i<this.l;i++){
+                    var r=t.r[t.a[i].o].cloneNode(true); n.appendChild(r);
+                    r.className=i%2==0?this.even:this.odd; var cells=T$$('td',r);
+                    for(var z=0;z<t.w;z++){cells[z].className=y==z?i%2==0?this.evensel:this.oddsel:''}
+                }
+                t.replaceChild(n,t.b); if(this.paginate){this.size(this.pagesize)}
+            };
+            sorter.prototype.page=function(s){
+                var t=ge(this.e), i=0, l=s+parseInt(this.pagesize);
+                if(this.currentid&&this.limitid){T$(this.currentid).innerHTML=this.g}
+                for(i;i<this.l;i++){t.r[i].style.display=i>=s&&i<l?'':'none'}
+            };
+            sorter.prototype.move=function(d,m){
+                var s=d==1?(m?this.d:this.g+1):(m?1:this.g-1);
+                if(s<=this.d&&s>0){this.g=s; this.page((s-1)*this.pagesize)}
+            };
+            sorter.prototype.size=function(s){
+                this.pagesize=s; this.g=1; this.pages(); this.page(0);
+                if(this.currentid&&this.limitid){T$(this.limitid).innerHTML=this.d}
+            };
+            sorter.prototype.pages=function(){this.d=Math.ceil(this.l/this.pagesize)};
+            function ge(e){var t=T$(e); t.b=T$$('tbody',t)[0]; t.r=t.b.rows; return t};
+            function cp(f,c){
+                var g,h; f=g=f.v.toLowerCase(), c=h=c.v.toLowerCase();
+                var i=parseFloat(f.replace(/(\$|\,)/g,'')), n=parseFloat(c.replace(/(\$|\,)/g,''));
+                if(!isNaN(i)&&!isNaN(n)){g=i,h=n}
+                i=Date.parse(f); n=Date.parse(c);
+                if(!isNaN(i)&&!isNaN(n)){g=i; h=n}
+                return g>h?1:(g<h?-1:0)
+            };
+            return{sorter:sorter}
+        }();
+    }
+    sorter_instance = new TINY.table.sorter("sorter_instance");
+    console.log(sorter_instance);
+    console.log(TINY);
+    sorter_instance.head = "head";
+    sorter_instance.asc = "asc";
+    sorter_instance.desc = "desc";
+    sorter_instance.even = "evenrow";
+    sorter_instance.odd = "oddrow";
+    sorter_instance.evensel = "evenselected";
+    sorter_instance.oddsel = "oddselected";
+    sorter_instance.paginate = true;
+    sorter_instance.currentid = "currentpage";
+    sorter_instance.limitid = "pagelimit";
 
-    {//controls内容
-        var perpage = document.createElement('div');
-        perpage.id = 'perpage';
-        controls.appendChild(perpage);
-        {
-            var select = document.createElement('select');
-            select.id = 'selec';
-            perpage.appendChild(select);
-            /*	var option = document.createElement('option');
-             option.value = '5';
-             option.innerHTML = 5;
-             select.appendChild(option);
-             */
-            var option = document.createElement('option');
-            option.value = '10';
-            option.selected = "selected";
-            option.innerHTML = 10;
-            select.appendChild(option);
-            /*
-             var option = document.createElement('option');
-             option.value = '15';
-             option.innerHTML = 15;
-             select.appendChild(option);
-             */
-            var span = document.createElement('span');
-            var ipp = "items/page";//"项每页";
-            span.innerHTML = ipp;
-            perpage.appendChild(span);
-        }
-        var navigation = document.createElement('div');
-        navigation.id = 'navigation';
-        controls.appendChild(navigation);
-        {
-            var first = document.createElement('img');
-            first.src = chrome.extension.getURL("../images/first.gif");
-            first.width = "16";
-            first.height = "16";
-            first.alt = "First Page";
-            //first.onclick="sorter.move(-1,true)";
-            first.onclick = function () {
-                sorter.move(-1, true);
+    var controls = document.getElementById('controls');
+    if (!controls) {
+        var controls = document.createElement('div');
+        controls.id = 'controls';
+        document.getElementById('GmailAssist').appendChild(controls);
+
+        {//controls内容
+            var perpage = document.createElement('div');
+            perpage.id = 'perpage';
+            controls.appendChild(perpage);
+            {
+                var select = document.createElement('select');
+                select.id = 'selec';
+                perpage.appendChild(select);
+                	var option = document.createElement('option');
+                 option.value = '5';
+                 option.innerHTML = 5;
+                 select.appendChild(option);
+
+                var option = document.createElement('option');
+                option.value = '10';
+                option.selected = "selected";
+                option.innerHTML = 10;
+                select.appendChild(option);
+
+                 var option = document.createElement('option');
+                 option.value = '15';
+                 option.innerHTML = 15;
+                 select.appendChild(option);
+
+                //下面加上实现换每页项数的代码！//暂时先注释掉
+                select.onchange = function(){
+                    sorter_instance.size(this.value);
+                }
+                var span = document.createElement('span');
+                var ipp = "Entries per page";//"项每页";
+                span.innerHTML = ipp;
+                perpage.appendChild(span);
             }
-            navigation.appendChild(first);
+            var navigation = document.createElement('div');
+            navigation.id = 'navigation';
+            controls.appendChild(navigation);
+            {
+                var first = document.createElement('img');
+                first.src = chrome.extension.getURL("../images/first.gif");
+                first.width = "16";
+                first.height = "16";
+                first.alt = "First Page";
+                //first.onclick="sorter.move(-1,true)";
+                first.onclick = function () {
+                    sorter_instance.move(-1, true);
+                }
+                navigation.appendChild(first);
 
-            var previous = document.createElement('img');
-            previous.src = chrome.extension.getURL("../images/previous.gif");
-            previous.width = "16";
-            previous.height = "16";
-            previous.alt = "Previous Page";
-            //previous.onclick="javascript:sorter.move(-1)";
-            previous.onclick = function () {
-                sorter.move(-1);
+                var previous = document.createElement('img');
+                previous.src = chrome.extension.getURL("../images/previous.gif");
+                previous.width = "16";
+                previous.height = "16";
+                previous.alt = "Previous Page";
+                //previous.onclick="javascript:sorter.move(-1)";
+                previous.onclick = function () {
+                    sorter_instance.move(-1);
+                }
+                navigation.appendChild(previous);
+
+                var next = document.createElement('img');
+                next.src = chrome.extension.getURL("../images/next.gif");
+                next.width = "16";
+                next.height = "16";
+                next.alt = "Next Page";
+                //next.onclick=sorter.move(1);
+                //next.setAttribute("onclick", function(){alert('123');});
+                next.onclick = function () {
+                    sorter_instance.move(1);
+                }
+                navigation.appendChild(next);
+
+                var last = document.createElement('img');
+                last.src = chrome.extension.getURL("../images/last.gif");
+                last.width = "16";
+                last.height = "16";
+                last.alt = "Last Page";
+                last.onclick = function () {
+                    sorter_instance.move(1, true);
+                }
+                //last.onclick=sorter.move(1,true);
+                //last.setAttribute("onclick", alert('123'));
+                navigation.appendChild(last);
             }
-            navigation.appendChild(previous);
+            var text = document.createElement('div');
+            text.id = 'text';
+            controls.appendChild(text);
+            {
+                var node = document.createTextNode("Page ");//"第"
+                text.appendChild(node);
 
-            var next = document.createElement('img');
-            next.src = chrome.extension.getURL("../images/next.gif");
-            next.width = "16";
-            next.height = "16";
-            next.alt = "Next Page";
-            //next.onclick=sorter.move(1);
-            //next.setAttribute("onclick", function(){alert('123');});
-            next.onclick = function () {
-                sorter.move(1);
+                var currentpage = document.createElement('span');
+                currentpage.id = "currentpage";
+                text.appendChild(currentpage);
+
+                var node = document.createTextNode("/");
+                text.appendChild(node);
+
+                var pagelimit = document.createElement('span');
+                pagelimit.id = "pagelimit";
+                text.appendChild(pagelimit);
+
+                //var node = document.createTextNode(chrome.i18n.getMessage("pageNumEnd"));//"页"
+                //text.appendChild(node);
             }
-            navigation.appendChild(next);
-
-            var last = document.createElement('img');
-            last.src = chrome.extension.getURL("../images/last.gif");
-            last.width = "16";
-            last.height = "16";
-            last.alt = "Last Page";
-            last.onclick = function () {
-                sorter.move(1, true);
-            }
-            //last.onclick=sorter.move(1,true);
-            //last.setAttribute("onclick", alert('123'));
-            navigation.appendChild(last);
-        }
-        var text = document.createElement('div');
-        text.id = 'text';
-        controls.appendChild(text);
-        {
-            var node = document.createTextNode("Page ");//"第"
-            text.appendChild(node);
-
-            var currentpage = document.createElement('span');
-            currentpage.id = "currentpage";
-            text.appendChild(currentpage);
-
-            var node = document.createTextNode("/");
-            text.appendChild(node);
-
-            var pagelimit = document.createElement('span');
-            pagelimit.id = "pagelimit";
-            text.appendChild(pagelimit);
-
-            //var node = document.createTextNode(chrome.i18n.getMessage("pageNumEnd"));//"页"
-            //text.appendChild(node);
         }
     }
-}
 
-sorter.init("table_to_sort", 0);
+    sorter_instance.init("table_to_sort", 0);
 }
 //===================显示UI大块=================================
 //chrome.extension.onMessage.addListener(
@@ -563,13 +635,13 @@ function initCtrls() {
         initPageAndSorting();
         console.log("controls inited!");
 
-            document.getElementById('status_span').innerHTML = chrome.i18n.getMessage("finishListing");//'获取附件列表完毕！';
-            document.getElementById('load1').style.display = 'none';
-            document.getElementById('GmailAssist').style.visibility = 'visible';
-            document.getElementById('overlay').style.visibility = 'visible';
-            document.getElementById('table_to_sort').getElementsByTagName('tbody')[0].style.visibility = 'visible';
+        document.getElementById('status_span').innerHTML = chrome.i18n.getMessage("finishListing");//'获取附件列表完毕！';
+        document.getElementById('load1').style.display = 'none';
+        document.getElementById('GmailAssist').style.visibility = 'visible';
+        document.getElementById('overlay').style.visibility = 'visible';
+        document.getElementById('table_to_sort').getElementsByTagName('tbody')[0].style.visibility = 'visible';
 
-            //setTimeout("document.getElementById('status_span').innerHTML = '';",3000);
+        //setTimeout("document.getElementById('status_span').innerHTML = '';",3000);
 
     }
 }

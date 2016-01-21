@@ -1,3 +1,4 @@
+/*
 var TINY={};
 //download by http://www.codefans.net
 function T$(i){return document.getElementById(i)}
@@ -60,4 +61,4 @@ TINY.table=function(){
 		return g>h?1:(g<h?-1:0)
 	};
 	return{sorter:sorter}
-}();
+}();*/
