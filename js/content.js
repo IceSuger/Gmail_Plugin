@@ -8,13 +8,13 @@ var id_show = 0;//附件编号（显示出来的列表行的编号，经过filte
 var msgFinished = [];
 var allContent = [];
 var visibleRows = [];
-var msgNow = 0;
+var msgNow = 0;//获取附件（邮件）列表过程中，当前已获取到的邮件总数
 var not_include_content_pics = true;
 var filterValue;//搜索框输入值
 
 //添加附件过程
 function insertAtt() {
-    var id2;
+    var id2;//id2指明当前要操作的附件在table中的编号（由获取到的顺序决定）
 
     for (id2 = idnow; id2 < visibleRows.length; id2++) {
         if (document.getElementById("checkbox_" + id2).checked == true) {
@@ -72,7 +72,7 @@ function InitDiv() {
         document.getElementById('table_to_sort').getElementsByTagName('tbody')[0].style.visibility = 'hidden';
     };
 
-    //---------显示主按钮-------
+    //---------显示 获取附件列表 按钮-------
     var button = document.createElement('button');
     button.id = 'form';
     button.innerHTML = chrome.i18n.getMessage("fetchAttsList");//'获取附件列表';
@@ -101,16 +101,22 @@ function InitDiv() {
     btndown.innerHTML = chrome.i18n.getMessage("download");//'下载';
     btndown.onclick = function () {
         var id2 = 0;
-        console.log('id2: ' + id2 + ' id: ' + id);
+        //console.log('id2: ' + id2 + ' id: ' + id);
         for (id2 = 0; id2 < visibleRows.length; id2++) {
             var chebox = document.getElementById("checkbox_" + id2);
+            //console.log('id2是 '+id2+'。visibleRows.length= ' + visibleRows.length);
             //console.log(chebox);
             if (chebox.checked == true) {
                 var url = 'https://mail.google.com/mail/u/0/?ui=2&ik=undefined&view=att&th=' + visibleRows[id2].split('|-|')[6] + '&attid=0.' + visibleRows[id2].split('|-|')[7] + '&disp=safe&zw';
                 chrome.runtime.sendMessage({url: url}, function (response) {
-                    //document.write(response);
-                    console.log({url: url});
-                    console.log('从background返回了');
+                    /*if(response){
+                     console.log(response);
+                     }else{
+                     console.log(chrome.runtime.lastError);
+                     }
+
+                     console.log({url: url});
+                     console.log('从background返回了');*/
                 });
 
             }
@@ -135,7 +141,6 @@ function InitDiv() {
             }
         }
         setTimeout("insertAtt();", 500);
-        //inser();
     };
     div.appendChild(btninsert);
     //---------生成本地搜索按钮-----
@@ -734,13 +739,15 @@ function fetchNextList(pagetoken) {
         url = LIST_FETCH_URL + '?q=has%3Aattachment' + otherParams;
     }
     var settings = {
+        retryCount: 0,
+        url: url,
         /**
          *
          * @param list      即解析过（JSON.parse）之后的xhr.responseText
          * @param textStatus    描述该ajax请求的状态的字符串
          * @param xhr       jqXHR对象
          */
-        success: function (list, textStatus,xhr) {
+        success: function (list, textStatus, xhr) {
             //var list = JSON.parse(xhr.responseText);
             //id = 0;
             /*				//弄个数组来保存每个message是否处理完的信息
@@ -749,7 +756,7 @@ function fetchNextList(pagetoken) {
             console.log(list.nextPageToken);
             for (i = 0; i < list.messages.length; i++) {
                 msgFinished[i + msgNow] = false;
-                console.log(list.messages[i].id + ' ' + i + msgNow + ' ' + list.resultSizeEstimate);
+                console.log(list.messages[i].id + ' ' + (i + msgNow) + ' ' + list.resultSizeEstimate);
                 getMessage(list.messages[i].id, i + msgNow);
             }
             msgNow += i;
@@ -759,15 +766,19 @@ function fetchNextList(pagetoken) {
             }
             else {
                 //fetchList();
-                var time = setTimeout("visibleRows=allContent;showRows();initCtrls();", 2000);
+                setTimeout(function () {
+                    visibleRows = allContent;
+                    showRows();
+                    initCtrls();
+                }, 2000);
             }
         }
     }
-    $.ajax(url, settings);
+    $.ajax(settings);
 }
 
 //排序table的控制（翻页）按钮们的初始化
-function initCtrls() {
+function initCtrls0() {
     var flag = true;
     for (i in msgFinished) {
         //console.log(msgFinished+' i='+i);
@@ -781,9 +792,8 @@ function initCtrls() {
     }
     else {
         //filterRows();//根据搜索框，过滤不显示的
-        //showRows();//根据数组show_thisrow决定是否显示当前行
+        //showRows();//根据数组visibleRows决定显示哪些行
 
-        //jcLoader().load({type: "js", url: chrome.extension.getURL("injected-js/tableInited.js")}, function () {
         initPageAndSorting();
         console.log("controls inited!");
 
@@ -798,10 +808,37 @@ function initCtrls() {
     }
 }
 
+function initCtrls() {
+    for (var i = 0; i < msgFinished.length; i++) {//实现了一种滑动窗口，已收到的（msgFinished==true的）就不再检测
+        if (!msgFinished[i]) {
+            console.log('再等会');
+            setTimeout(function () {
+                i -= 1;
+            }, 2100);
+        }
+    }
+    initPageAndSorting();
+    console.log("controls inited!");
+
+    document.getElementById('status_span').innerHTML = chrome.i18n.getMessage("finishListing");//'获取附件列表完毕！';
+    document.getElementById('load1').style.display = 'none';
+    document.getElementById('GmailAssist').style.visibility = 'visible';
+    document.getElementById('overlay').style.visibility = 'visible';
+    document.getElementById('table_to_sort').getElementsByTagName('tbody')[0].style.visibility = 'visible';
+}
+
+
 function getMessage(MessageId, j) {//j为在msgFinished中的下标
     url = MESSAGE_FETCH_URL_prefix + MessageId;
     var settings = {
-        success: function (messageObj, textStatus,xhr) {
+        retryCount: 0,
+        url: url,
+        headers: {
+            "Content-Type": "application/json",
+            "Authorization": 'OAuth ' + token
+        },
+
+        success: function (messageObj, textStatus, xhr) {
             //var messageObj = JSON.parse(xhr.responseText);
             var parts = messageObj.payload.parts;
 
@@ -853,7 +890,7 @@ function getMessage(MessageId, j) {//j为在msgFinished中的下标
             msgFinished[j] = true;
         }
     }
-    $.ajax(url, settings);
+    $.ajax(settings);
 }
 
 //---草稿操作函数
@@ -887,6 +924,7 @@ function makenewdraft(passed, name) {
     function getCurrentDraftID(callback) {
         url = DRAFT_URL_prefix;
         var settings = {
+            url: url,
             /**
              *
              * @param result  经JSON.parse解析过的请求返回内容
@@ -904,7 +942,7 @@ function makenewdraft(passed, name) {
                 //	console.log(draftID);
             }
         }
-        $.ajax(url, settings);
+        $.ajax(settings);
         //为啥原来写的async是false？？难道这个需要同步才行？？
         //xhr.open('GET', DRAFT_URL_prefix, false);
     }
@@ -912,6 +950,7 @@ function makenewdraft(passed, name) {
     function getCurrentRawDraft(DraftId, callback) {
         url = DRAFT_URL_prefix + DraftId + '?format=raw';
         var settings = {
+            url: url,
             /**
              *
              * @param oldDraft  经JSON.parse解析过的xhr.responseText
@@ -922,7 +961,7 @@ function makenewdraft(passed, name) {
                 callback(atob(raw.replace(/-/g, '+').replace(/_/g, '/')));
             }
         }
-        $.ajax(url, settings);
+        $.ajax(settings);
         //这个也是false？？？也要同步才行？不能异步？？
         //xhr.open('GET', DRAFT_URL_prefix + DraftId + '?format=raw', false);
     }
@@ -930,6 +969,7 @@ function makenewdraft(passed, name) {
     function getAttPart(MessageId, partid, callback) {
         url = MESSAGE_FETCH_URL_prefix + MessageId + '?format=raw';
         var settings = {
+            url: url,
             /**
              *
              * @param rawmail   经JSON.parse解析过的xhr.responseText
@@ -958,7 +998,7 @@ function makenewdraft(passed, name) {
                 }
             }
         }
-        $.ajax(url, settings);
+        $.ajax(settings);
 //又是一个false？？草稿相关的都得false？？
         //xhr.open('GET', MESSAGE_FETCH_URL_prefix + MessageId + '?format=raw', false);
     }
@@ -1045,12 +1085,15 @@ function makenewdraft(passed, name) {
         url = DRAFT_URL_prefix + DraftId;
         var settings = {
             type: 'PUT',
+            url: url,
+            data: json,
+            async: false,
             success: function () {
                 document.getElementById('status_span').innerHTML = chrome.i18n.getMessage("finishInsert", name);//'附件<strong>'+ name +'</strong>已成功插入至最新草稿！';
                 console.log('添加附件成功！');
             }
         }
-        $.ajax(url, settings);
+        $.ajax(settings);
 
         //果然还是个false
         //xhr.open('PUT', DRAFT_URL_prefix + DraftId, false);
@@ -1169,7 +1212,7 @@ function nextDelayTime(attempts) {
     return (Math.pow(2, attempts) * 1000) + Math.floor(Math.random() * 1000);//random() 方法可返回介于 0 ~ 1 之间的一个随机数。
 }
 //如果ajax失败了，就重发（指数退避重试7次以上都按7次算）
-function doAjaxRequestLoop(attempts, xhr) {
+function doAjaxRequestLoop0(attempts, xhr) {
     attempts += 1;
     if (attempts > 7) {
         attempts = 7;
@@ -1183,24 +1226,87 @@ function doAjaxRequestLoop(attempts, xhr) {
             }
         });
     }, nextDelayTime(attempts));
-
 }
+
+function doAjaxRequestLoop1(attempts, callback) {
+    attempts += 1;
+    if (attempts > 7) {
+        attempts = 7;
+    }
+    setTimeout(callback, nextDelayTime(attempts));
+}
+
+function doAjaxRequestLoop2(attempts, originalOptions) {
+    attempts += 1;
+    if (attempts > 7) {
+        attempts = 7;
+    }
+    setTimeout(function () {
+        $.ajax({
+            error: function (error) {
+                console.log('未授权哦');
+                doAjaxRequestLoop(attempts, originalOptions);
+            }
+        });
+    }, nextDelayTime(attempts));
+}
+
 
 InitDiv();
 //全局ajax设置，ajax失败则指数退避重传(jq ajax的type默认为'GET')
-$.ajaxSetup({
-    error: function (xhr) {
-        if (xhr.status == 401) {
+//$.ajaxSetup({
+//    //attempts: 0,//已重试次数
+//    error: function (xhr) {
+//        if (xhr.status == 401) {
+//            document.getElementById('status_span').innerHTML = chrome.i18n.getMessage("errorOfUnauthorized");//'未成功授权，请重新授权后再试！';
+//            document.getElementById('load1').style.display = 'none';
+//            //console.log('未授权哦');
+//            //console.log(xhr);
+//            //通过闭包（还是？匿名函数？）来把this（即当前这个ajax请求的设置参数）传走
+//            //doAjaxRequestLoop(0, function(){
+//            //    $.ajax(this);
+//            //    console.log('重传'+this.url);
+//            //});
+//
+//            //doAjaxRequestLoop(0, xhr);//attempts=0 是当前重试的次数，用于指数退避的时间间隔计算。xhr是把当前失败了的这个xhr传下去，重发之。//但这个xhr不是已经readystate==4的了么？？
+//        } else if (xhr.status == 403 || xhr.status == 429 || xhr.status == 502 || xhr.status == 503) {
+//            //doAjaxRequestLoop(0, xhr);//attempts=0 是当前重试的次数，用于指数退避的时间间隔计算。xhr是把当前失败了的这个xhr传下去，重发之。//但这个xhr不是已经readystate==4的了么？？
+//        } else {//除了上述错误码，其他的都认为是网络错误，直接提示。
+//            document.getElementById('status_span').innerHTML = chrome.i18n.getMessage("errorOfConnection");//'网络问题，请重试。不行的话，请刷新网页再试！';
+//            document.getElementById('load1').style.display = 'none';
+//        }
+//    }
+//});
+// register AJAX prefilter : options, original options
+$.ajaxPrefilter(function (options, originalOptions, jqXHR) {
+
+    originalOptions._error = originalOptions.error;
+
+    // overwrite error handler for current request
+    options.error = function (_xhr, _textStatus, _errorThrown) {
+
+        if (_xhr.status == 403 || _xhr.status == 429 || _xhr.status == 502 || _xhr.status == 503) {
             document.getElementById('status_span').innerHTML = chrome.i18n.getMessage("errorOfUnauthorized");//'未成功授权，请重新授权后再试！';
             document.getElementById('load1').style.display = 'none';
-            console.log('未授权哦');
-            //doAjaxRequestLoop(0, xhr);//attempts=0 是当前重试的次数，用于指数退避的时间间隔计算。xhr是把当前失败了的这个xhr传下去，重发之。//但这个xhr不是已经readystate==4的了么？？
-        } else if (xhr.status == 403 || xhr.status == 429 || xhr.status == 502 || xhr.status == 503) {
-            doAjaxRequestLoop(0, xhr);//attempts=0 是当前重试的次数，用于指数退避的时间间隔计算。xhr是把当前失败了的这个xhr传下去，重发之。//但这个xhr不是已经readystate==4的了么？？
-        } else {//除了上述错误码，其他的都认为是网络错误，直接提示。
+            console.log(_xhr.status + '错误  已重试次数：' + originalOptions.retryCount);
+
+            originalOptions.retryCount++;
+            if (originalOptions.retryCount > 7) {
+                originalOptions.retryCount = 7;
+            }//重试次数+1，到7不再加
+
+            setTimeout(function () {
+                $.ajax(originalOptions);
+            }, nextDelayTime(originalOptions.retryCount));
+            //doAjaxRequestLoop(0, originalOptions);
+        } else if (_xhr.status == 401 ){
+            document.getElementById('status_span').innerHTML = chrome.i18n.getMessage("errorOfUnauthorized");//'未成功授权，请重新授权后再试！';
+            document.getElementById('load1').style.display = 'none';
+        } else {
             document.getElementById('status_span').innerHTML = chrome.i18n.getMessage("errorOfConnection");//'网络问题，请重试。不行的话，请刷新网页再试！';
             document.getElementById('load1').style.display = 'none';
         }
-    }
+
+    };
 });
 setTimeout("tellIfLoaded();", 20000);

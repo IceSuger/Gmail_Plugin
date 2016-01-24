@@ -1,10 +1,4 @@
-﻿var LIST_FETCH_URL = 'https://www.googleapis.com/gmail/v1/users/me/messages';
-var MESSAGE_FETCH_URL_prefix = 'https://www.googleapis.com/gmail/v1/users/me/messages/';//+messageId
-var ATTACHMENT_FETCH_URL = 'https://www.googleapis.com/gmail/v1/users/me/messages/MessageId/attachments/AttId';
-var DRAFT_URL_prefix = 'https://www.googleapis.com/gmail/v1/users/me/drafts/';//+draftId
-
-
-//===================授权/取消授权模块======================
+﻿//===================授权/取消授权模块======================
 var google = new OAuth2('google', {
     client_id: '1061800679212-t8pdm7kk16gk47odgu0mt7ov5l9or5g5.apps.googleusercontent.com',
     client_secret: 'Ihu8AKXFttSGBVXA-hOsk5Yf',

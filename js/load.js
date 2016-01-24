@@ -89,7 +89,7 @@ window.onload = function () {
 
         chrome.runtime.onMessage.addListener(
             function (request, sender, sendResponse) {
-                //alert('TOKEN IS: '+request.token);
+                //alert(request);
                 if (request.token != '') {
                     token = request.token;
                     $.ajaxSetup({
@@ -103,8 +103,9 @@ window.onload = function () {
                     document.getElementById('GmailAssist').style.visibility = "visible";
                     document.getElementById('overlay').style.visibility = "visible";
                     document.getElementById('table_to_sort').getElementsByTagName('tbody')[0].style.visibility = 'visible';
-                    //sendResponse({farewell: "goodbye"});
+
                 }
+                //sendResponse({farewell: "goodbye"});
             });
         console.log('绑定了监听事件，按下show up按钮，将会显示助手界面');
         //});
