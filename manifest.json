@@ -14,12 +14,12 @@
       "19": "images/icon19.png",
       "38": "images/icon38.png"
     },
-    "default_title": "__MSG_extName__",
-    "default_popup": "popup.html"
+    "default_title": "__MSG_extName__"
+    //"default_popup": "popup.html"
   },
   "background": {
     "scripts": [
-      "js/background.js"
+      "oauth2/oauth2.js","js/background.js"
     ],
     "persistent": false
   },
