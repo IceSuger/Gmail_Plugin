@@ -10,6 +10,7 @@ var allContent = [];
 var visibleRows = [];
 var msgNow = 0;
 var not_include_content_pics = true;
+var filterValue;//搜索框输入值
 
 //添加附件过程
 function insertAtt() {
@@ -46,6 +47,7 @@ function InitDiv() {
 
     var div = document.createElement('div');
     div.id = "GmailAssist";
+    div.style.display = "none";
     document.getElementsByTagName('body')[0].appendChild(div);
     /*div.style.width = '1078px';
      //div.style.height = '500px';
@@ -87,7 +89,7 @@ function InitDiv() {
         id = 0;//附件编号（按获取到的顺序）
         msgNow = 0;
         not_include_content_pics = !document.getElementById('includeContentPics').checked;
-        fetchList();//将获取到的东西都存到数组allContent中
+        fetchNextList(null);//原本是fetchList();现在统一到fetchNextList这个函数上了。//将获取到的东西都存到数组allContent中
 
     };
     div.appendChild(button);
@@ -234,7 +236,7 @@ function InitDiv() {
 
     div.appendChild(sortingTable);
 
-    {//table内容
+    {//table表头内容
         var thead = document.createElement('thead');
         //thead.id='AttachmentsTableTbody';
         sortingTable.appendChild(thead);
@@ -242,6 +244,7 @@ function InitDiv() {
         thead.appendChild(tr);
         //复选框
         var th = document.createElement('th');
+        th.className = "nosort";
         tr.appendChild(th);
         var cb = document.createElement('input');
         cb.id = "toggle_all";
@@ -296,71 +299,145 @@ function InitDiv() {
 }
 
 //-----初始化分页、排序
-var sorter_instance={};
+var sorter_instance = {};
 function initPageAndSorting() {
-    {
-        var TINY={};
+    {//原来的table_sort_script.js
+        var TINY = {};
 //download by http://www.codefans.net
-        function T$(i){return document.getElementById(i)}
-        function T$$(e,p){return p.getElementsByTagName(e)}
+        function T$(i) {
+            return document.getElementById(i)
+        }
 
-        TINY.table=function(){
-            function sorter(n){this.n=n; this.pagesize=10; this.paginate=0}
-            sorter.prototype.init=function(e,f){
-                var t=ge(e), i=0; this.e=e; this.l=t.r.length; t.a=[];
-                t.h=T$$('thead',T$(e))[0].rows[0]; t.w=t.h.cells.length;
-                for(i;i<t.w;i++){
-                    var c=t.h.cells[i];
-                    if(c.className!='nosort'){
-                        c.className=this.head; c.onclick=new Function(this.n+'.wk(this.cellIndex)')
+        function T$$(e, p) {
+            return p.getElementsByTagName(e)
+        }
+
+        TINY.table = function () {
+            function sorter(n) {
+                this.n = n;
+                this.pagesize = 10;
+                this.paginate = 0
+            }
+
+            sorter.prototype.init = function (e, f) {
+                var t = ge(e), i = 0;
+                this.e = e;
+                this.l = t.r.length;
+                t.a = [];
+                t.h = T$$('thead', T$(e))[0].rows[0];
+                t.w = t.h.cells.length;
+                for (i; i < t.w; i++) {
+                    var c = t.h.cells[i];
+                    if (c.className != 'nosort') {
+                        c.className = this.head;
+                        c.onclick = new Function(this.n + '.wk(this.cellIndex)')
                     }
                 }
-                for(i=0;i<this.l;i++){t.a[i]={}}
-                if(f!=null){var a=new Function(this.n+'.wk('+f+')'); a()}
-                if(this.paginate){this.g=1; this.pages()}
-            };
-            sorter.prototype.wk=function(y){
-                var t=ge(this.e), x=t.h.cells[y], i=0;
-                for(i;i<this.l;i++){
-                    t.a[i].o=i; var v=t.r[i].cells[y]; t.r[i].style.display='';
-                    while(v.hasChildNodes()){v=v.firstChild}
-                    t.a[i].v=v.nodeValue?v.nodeValue:''
+                for (i = 0; i < this.l; i++) {
+                    t.a[i] = {}
                 }
-                for(i=0;i<t.w;i++){var c=t.h.cells[i]; if(c.className!='nosort'){c.className=this.head}}
-                if(t.p==y){t.a.reverse(); x.className=t.d?this.asc:this.desc; t.d=t.d?0:1}
-                else{t.p=y; t.a.sort(cp); t.d=0; x.className=this.asc}
-                var n=document.createElement('tbody');
-                for(i=0;i<this.l;i++){
-                    var r=t.r[t.a[i].o].cloneNode(true); n.appendChild(r);
-                    r.className=i%2==0?this.even:this.odd; var cells=T$$('td',r);
-                    for(var z=0;z<t.w;z++){cells[z].className=y==z?i%2==0?this.evensel:this.oddsel:''}
+                if (f != null) {
+                    var a = new Function(this.n + '.wk(' + f + ')');
+                    a()
                 }
-                t.replaceChild(n,t.b); if(this.paginate){this.size(this.pagesize)}
+                if (this.paginate) {
+                    this.g = 1;
+                    this.pages()
+                }
             };
-            sorter.prototype.page=function(s){
-                var t=ge(this.e), i=0, l=s+parseInt(this.pagesize);
-                if(this.currentid&&this.limitid){T$(this.currentid).innerHTML=this.g}
-                for(i;i<this.l;i++){t.r[i].style.display=i>=s&&i<l?'':'none'}
+            sorter.prototype.wk = function (y) {
+                var t = ge(this.e), x = t.h.cells[y], i = 0;
+                for (i; i < this.l; i++) {
+                    t.a[i].o = i;
+                    var v = t.r[i].cells[y];
+                    t.r[i].style.display = '';
+                    while (v.hasChildNodes()) {
+                        v = v.firstChild
+                    }
+                    t.a[i].v = v.nodeValue ? v.nodeValue : ''
+                }
+                for (i = 0; i < t.w; i++) {
+                    var c = t.h.cells[i];
+                    if (c.className != 'nosort') {
+                        c.className = this.head
+                    }
+                }
+                if (t.p == y) {
+                    t.a.reverse();
+                    x.className = t.d ? this.asc : this.desc;
+                    t.d = t.d ? 0 : 1
+                }
+                else {
+                    t.p = y;
+                    t.a.sort(cp);
+                    t.d = 0;
+                    x.className = this.asc
+                }
+                var n = document.createElement('tbody');
+                for (i = 0; i < this.l; i++) {
+                    var r = t.r[t.a[i].o].cloneNode(true);
+                    n.appendChild(r);
+                    r.className = i % 2 == 0 ? this.even : this.odd;
+                    var cells = T$$('td', r);
+                    for (var z = 0; z < t.w; z++) {
+                        cells[z].className = y == z ? i % 2 == 0 ? this.evensel : this.oddsel : ''
+                    }
+                }
+                t.replaceChild(n, t.b);
+                if (this.paginate) {
+                    this.size(this.pagesize)
+                }
             };
-            sorter.prototype.move=function(d,m){
-                var s=d==1?(m?this.d:this.g+1):(m?1:this.g-1);
-                if(s<=this.d&&s>0){this.g=s; this.page((s-1)*this.pagesize)}
+            sorter.prototype.page = function (s) {
+                var t = ge(this.e), i = 0, l = s + parseInt(this.pagesize);
+                if (this.currentid && this.limitid) {
+                    T$(this.currentid).innerHTML = this.g
+                }
+                for (i; i < this.l; i++) {
+                    t.r[i].style.display = i >= s && i < l ? '' : 'none'
+                }
             };
-            sorter.prototype.size=function(s){
-                this.pagesize=s; this.g=1; this.pages(); this.page(0);
-                if(this.currentid&&this.limitid){T$(this.limitid).innerHTML=this.d}
+            sorter.prototype.move = function (d, m) {
+                var s = d == 1 ? (m ? this.d : this.g + 1) : (m ? 1 : this.g - 1);
+                if (s <= this.d && s > 0) {
+                    this.g = s;
+                    this.page((s - 1) * this.pagesize)
+                }
             };
-            sorter.prototype.pages=function(){this.d=Math.ceil(this.l/this.pagesize)};
-            function ge(e){var t=T$(e); t.b=T$$('tbody',t)[0]; t.r=t.b.rows; return t};
-            function cp(f,c){
-                var g,h; f=g=f.v.toLowerCase(), c=h=c.v.toLowerCase();
-                var i=parseFloat(f.replace(/(\$|\,)/g,'')), n=parseFloat(c.replace(/(\$|\,)/g,''));
-                if(!isNaN(i)&&!isNaN(n)){g=i,h=n}
-                i=Date.parse(f); n=Date.parse(c);
-                if(!isNaN(i)&&!isNaN(n)){g=i; h=n}
-                return g>h?1:(g<h?-1:0)
+            sorter.prototype.size = function (s) {
+                this.pagesize = s;
+                this.g = 1;
+                this.pages();
+                this.page(0);
+                if (this.currentid && this.limitid) {
+                    T$(this.limitid).innerHTML = this.d
+                }
             };
-            return{sorter:sorter}
+            sorter.prototype.pages = function () {
+                this.d = Math.ceil(this.l / this.pagesize)
+            };
+            function ge(e) {
+                var t = T$(e);
+                t.b = T$$('tbody', t)[0];
+                t.r = t.b.rows;
+                return t
+            };
+            function cp(f, c) {
+                var g, h;
+                f = g = f.v.toLowerCase(), c = h = c.v.toLowerCase();
+                var i = parseFloat(f.replace(/(\$|\,)/g, '')), n = parseFloat(c.replace(/(\$|\,)/g, ''));
+                if (!isNaN(i) && !isNaN(n)) {
+                    g = i, h = n
+                }
+                i = Date.parse(f);
+                n = Date.parse(c);
+                if (!isNaN(i) && !isNaN(n)) {
+                    g = i;
+                    h = n
+                }
+                return g > h ? 1 : (g < h ? -1 : 0)
+            };
+            return {sorter: sorter}
         }();
     }
     sorter_instance = new TINY.table.sorter("sorter_instance");
@@ -391,10 +468,10 @@ function initPageAndSorting() {
                 var select = document.createElement('select');
                 select.id = 'selec';
                 perpage.appendChild(select);
-                	var option = document.createElement('option');
-                 option.value = '5';
-                 option.innerHTML = 5;
-                 select.appendChild(option);
+                var option = document.createElement('option');
+                option.value = '5';
+                option.innerHTML = 5;
+                select.appendChild(option);
 
                 var option = document.createElement('option');
                 option.value = '10';
@@ -402,13 +479,13 @@ function initPageAndSorting() {
                 option.innerHTML = 10;
                 select.appendChild(option);
 
-                 var option = document.createElement('option');
-                 option.value = '15';
-                 option.innerHTML = 15;
-                 select.appendChild(option);
+                var option = document.createElement('option');
+                option.value = '15';
+                option.innerHTML = 15;
+                select.appendChild(option);
 
-                //下面加上实现换每页项数的代码！//暂时先注释掉
-                select.onchange = function(){
+                //下面加上实现换每页项数的代码！
+                select.onchange = function () {
                     sorter_instance.size(this.value);
                 }
                 var span = document.createElement('span');
@@ -508,62 +585,73 @@ function initPageAndSorting() {
  }
  });*/
 //------------testing------------ 
-function fetchList() {
-    var xhr = new XMLHttpRequest();
-    xhr.onreadystatechange = function (event) {
-        if (xhr.readyState == 4) {
-            if (xhr.status == 200) {
-                var i = 0;
+//function fetchList() {
+//    filterValue = document.getElementById('filter').value;
+//    /*if(filterValue==null)
+//     console.log('NULL?'+filterValue);
+//     else if(filterValue==undefined)
+//     console.log('UNdefined');
+//     else if(filterValue=='')
+//     console.log('空串！');
+//     else if(filterValue==' ')
+//     console.log('空格！！');*/
+//    var xhr = new XMLHttpRequest();
+//    xhr.onreadystatechange = function (event) {
+//        if (xhr.readyState == 4) {
+//            if (xhr.status == 200) {
+//                var i = 0;
+//
+//                var list = JSON.parse(xhr.responseText);
+//                MsgList = list;
+//                //id = 0;
+//                /*				//弄个数组来保存每个message是否处理完的信息
+//
+//                 */				//Fetch information of the attachments with a for loop
+//                /*		if(list.resultSizeEstimate > 100)
+//                 {
+//                 list.resultSizeEstimate = 100;
+//                 }*/
+//                for (i = 0; i < list.messages.length; i++) {
+//                    msgFinished[i + msgNow] = false;
+//                    //console.log(list.messages[i].id + ' ' + i + msgNow + ' ' + list.resultSizeEstimate);
+//                    getMessage(list.messages[i].id, i);
+//                }
+//                msgNow += i;
+//                if (list.nextPageToken) {
+//                    console.log('nextPageToken: ' + list.nextPageToken);
+//                    fetchNextList(list.nextPageToken);
+//                }
+//                else {
+//                    //list.nextPageToken;
+//                    var time = setTimeout("initCtrls();", 4000);
+//                }
+//
+//            } else if (xhr.status == 401) {
+//                document.getElementById('status_span').innerHTML = chrome.i18n.getMessage("errorOfUnauthorized");//'未成功授权，请重新授权后再试！';
+//                document.getElementById('load1').style.display = 'none';
+//            }
+//            else {
+//                document.getElementById('status_span').innerHTML = chrome.i18n.getMessage("errorOfConnection");//'网络问题，请重试。不行的话，请刷新网页再试！';
+//                document.getElementById('load1').style.display = 'none';
+//            }
+//        }
+//        /*else{
+//         document.getElementById('status_span').innerHTML = '网络问题，请重试。不行的话，请刷新网页再试！wai';
+//         document.getElementById('load1').style.display = 'none';
+//         }*/
+//    };
+//
+//    xhr.open('GET', LIST_FETCH_URL + '?q=has%3Aattachment', true);
+//
+//    xhr.setRequestHeader('Content-Type', 'application/json');
+//    xhr.setRequestHeader('Authorization', 'OAuth ' + token);
+//
+//    xhr.send(null);
+//}
 
-                var list = JSON.parse(xhr.responseText);
-                MsgList = list;
-                //id = 0;
-                /*				//弄个数组来保存每个message是否处理完的信息
-
-                 */				//Fetch information of the attachments with a for loop
-                /*		if(list.resultSizeEstimate > 100)
-                 {
-                 list.resultSizeEstimate = 100;
-                 }*/
-                for (i = 0; i < list.messages.length; i++) {
-                    msgFinished[i + msgNow] = false;
-                    console.log(list.messages[i].id + ' ' + i + msgNow + ' ' + list.resultSizeEstimate);
-                    getMessage(list.messages[i].id, i);
-                }
-                msgNow += i;
-                if (list.nextPageToken) {
-                    console.log(list.nextPageToken);
-                    fetchNextList(list.nextPageToken);
-                }
-                else {
-                    //list.nextPageToken;
-                    var time = setTimeout("initCtrls();", 4000);
-                }
-
-            } else if (xhr.status == 401) {
-                document.getElementById('status_span').innerHTML = chrome.i18n.getMessage("errorOfUnauthorized");//'未成功授权，请重新授权后再试！';
-                document.getElementById('load1').style.display = 'none';
-            }
-            else {
-                document.getElementById('status_span').innerHTML = chrome.i18n.getMessage("errorOfConnection");//'网络问题，请重试。不行的话，请刷新网页再试！';
-                document.getElementById('load1').style.display = 'none';
-            }
-        }
-        /*else{
-         document.getElementById('status_span').innerHTML = '网络问题，请重试。不行的话，请刷新网页再试！wai';
-         document.getElementById('load1').style.display = 'none';
-         }*/
-    };
-
-    xhr.open('GET', LIST_FETCH_URL + '?q=has%3Aattachment', true);
-
-    xhr.setRequestHeader('Content-Type', 'application/json');
-    xhr.setRequestHeader('Authorization', 'OAuth ' + token);
-
-    xhr.send(null);
-}
-
-function fetchNextList(pagetoken) {
+//获取附件列表（事实上这个是获取邮件列表）
+function fetchNextList0(pagetoken) {
+    filterValue = document.getElementById('filter').value;
     var xhr = new XMLHttpRequest();
     xhr.onreadystatechange = function (event) {
         if (xhr.readyState == 4) {
@@ -589,12 +677,19 @@ function fetchNextList(pagetoken) {
                 }
                 else {
                     //fetchList();
-                    var time = setTimeout("initCtrls();", 4000);
+                    var time = setTimeout("visibleRows=allContent;showRows();initCtrls();", 4000);
                 }
 
             } else if (xhr.status == 401) {
                 document.getElementById('status_span').innerHTML = chrome.i18n.getMessage("errorOfUnauthorized");//'未成功授权，请重新授权后再试！';
                 document.getElementById('load1').style.display = 'none';
+                //console.log(xhr);
+                setTimeout(function () {
+                    xhr.readyState = 1;
+                    //console.log(xhr);
+                    xhr.send();
+                    console.log(xhr);
+                }, 1000);
             }
             else {
                 document.getElementById('status_span').innerHTML = chrome.i18n.getMessage("errorOfConnection");//'网络问题，请重试。不行的话，请刷新网页再试！';
@@ -606,15 +701,72 @@ function fetchNextList(pagetoken) {
          document.getElementById('load1').style.display = 'none';
          }*/
     };
-
-    xhr.open('GET', LIST_FETCH_URL + '?pageToken=' + pagetoken + '&q=has%3Aattachment', true);
+    var otherParams = '';
+    if (filterValue) {
+        otherParams = '+' + encodeURIComponent(filterValue).replace(/%20/g, '+');
+    }
+    if (pagetoken) {
+        xhr.open('GET', LIST_FETCH_URL + '?pageToken=' + pagetoken + '&q=has%3Aattachment' + otherParams, true);
+        console.log('?pageToken=' + pagetoken + '&q=has%3Aattachment' + otherParams);
+    } else {
+        xhr.open('GET', LIST_FETCH_URL + '?q=has%3Aattachment' + otherParams, true);
+        console.log('?q=has%3Aattachment' + otherParams);
+    }
 
     xhr.setRequestHeader('Content-Type', 'application/json');
     xhr.setRequestHeader('Authorization', 'OAuth ' + token);
 
+    console.log('XHR做好了：');
+    console.log(xhr);
     xhr.send(null);
+    console.time('发一次');
 }
 
+function fetchNextList(pagetoken) {
+    filterValue = document.getElementById('filter').value;
+    var otherParams = '';
+    if (filterValue) {
+        otherParams = '+' + encodeURIComponent(filterValue).replace(/%20/g, '+');
+    }
+    if (pagetoken) {
+        url = LIST_FETCH_URL + '?pageToken=' + pagetoken + '&q=has%3Aattachment' + otherParams;
+    } else {
+        url = LIST_FETCH_URL + '?q=has%3Aattachment' + otherParams;
+    }
+    var settings = {
+        /**
+         *
+         * @param list      即解析过（JSON.parse）之后的xhr.responseText
+         * @param textStatus    描述该ajax请求的状态的字符串
+         * @param xhr       jqXHR对象
+         */
+        success: function (list, textStatus,xhr) {
+            //var list = JSON.parse(xhr.responseText);
+            //id = 0;
+            /*				//弄个数组来保存每个message是否处理完的信息
+
+             */				//Fetch information of the attachments with a for loop
+            console.log(list.nextPageToken);
+            for (i = 0; i < list.messages.length; i++) {
+                msgFinished[i + msgNow] = false;
+                console.log(list.messages[i].id + ' ' + i + msgNow + ' ' + list.resultSizeEstimate);
+                getMessage(list.messages[i].id, i + msgNow);
+            }
+            msgNow += i;
+            if (list.nextPageToken) {
+                console.log(list.nextPageToken);
+                fetchNextList(list.nextPageToken);
+            }
+            else {
+                //fetchList();
+                var time = setTimeout("visibleRows=allContent;showRows();initCtrls();", 2000);
+            }
+        }
+    }
+    $.ajax(url, settings);
+}
+
+//排序table的控制（翻页）按钮们的初始化
 function initCtrls() {
     var flag = true;
     for (i in msgFinished) {
@@ -628,8 +780,8 @@ function initCtrls() {
         setTimeout("initCtrls();", 2500);
     }
     else {
-        filterRows();//根据搜索框，过滤不显示的
-        showRows();//根据数组show_thisrow决定是否显示当前行
+        //filterRows();//根据搜索框，过滤不显示的
+        //showRows();//根据数组show_thisrow决定是否显示当前行
 
         //jcLoader().load({type: "js", url: chrome.extension.getURL("injected-js/tableInited.js")}, function () {
         initPageAndSorting();
@@ -647,82 +799,61 @@ function initCtrls() {
 }
 
 function getMessage(MessageId, j) {//j为在msgFinished中的下标
-    var xhr = new XMLHttpRequest();
-    xhr.onreadystatechange = function (event) {
-        if (xhr.readyState == 4) {
-            if (xhr.status == 200) {
-                var messageObj = JSON.parse(xhr.responseText);
-                var parts = messageObj.payload.parts;
+    url = MESSAGE_FETCH_URL_prefix + MessageId;
+    var settings = {
+        success: function (messageObj, textStatus,xhr) {
+            //var messageObj = JSON.parse(xhr.responseText);
+            var parts = messageObj.payload.parts;
 
-                var headers = messageObj.payload.headers;
-                var sender;
-                var subject = '-';
-                var labels = messageObj.labelIds;
-                var date;
-                if (parts) {
-
-
-                    //Fetch information of the attachments with a for loop
-                    for (i in headers) {
-                        var header = headers[i];
-                        if (header.name == 'From') {
-                            sender = header.value;
-                        }
-                        else if (header.name == 'Subject') {
-                            if (header.value) {
-                                subject = header.value;
-                            }
-                        }
-                        else if (header.name == 'Date') {
-                            date = header.value;
+            var headers = messageObj.payload.headers;
+            var sender;
+            var subject = '-';
+            var labels = messageObj.labelIds;
+            var date;
+            if (parts) {
+                //Fetch information of the attachments with a for loop
+                for (i in headers) {
+                    var header = headers[i];
+                    if (header.name == 'From') {
+                        sender = header.value;
+                    }
+                    else if (header.name == 'Subject') {
+                        if (header.value) {
+                            subject = header.value;
                         }
                     }
-                    //for(var i=0; i<parts.length ; i++)
-                    for (i in parts) {
-
-                        var part = parts[i];
-
-                        if (part.filename) {
-                            for (i in part.headers) {
-                                var partheader = part.headers[i];
-                                if (partheader.name == 'Content-ID') {
-                                    var in_content = true;
-                                }
-                            }
-
-                            if (in_content && not_include_content_pics) {
-                                break;
-                            }
-                            part.body.size = Math.ceil(part.body.size * 0.75 / 1024);
-                            var d = new Date(Date.parse(date));
-
-                            allContent[id] = part.filename + '|-|' + part.body.size + '|-|' + sender + '|-|' + labels + '|-|' + subject + '|-|' + d.toLocaleDateString() + '|-|' + MessageId + '|-|' + part.partId;
-
-                            id++;
-                        }
+                    else if (header.name == 'Date') {
+                        date = header.value;
                     }
                 }
-                msgFinished[j] = true;
-            } else if (xhr.status == 401) {
-                document.getElementById('status_span').innerHTML = chrome.i18n.getMessage("errorOfUnauthorized");//'未成功授权，请重新授权后再试！';
-                document.getElementById('load1').style.display = 'none';
-            } else {
-                document.getElementById('status_span').innerHTML = chrome.i18n.getMessage("errorOfConnection");//'网络问题，请重试。不行的话，请刷新网页再试！';
-                document.getElementById('load1').style.display = 'none';
+                //for(var i=0; i<parts.length ; i++)
+                for (i in parts) {
+                    var part = parts[i];
+
+                    if (part.filename) {
+                        for (i in part.headers) {
+                            var partheader = part.headers[i];
+                            if (partheader.name == 'Content-ID') {
+                                var in_content = true;
+                            }
+                        }
+
+                        if (in_content && not_include_content_pics) {
+                            break;
+                        }
+                        part.body.size = Math.ceil(part.body.size * 0.75 / 1024);
+                        var d = new Date(Date.parse(date));
+
+                        allContent[id] = part.filename + '|-|' + part.body.size + '|-|' + sender + '|-|' + labels + '|-|' + subject + '|-|' + d.toLocaleDateString() + '|-|' + MessageId + '|-|' + part.partId;
+
+                        id++;
+                    }
+                }
             }
+            msgFinished[j] = true;
         }
-        /*else{
-         document.getElementById('status_span').innerHTML = chrome.i18n.getMessage("badRequest");//'网络请求失败，请重试！';
-         document.getElementById('load1').style.display = 'none';
-         }*/
-    };
-
-    xhr.open('GET', MESSAGE_FETCH_URL_prefix + MessageId, true);
-
-    xhr.setRequestHeader('Content-Type', 'application/json');
-    xhr.setRequestHeader('Authorization', 'OAuth ' + token);
-
-    xhr.send(null);
+    }
+    $.ajax(url, settings);
 }
 
 //---草稿操作函数
@@ -754,122 +885,85 @@ function makenewdraft(passed, name) {
 //---草稿操作相关函数
 {
     function getCurrentDraftID(callback) {
-        var xhr = new XMLHttpRequest();
-        xhr.onreadystatechange = function (event) {
-            if (xhr.readyState == 4) {
-                if (xhr.status == 200) {
-                    var result = JSON.parse(xhr.responseText);
-                    if (result.drafts) {
-                        draftID = result.drafts[0].id;
-                        callback(draftID);
-                    }
-                    else {
-                        document.getElementById('status_span').innerHTML = chrome.i18n.getMessage("draftBoxEmpty");//'草稿箱为空，请先创建草稿后再试！';
-                        document.getElementById('load1').style.display = 'none';
-                    }
-                    //	console.log(draftID);
-                } else if (xhr.status == 401) {
-                    document.getElementById('status_span').innerHTML = chrome.i18n.getMessage("errorOfUnauthorized");//'未成功授权，请重新授权后再试！';
-                    document.getElementById('load1').style.display = 'none';
-                } else {
-                    document.getElementById('status_span').innerHTML = chrome.i18n.getMessage("errorOfConnection");//'网络问题，请重试。不行的话，请刷新网页再试！';
+        url = DRAFT_URL_prefix;
+        var settings = {
+            /**
+             *
+             * @param result  经JSON.parse解析过的请求返回内容
+             */
+            success: function (result) {
+                //var result = JSON.parse(xhr.responseText);
+                if (result.drafts) {
+                    draftID = result.drafts[0].id;
+                    callback(draftID);
+                }
+                else {
+                    document.getElementById('status_span').innerHTML = chrome.i18n.getMessage("draftBoxEmpty");//'草稿箱为空，请先创建草稿后再试！';
                     document.getElementById('load1').style.display = 'none';
                 }
-            } else {
-                document.getElementById('status_span').innerHTML = chrome.i18n.getMessage("badRequest");//'网络请求失败，请重试！';
-                document.getElementById('load1').style.display = 'none';
+                //	console.log(draftID);
             }
-        };
-
-        xhr.open('GET', DRAFT_URL_prefix, false);
-
-        xhr.setRequestHeader('Content-Type', 'application/json');
-        xhr.setRequestHeader('Authorization', 'OAuth ' + token);
-
-        xhr.send(null);
+        }
+        $.ajax(url, settings);
+        //为啥原来写的async是false？？难道这个需要同步才行？？
+        //xhr.open('GET', DRAFT_URL_prefix, false);
     }
 
     function getCurrentRawDraft(DraftId, callback) {
-        var xhr = new XMLHttpRequest();
-        xhr.onreadystatechange = function (event) {
-            if (xhr.readyState == 4) {
-                if (xhr.status == 200) {
-                    var oldDraft = JSON.parse(xhr.responseText);
-                    var raw = oldDraft.message.raw;
-                    callback(atob(raw.replace(/-/g, '+').replace(/_/g, '/')));
-
-                } else if (xhr.status == 401) {
-                    document.getElementById('status_span').innerHTML = chrome.i18n.getMessage("errorOfUnauthorized");//'未成功授权，请重新授权后再试！';
-                    document.getElementById('load1').style.display = 'none';
-                } else {
-                    document.getElementById('status_span').innerHTML = chrome.i18n.getMessage("errorOfConnection");//'网络问题，请重试。不行的话，请刷新网页再试！';
-                    document.getElementById('load1').style.display = 'none';
-                }
-            } else {
-                document.getElementById('status_span').innerHTML = chrome.i18n.getMessage("badRequest");//'网络请求失败，请重试！';
-                document.getElementById('load1').style.display = 'none';
+        url = DRAFT_URL_prefix + DraftId + '?format=raw';
+        var settings = {
+            /**
+             *
+             * @param oldDraft  经JSON.parse解析过的xhr.responseText
+             */
+            success: function (oldDraft) {
+                //var oldDraft = JSON.parse(xhr.responseText);
+                var raw = oldDraft.message.raw;
+                callback(atob(raw.replace(/-/g, '+').replace(/_/g, '/')));
             }
-        };
-
-        xhr.open('GET', DRAFT_URL_prefix + DraftId + '?format=raw', false);
-
-        xhr.setRequestHeader('Content-Type', 'application/json');
-        xhr.setRequestHeader('Authorization', 'OAuth ' + token);
-
-        xhr.send(null);
+        }
+        $.ajax(url, settings);
+        //这个也是false？？？也要同步才行？不能异步？？
+        //xhr.open('GET', DRAFT_URL_prefix + DraftId + '?format=raw', false);
     }
 
     function getAttPart(MessageId, partid, callback) {
-        var xhr = new XMLHttpRequest();
-        xhr.onreadystatechange = function (event) {
-            if (xhr.readyState == 4) {
-                if (xhr.status == 200) {
-                    var rawmail = JSON.parse(xhr.responseText);
-                    //console.log(rawmail);
-                    var raw = rawmail.raw;
+        url = MESSAGE_FETCH_URL_prefix + MessageId + '?format=raw';
+        var settings = {
+            /**
+             *
+             * @param rawmail   经JSON.parse解析过的xhr.responseText
+             */
+            success: function (rawmail) {
+                //var rawmail = JSON.parse(xhr.responseText);
+                //console.log(rawmail);
+                var raw = rawmail.raw;
 
-                    var mail = atob(raw.replace(/-/g, '+').replace(/_/g, '/'));
-                    //console.log(mail);
-                    var boundstartpos = mail.indexOf('boundary=') + 9;
-                    var boundary = mail.substring(boundstartpos, mail.indexOf('\r', boundstartpos));
-                    if (boundary.indexOf('"') == 0) {
-                        boundary = boundary.substring(1, boundary.length - 1);
-                    }
-                    //console.log(boundary);
-                    var mailparts = mail.split(boundary);
-                    partid = parseInt(partid) + 2;
-
-                    if (mailparts[partid].indexOf('X-Attachment-Id') == -1) {
-                        callback('\nX-Attachment-Id: f_' + MessageId + partid + mailparts[partid]);
-                    }
-                    else {
-                        callback(mailparts[partid]);
-                    }
-
-                } else if (xhr.status == 401) {
-                    document.getElementById('status_span').innerHTML = chrome.i18n.getMessage("errorOfUnauthorized");//'未成功授权，请重新授权后再试！';
-                    document.getElementById('load1').style.display = 'none';
-                } else {
-                    document.getElementById('status_span').innerHTML = chrome.i18n.getMessage("errorOfConnection");//'网络问题，请重试。不行的话，请刷新网页再试！';
-                    document.getElementById('load1').style.display = 'none';
+                var mail = atob(raw.replace(/-/g, '+').replace(/_/g, '/'));
+                //console.log(mail);
+                var boundstartpos = mail.indexOf('boundary=') + 9;
+                var boundary = mail.substring(boundstartpos, mail.indexOf('\r', boundstartpos));
+                if (boundary.indexOf('"') == 0) {
+                    boundary = boundary.substring(1, boundary.length - 1);
                 }
-            } else {
-                document.getElementById('status_span').innerHTML = chrome.i18n.getMessage("badRequest");//'网络请求失败，请重试！';
-                document.getElementById('load1').style.display = 'none';
+                //console.log(boundary);
+                var mailparts = mail.split(boundary);
+                partid = parseInt(partid) + 2;
+
+                if (mailparts[partid].indexOf('X-Attachment-Id') == -1) {
+                    callback('\nX-Attachment-Id: f_' + MessageId + partid + mailparts[partid]);
+                }
+                else {
+                    callback(mailparts[partid]);
+                }
             }
-        };
-
-        xhr.open('GET', MESSAGE_FETCH_URL_prefix + MessageId + '?format=raw', false);
-
-        xhr.setRequestHeader('Content-Type', 'application/json');
-        xhr.setRequestHeader('Authorization', 'OAuth ' + token);
-
-        xhr.send(null);
+        }
+        $.ajax(url, settings);
+//又是一个false？？草稿相关的都得false？？
+        //xhr.open('GET', MESSAGE_FETCH_URL_prefix + MessageId + '?format=raw', false);
     }
 
     function joinPartToDraft(currentDraftString, partBeingInserted) {
-
-
         var boundstartpos = currentDraftString.indexOf('Content-Type: multipart/mixed; boundary=');
         if (boundstartpos != -1)//找到了mix boundary
         {
@@ -903,6 +997,10 @@ function makenewdraft(passed, name) {
         return btoa(newdraft).replace(/\//g, '_').replace(/\+/g, '-');
     }
 
+    /**废弃了
+     *
+     * @param oldEmail
+     */
     function makeUpdatedDraft(oldEmail) {
         var xhr = new XMLHttpRequest();
         xhr.onreadystatechange = function (event) {
@@ -932,44 +1030,40 @@ function makenewdraft(passed, name) {
         xhr.send(null);
     }
 
+    /**更新当前最新的草稿，即把本地拼好要插入的附件之后的新草稿发回服务器
+     *
+     * @param DraftId  操作的草稿的DraftId
+     * @param updatedRaw  草稿内容全文，完整的MIME格式
+     * @param name  插进去的附件的文件名
+     */
     function updateDraft(DraftId, updatedRaw, name) {
         var newdraft = {};
         newdraft.message = {};
         newdraft.message.raw = updatedRaw;
         var json = JSON.stringify(newdraft);
 
-        var xhr = new XMLHttpRequest();
-        xhr.onreadystatechange = function (event) {
-            if (xhr.readyState == 4) {
-                if (xhr.status == 200) {
-                    document.getElementById('status_span').innerHTML = chrome.i18n.getMessage("finishInsert", name);//'附件<strong>'+ name +'</strong>已成功插入至最新草稿！';
-                    console.log('添加附件成功！');
-                } else if (xhr.status == 401) {
-                    document.getElementById('status_span').innerHTML = chrome.i18n.getMessage("errorOfUnauthorized");//'未成功授权，请重新授权后再试！';
-                    document.getElementById('load1').style.display = 'none';
-                } else {
-                    document.getElementById('status_span').innerHTML = chrome.i18n.getMessage("errorOfConnection");//'网络问题，请重试。不行的话，请刷新网页再试！';
-                    document.getElementById('load1').style.display = 'none';
-                }
-            } else {
-                document.getElementById('status_span').innerHTML = chrome.i18n.getMessage("badRequest");//'网络请求失败，请重试！';
-                document.getElementById('load1').style.display = 'none';
+        url = DRAFT_URL_prefix + DraftId;
+        var settings = {
+            type: 'PUT',
+            success: function () {
+                document.getElementById('status_span').innerHTML = chrome.i18n.getMessage("finishInsert", name);//'附件<strong>'+ name +'</strong>已成功插入至最新草稿！';
+                console.log('添加附件成功！');
             }
-        };
+        }
+        $.ajax(url, settings);
 
-        xhr.open('PUT', DRAFT_URL_prefix + DraftId, false);
-
-        xhr.setRequestHeader('Content-Type', 'application/json');
-        xhr.setRequestHeader('Authorization', 'OAuth ' + token);
-
-        xhr.send(json);
+        //果然还是个false
+        //xhr.open('PUT', DRAFT_URL_prefix + DraftId, false);
     }
 
 }
 
 
-//filter
+/**根据搜索框（过滤条件框）内的内容，过滤掉不显示的行
+ *
+ */
 function filterRows() {
+    console.log('过滤器工作啦');
     var filterValue = document.getElementById('filter').value;
     {
         var terms = filterValue.split(' ');
@@ -995,8 +1089,13 @@ function filterRows() {
     }
 }
 
+/**按照filterRows操作过的结果，把全局数组visibleRows[]的内容都显示到sorting table里
+ *
+ */
 function showRows() {
+    //console.log(visibleRows);
     for (id3 = 0; id3 < visibleRows.length; id3++) {
+        //console.log(visibleRows[id3]);
         var rowcontents = visibleRows[id3].split('|-|');
 
         var tr = document.createElement('tr');
@@ -1055,13 +1154,53 @@ function toggleAll() {
         document.getElementById("checkbox_" + k).checked = checked;
     }
 }
-
+//判断是否完成了GmailAssist的加载
 function tellIfLoaded() {
     if (document.getElementById('form').disabled == true)
         document.getElementById('status_span').innerHTML = chrome.i18n.getMessage("failLoading");//'Gmail助手加载失败了，请刷新网页重试。(建议先等页面加载完毕，再打开助手界面)';
     document.getElementById('load1').style.display = 'none';
 }
+/**
+ * 根据当前重试的次数，由指数退避算法计算出下次间隔多长时间再重发
+ * @param attempts  当前已尝试次数
+ * @returns {number}   下次发送前要间隔的ms数
+ */
+function nextDelayTime(attempts) {
+    return (Math.pow(2, attempts) * 1000) + Math.floor(Math.random() * 1000);//random() 方法可返回介于 0 ~ 1 之间的一个随机数。
+}
+//如果ajax失败了，就重发（指数退避重试7次以上都按7次算）
+function doAjaxRequestLoop(attempts, xhr) {
+    attempts += 1;
+    if (attempts > 7) {
+        attempts = 7;
+    }
+    setTimeout(function () {
+        $.ajax({
+            xhr: xhr,
+            error: function (error) {
+                console.log('未授权哦');
+                doAjaxRequestLoop(attempts, xhr);
+            }
+        });
+    }, nextDelayTime(attempts));
+
+}
 
 InitDiv();
-//console.log('Div inited now!');
+//全局ajax设置，ajax失败则指数退避重传(jq ajax的type默认为'GET')
+$.ajaxSetup({
+    error: function (xhr) {
+        if (xhr.status == 401) {
+            document.getElementById('status_span').innerHTML = chrome.i18n.getMessage("errorOfUnauthorized");//'未成功授权，请重新授权后再试！';
+            document.getElementById('load1').style.display = 'none';
+            console.log('未授权哦');
+            //doAjaxRequestLoop(0, xhr);//attempts=0 是当前重试的次数，用于指数退避的时间间隔计算。xhr是把当前失败了的这个xhr传下去，重发之。//但这个xhr不是已经readystate==4的了么？？
+        } else if (xhr.status == 403 || xhr.status == 429 || xhr.status == 502 || xhr.status == 503) {
+            doAjaxRequestLoop(0, xhr);//attempts=0 是当前重试的次数，用于指数退避的时间间隔计算。xhr是把当前失败了的这个xhr传下去，重发之。//但这个xhr不是已经readystate==4的了么？？
+        } else {//除了上述错误码，其他的都认为是网络错误，直接提示。
+            document.getElementById('status_span').innerHTML = chrome.i18n.getMessage("errorOfConnection");//'网络问题，请重试。不行的话，请刷新网页再试！';
+            document.getElementById('load1').style.display = 'none';
+        }
+    }
+});
 setTimeout("tellIfLoaded();", 20000);

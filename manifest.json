@@ -21,7 +21,7 @@
     "scripts": [
       "js/background.js"
     ],
-    "persistent": true
+    "persistent": false
   },
   "content_scripts": [
     {
@@ -35,7 +35,7 @@
     },
     {
       "js": [
-
+        "js/jquery-1.11.1.min.js",
         "js/table_sort_script.js","js/load.js",
         "js/content.js"
       ],
@@ -61,7 +61,6 @@
     "injected-js/tableInited.js",
     "css/main-UI-style.css",
     "css/component.css",
-    //"injected-js/table_sort_script.js",
     "images/first.gif",
     "images/previous.gif",
     "images/next.gif",

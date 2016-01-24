@@ -92,7 +92,14 @@ window.onload = function () {
                 //alert('TOKEN IS: '+request.token);
                 if (request.token != '') {
                     token = request.token;
+                    $.ajaxSetup({
+                        headers: {
+                            "Content-Type":"application/json",
+                            "Authorization":'OAuth ' + token
+                        }
+                    });
                     //alert(token);
+                    document.getElementById('GmailAssist').style.display = "block";
                     document.getElementById('GmailAssist').style.visibility = "visible";
                     document.getElementById('overlay').style.visibility = "visible";
                     document.getElementById('table_to_sort').getElementsByTagName('tbody')[0].style.visibility = 'visible';
