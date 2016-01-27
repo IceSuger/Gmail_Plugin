@@ -6,9 +6,15 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="5f780d2d-7c98-4e6d-ae94-de4e8346a0b3" name="Default" comment="">
+      <change type="DELETED" beforePath="E:\Code\GmailAssist\Gmail_Plugin\js\table_sort_script.js" afterPath="" />
+      <change type="DELETED" beforePath="E:\Code\GmailAssist\Gmail_Plugin\js\test4.js" afterPath="" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/js/background.js" afterPath="$PROJECT_DIR$/js/background.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/js/content.js" afterPath="$PROJECT_DIR$/js/content.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/js/load.js" afterPath="$PROJECT_DIR$/js/load.js" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/manifest.json" afterPath="$PROJECT_DIR$/manifest.json" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/_locales/zh/messages.json" afterPath="$PROJECT_DIR$/_locales/zh/messages.json" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/功能说明.txt" afterPath="$PROJECT_DIR$/功能说明.txt" />
     </list>
     <ignored path="Gmail_Plugin.iws" />
     <ignored path=".idea/workspace.xml" />
@@ -33,7 +39,7 @@
         <entry file="file://$PROJECT_DIR$/js/load.js">
           <provider selected="true" editor-type-id="text-editor">
             <state vertical-scroll-proportion="0.0">
-              <caret line="115" column="1" selection-start-line="115" selection-start-column="1" selection-end-line="115" selection-end-column="1" />
+              <caret line="98" column="27" selection-start-line="98" selection-start-column="27" selection-end-line="98" selection-end-column="27" />
               <folding>
                 <element signature="e#58#2322#0" expanded="false" />
               </folding>
@@ -44,7 +50,7 @@
       <file leaf-file-name="manifest.json" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/manifest.json">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="-5.4814816">
+            <state vertical-scroll-proportion="0.0">
               <caret line="16" column="38" selection-start-line="16" selection-start-column="38" selection-end-line="16" selection-end-column="38" />
               <folding />
             </state>
@@ -61,30 +67,10 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="table_sort_script.js" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/js/table_sort_script.js">
-          <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0">
-              <caret line="11" column="25" selection-start-line="11" selection-start-column="25" selection-end-line="11" selection-end-column="25" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="test4.js" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/js/test4.js">
-          <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0">
-              <caret line="1" column="0" selection-start-line="1" selection-start-column="0" selection-end-line="5" selection-end-column="3" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
       <file leaf-file-name="popup.html" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/popup.html">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="-2.8148148">
+            <state vertical-scroll-proportion="0.0">
               <caret line="4" column="34" selection-start-line="4" selection-start-column="16" selection-end-line="4" selection-end-column="34" />
               <folding />
             </state>
@@ -94,46 +80,54 @@
       <file leaf-file-name="oauth2.js" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/oauth2/oauth2.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="-11.3">
-              <caret line="423" column="35" selection-start-line="423" selection-start-column="35" selection-end-line="423" selection-end-column="35" />
+            <state vertical-scroll-proportion="0.0">
+              <caret line="417" column="45" selection-start-line="417" selection-start-column="45" selection-end-line="417" selection-end-column="45" />
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="background.js" pinned="false" current-in-tab="true">
+      <file leaf-file-name="background.js" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/js/background.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.6191537">
-              <caret line="35" column="3" selection-start-line="35" selection-start-column="3" selection-end-line="35" selection-end-column="3" />
+            <state vertical-scroll-proportion="0.0">
+              <caret line="30" column="11" selection-start-line="30" selection-start-column="11" selection-end-line="30" selection-end-column="11" />
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="content.js" pinned="false" current-in-tab="false">
+      <file leaf-file-name="content.js" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/js/content.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="-13.7">
-              <caret line="1306" column="68" selection-start-line="1306" selection-start-column="68" selection-end-line="1306" selection-end-column="68" />
+            <state vertical-scroll-proportion="0.48736462">
+              <caret line="734" column="34" selection-start-line="734" selection-start-column="34" selection-end-line="734" selection-end-column="34" />
               <folding>
-                <element signature="e#1559#1887#0" expanded="false" />
-                <element signature="e#2089#2592#0" expanded="false" />
-                <element signature="e#2691#2947#0" expanded="false" />
-                <element signature="e#8594#9097#0" expanded="false" />
-                <element signature="e#12671#17743#0" expanded="false" />
-                <element signature="e#29173#29262#0" expanded="false" />
-                <element signature="e#29282#29385#0" expanded="false" />
-                <element signature="e#29391#29466#0" expanded="false" />
-                <element signature="e#37111#37727#0" expanded="false" />
-                <element signature="e#37782#39206#0" expanded="false" />
-                <element signature="e#39276#41485#0" expanded="false" />
-                <element signature="n#!!block;n#filterRows#0" expanded="false" />
+                <element signature="n#!!block;n#insertAtt#0" expanded="false" />
+                <element signature="n#!!block;n#InitDiv#0" expanded="false" />
+                <element signature="e#1829#2157#0" expanded="false" />
+                <element signature="e#2359#2862#0" expanded="false" />
+                <element signature="e#10623#12767#0" expanded="false" />
+                <element signature="n#!!block;n#initPageAndSorting#0" expanded="false" />
+                <element signature="n#!!block;n#fetchNextList#0" expanded="false" />
+                <element signature="n#!!block;n#initCtrls#0" expanded="false" />
+                <element signature="e#26541#26599#0" expanded="false" />
+                <element signature="n#!!block;n#getMessage#0" expanded="false" />
+                <element signature="e#31845#31850#0" expanded="false" />
+                <element signature="n#!!block;n#makenewdraft#0" expanded="false" />
+                <element signature="e#35142#46284#0" expanded="false" />
+                <element signature="e#35305#35391#0" expanded="false" />
+                <element signature="e#35978#36444#0" expanded="false" />
+                <element signature="e#36719#38592#0" expanded="false" />
+                <element signature="e#38599#38667#0" expanded="false" />
+                <element signature="e#42824#45178#0" expanded="false" />
+                <element signature="e#45400#46281#0" expanded="false" />
+                <element signature="n#!!block;n#showRows#0" expanded="false" />
+                <element signature="n#!!block;n#toggleAll#0" expanded="false" />
+                <element signature="n#!!block;n#tellIfLoaded#0" expanded="false" />
                 <element signature="n#!!block;n#nextDelayTime#0" expanded="false" />
-                <element signature="n#!!block;n#doAjaxRequestLoop0#0" expanded="false" />
-                <element signature="n#!!block;n#doAjaxRequestLoop1#0" expanded="false" />
-                <element signature="n#!!block;n#doAjaxRequestLoop2#0" expanded="false" />
-                <marker date="1453643018495" expanded="true" signature="27753:27785" placeholder="/*...*/" />
+                <element signature="e#49697#49751#0" expanded="false" />
+                <element signature="e#51839#53755#0" expanded="false" />
               </folding>
             </state>
           </provider>
@@ -174,11 +168,11 @@
         <option value="$PROJECT_DIR$/js/table_sort_script.js" />
         <option value="$PROJECT_DIR$/js/backoff-xhr.js" />
         <option value="$PROJECT_DIR$/js/backoffxhr.js" />
-        <option value="$PROJECT_DIR$/js/content.js" />
         <option value="$PROJECT_DIR$/js/test4.js" />
-        <option value="$PROJECT_DIR$/js/load.js" />
         <option value="$PROJECT_DIR$/manifest.json" />
         <option value="$PROJECT_DIR$/js/background.js" />
+        <option value="$PROJECT_DIR$/js/load.js" />
+        <option value="$PROJECT_DIR$/js/content.js" />
       </list>
     </option>
   </component>
@@ -240,6 +234,8 @@
       <sortByType />
     </navigator>
     <panes>
+      <pane id="Scratches" />
+      <pane id="Scope" />
       <pane id="ProjectPane">
         <subPane>
           <PATH>
@@ -255,6 +251,20 @@
             </PATH_ELEMENT>
             <PATH_ELEMENT>
               <option name="myItemId" value="Gmail_Plugin" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="Gmail_Plugin" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="Gmail_Plugin" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="oauth2" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
           </PATH>
@@ -288,8 +298,6 @@
           </PATH>
         </subPane>
       </pane>
-      <pane id="Scratches" />
-      <pane id="Scope" />
     </panes>
   </component>
   <component name="PropertiesComponent">
@@ -403,13 +411,13 @@
   </component>
   <component name="ToolWindowManager">
     <frame x="-8" y="-8" width="1382" height="744" extended-state="6" />
-    <editor active="true" />
+    <editor active="false" />
     <layout>
       <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.2470238" sideWeight="0.49429038" order="0" side_tool="false" content_ui="combo" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32952693" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.5350734" sideWeight="0.50292826" order="7" side_tool="true" content_ui="tabs" />
       <window_info id="Application Servers" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="8" side_tool="false" content_ui="tabs" />
-      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.17128874" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
+      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.43393147" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.15660685" sideWeight="0.5" order="9" side_tool="false" content_ui="tabs" />
       <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
@@ -437,11 +445,93 @@
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
-      <option name="time" value="5" />
+      <option name="time" value="6" />
     </breakpoint-manager>
     <watches-manager />
   </component>
   <component name="editorHistoryManager">
+    <entry file="file://$PROJECT_DIR$/manifest.json">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="16" column="38" selection-start-line="16" selection-start-column="38" selection-end-line="16" selection-end-column="38" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/css/component.css">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="1" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/popup.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="4" column="34" selection-start-line="4" selection-start-column="16" selection-end-line="4" selection-end-column="34" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/oauth2/oauth2.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="423" column="35" selection-start-line="423" selection-start-column="35" selection-end-line="423" selection-end-column="35" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/js/background.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="30" column="11" selection-start-line="30" selection-start-column="11" selection-end-line="30" selection-end-column="11" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/js/content.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding>
+            <element signature="n#!!block;n#insertAtt#0" expanded="false" />
+            <element signature="n#!!block;n#InitDiv#0" expanded="false" />
+            <element signature="e#1829#2157#0" expanded="false" />
+            <element signature="e#2359#2862#0" expanded="false" />
+            <element signature="e#10623#12767#0" expanded="false" />
+            <element signature="n#!!block;n#initPageAndSorting#0" expanded="false" />
+            <element signature="n#!!block;n#fetchNextList#0" expanded="false" />
+            <element signature="n#!!block;n#initCtrls#0" expanded="false" />
+            <element signature="e#26541#26599#0" expanded="false" />
+            <element signature="n#!!block;n#getMessage#0" expanded="false" />
+            <element signature="e#31845#31850#0" expanded="false" />
+            <element signature="n#!!block;n#makenewdraft#0" expanded="false" />
+            <element signature="e#35142#46284#0" expanded="false" />
+            <element signature="e#35305#35391#0" expanded="false" />
+            <element signature="e#35978#36444#0" expanded="false" />
+            <element signature="e#36719#38592#0" expanded="false" />
+            <element signature="e#38599#38667#0" expanded="false" />
+            <element signature="e#42824#45178#0" expanded="false" />
+            <element signature="e#45400#46281#0" expanded="false" />
+            <element signature="n#!!block;n#showRows#0" expanded="false" />
+            <element signature="n#!!block;n#toggleAll#0" expanded="false" />
+            <element signature="n#!!block;n#tellIfLoaded#0" expanded="false" />
+            <element signature="n#!!block;n#nextDelayTime#0" expanded="false" />
+            <element signature="e#49697#49751#0" expanded="false" />
+            <element signature="e#51839#53755#0" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/js/generateNameOfBtns.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="11" column="3" selection-start-line="11" selection-start-column="3" selection-end-line="11" selection-end-column="3" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/js/generateNameOfBtns.js">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
@@ -463,23 +553,31 @@
         <state vertical-scroll-proportion="0.0">
           <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
           <folding>
-            <element signature="e#1559#1887#0" expanded="false" />
-            <element signature="e#2089#2592#0" expanded="false" />
-            <element signature="e#2691#2947#0" expanded="false" />
-            <element signature="e#8594#9097#0" expanded="false" />
-            <element signature="e#12671#17743#0" expanded="false" />
-            <element signature="e#29173#29262#0" expanded="false" />
-            <element signature="e#29282#29385#0" expanded="false" />
-            <element signature="e#29391#29466#0" expanded="false" />
-            <element signature="e#37111#37727#0" expanded="false" />
-            <element signature="e#37782#39206#0" expanded="false" />
-            <element signature="e#39276#41485#0" expanded="false" />
-            <element signature="n#!!block;n#filterRows#0" expanded="false" />
+            <element signature="n#!!block;n#insertAtt#0" expanded="false" />
+            <element signature="n#!!block;n#InitDiv#0" expanded="false" />
+            <element signature="e#1829#2157#0" expanded="false" />
+            <element signature="e#2359#2862#0" expanded="false" />
+            <element signature="e#10623#12767#0" expanded="false" />
+            <element signature="n#!!block;n#initPageAndSorting#0" expanded="false" />
+            <element signature="n#!!block;n#fetchNextList#0" expanded="false" />
+            <element signature="n#!!block;n#initCtrls#0" expanded="false" />
+            <element signature="e#26541#26599#0" expanded="false" />
+            <element signature="n#!!block;n#getMessage#0" expanded="false" />
+            <element signature="e#31845#31850#0" expanded="false" />
+            <element signature="n#!!block;n#makenewdraft#0" expanded="false" />
+            <element signature="e#35142#46284#0" expanded="false" />
+            <element signature="e#35305#35391#0" expanded="false" />
+            <element signature="e#35978#36444#0" expanded="false" />
+            <element signature="e#36719#38592#0" expanded="false" />
+            <element signature="e#38599#38667#0" expanded="false" />
+            <element signature="e#42824#45178#0" expanded="false" />
+            <element signature="e#45400#46281#0" expanded="false" />
+            <element signature="n#!!block;n#showRows#0" expanded="false" />
+            <element signature="n#!!block;n#toggleAll#0" expanded="false" />
+            <element signature="n#!!block;n#tellIfLoaded#0" expanded="false" />
             <element signature="n#!!block;n#nextDelayTime#0" expanded="false" />
-            <element signature="n#!!block;n#doAjaxRequestLoop0#0" expanded="false" />
-            <element signature="n#!!block;n#doAjaxRequestLoop1#0" expanded="false" />
-            <element signature="n#!!block;n#doAjaxRequestLoop2#0" expanded="false" />
-            <marker date="1453643018495" expanded="true" signature="27753:27785" placeholder="/*...*/" />
+            <element signature="e#49697#49751#0" expanded="false" />
+            <element signature="e#51839#53755#0" expanded="false" />
           </folding>
         </state>
       </provider>
@@ -497,23 +595,31 @@
         <state vertical-scroll-proportion="0.0">
           <caret line="420" column="13" selection-start-line="420" selection-start-column="13" selection-end-line="420" selection-end-column="13" />
           <folding>
-            <element signature="e#1559#1887#0" expanded="false" />
-            <element signature="e#2089#2592#0" expanded="false" />
-            <element signature="e#2691#2947#0" expanded="false" />
-            <element signature="e#8594#9097#0" expanded="false" />
-            <element signature="e#12671#17743#0" expanded="false" />
-            <element signature="e#29173#29262#0" expanded="false" />
-            <element signature="e#29282#29385#0" expanded="false" />
-            <element signature="e#29391#29466#0" expanded="false" />
-            <element signature="e#37111#37727#0" expanded="false" />
-            <element signature="e#37782#39206#0" expanded="false" />
-            <element signature="e#39276#41485#0" expanded="false" />
-            <element signature="n#!!block;n#filterRows#0" expanded="false" />
+            <element signature="n#!!block;n#insertAtt#0" expanded="false" />
+            <element signature="n#!!block;n#InitDiv#0" expanded="false" />
+            <element signature="e#1829#2157#0" expanded="false" />
+            <element signature="e#2359#2862#0" expanded="false" />
+            <element signature="e#10623#12767#0" expanded="false" />
+            <element signature="n#!!block;n#initPageAndSorting#0" expanded="false" />
+            <element signature="n#!!block;n#fetchNextList#0" expanded="false" />
+            <element signature="n#!!block;n#initCtrls#0" expanded="false" />
+            <element signature="e#26541#26599#0" expanded="false" />
+            <element signature="n#!!block;n#getMessage#0" expanded="false" />
+            <element signature="e#31845#31850#0" expanded="false" />
+            <element signature="n#!!block;n#makenewdraft#0" expanded="false" />
+            <element signature="e#35142#46284#0" expanded="false" />
+            <element signature="e#35305#35391#0" expanded="false" />
+            <element signature="e#35978#36444#0" expanded="false" />
+            <element signature="e#36719#38592#0" expanded="false" />
+            <element signature="e#38599#38667#0" expanded="false" />
+            <element signature="e#42824#45178#0" expanded="false" />
+            <element signature="e#45400#46281#0" expanded="false" />
+            <element signature="n#!!block;n#showRows#0" expanded="false" />
+            <element signature="n#!!block;n#toggleAll#0" expanded="false" />
+            <element signature="n#!!block;n#tellIfLoaded#0" expanded="false" />
             <element signature="n#!!block;n#nextDelayTime#0" expanded="false" />
-            <element signature="n#!!block;n#doAjaxRequestLoop0#0" expanded="false" />
-            <element signature="n#!!block;n#doAjaxRequestLoop1#0" expanded="false" />
-            <element signature="n#!!block;n#doAjaxRequestLoop2#0" expanded="false" />
-            <marker date="1453643018495" expanded="true" signature="27753:27785" placeholder="/*...*/" />
+            <element signature="e#49697#49751#0" expanded="false" />
+            <element signature="e#51839#53755#0" expanded="false" />
           </folding>
         </state>
       </provider>
@@ -544,36 +650,36 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/js/table_sort_script.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/js/content.js">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
           <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
           <folding>
-            <element signature="e#1559#1887#0" expanded="false" />
-            <element signature="e#2089#2592#0" expanded="false" />
-            <element signature="e#2691#2947#0" expanded="false" />
-            <element signature="e#8594#9097#0" expanded="false" />
-            <element signature="e#12671#17743#0" expanded="false" />
-            <element signature="e#29173#29262#0" expanded="false" />
-            <element signature="e#29282#29385#0" expanded="false" />
-            <element signature="e#29391#29466#0" expanded="false" />
-            <element signature="e#37111#37727#0" expanded="false" />
-            <element signature="e#37782#39206#0" expanded="false" />
-            <element signature="e#39276#41485#0" expanded="false" />
-            <element signature="n#!!block;n#filterRows#0" expanded="false" />
+            <element signature="n#!!block;n#insertAtt#0" expanded="false" />
+            <element signature="n#!!block;n#InitDiv#0" expanded="false" />
+            <element signature="e#1829#2157#0" expanded="false" />
+            <element signature="e#2359#2862#0" expanded="false" />
+            <element signature="e#10623#12767#0" expanded="false" />
+            <element signature="n#!!block;n#initPageAndSorting#0" expanded="false" />
+            <element signature="n#!!block;n#fetchNextList#0" expanded="false" />
+            <element signature="n#!!block;n#initCtrls#0" expanded="false" />
+            <element signature="e#26541#26599#0" expanded="false" />
+            <element signature="n#!!block;n#getMessage#0" expanded="false" />
+            <element signature="e#31845#31850#0" expanded="false" />
+            <element signature="n#!!block;n#makenewdraft#0" expanded="false" />
+            <element signature="e#35142#46284#0" expanded="false" />
+            <element signature="e#35305#35391#0" expanded="false" />
+            <element signature="e#35978#36444#0" expanded="false" />
+            <element signature="e#36719#38592#0" expanded="false" />
+            <element signature="e#38599#38667#0" expanded="false" />
+            <element signature="e#42824#45178#0" expanded="false" />
+            <element signature="e#45400#46281#0" expanded="false" />
+            <element signature="n#!!block;n#showRows#0" expanded="false" />
+            <element signature="n#!!block;n#toggleAll#0" expanded="false" />
+            <element signature="n#!!block;n#tellIfLoaded#0" expanded="false" />
             <element signature="n#!!block;n#nextDelayTime#0" expanded="false" />
-            <element signature="n#!!block;n#doAjaxRequestLoop0#0" expanded="false" />
-            <element signature="n#!!block;n#doAjaxRequestLoop1#0" expanded="false" />
-            <element signature="n#!!block;n#doAjaxRequestLoop2#0" expanded="false" />
-            <marker date="1453643018495" expanded="true" signature="27753:27785" placeholder="/*...*/" />
+            <element signature="e#49697#49751#0" expanded="false" />
+            <element signature="e#51839#53755#0" expanded="false" />
           </folding>
         </state>
       </provider>
@@ -619,36 +725,36 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/js/table_sort_script.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/js/content.js">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
           <caret line="859" column="4" selection-start-line="859" selection-start-column="4" selection-end-line="859" selection-end-column="4" />
           <folding>
-            <element signature="e#1559#1887#0" expanded="false" />
-            <element signature="e#2089#2592#0" expanded="false" />
-            <element signature="e#2691#2947#0" expanded="false" />
-            <element signature="e#8594#9097#0" expanded="false" />
-            <element signature="e#12671#17743#0" expanded="false" />
-            <element signature="e#29173#29262#0" expanded="false" />
-            <element signature="e#29282#29385#0" expanded="false" />
-            <element signature="e#29391#29466#0" expanded="false" />
-            <element signature="e#37111#37727#0" expanded="false" />
-            <element signature="e#37782#39206#0" expanded="false" />
-            <element signature="e#39276#41485#0" expanded="false" />
-            <element signature="n#!!block;n#filterRows#0" expanded="false" />
+            <element signature="n#!!block;n#insertAtt#0" expanded="false" />
+            <element signature="n#!!block;n#InitDiv#0" expanded="false" />
+            <element signature="e#1829#2157#0" expanded="false" />
+            <element signature="e#2359#2862#0" expanded="false" />
+            <element signature="e#10623#12767#0" expanded="false" />
+            <element signature="n#!!block;n#initPageAndSorting#0" expanded="false" />
+            <element signature="n#!!block;n#fetchNextList#0" expanded="false" />
+            <element signature="n#!!block;n#initCtrls#0" expanded="false" />
+            <element signature="e#26541#26599#0" expanded="false" />
+            <element signature="n#!!block;n#getMessage#0" expanded="false" />
+            <element signature="e#31845#31850#0" expanded="false" />
+            <element signature="n#!!block;n#makenewdraft#0" expanded="false" />
+            <element signature="e#35142#46284#0" expanded="false" />
+            <element signature="e#35305#35391#0" expanded="false" />
+            <element signature="e#35978#36444#0" expanded="false" />
+            <element signature="e#36719#38592#0" expanded="false" />
+            <element signature="e#38599#38667#0" expanded="false" />
+            <element signature="e#42824#45178#0" expanded="false" />
+            <element signature="e#45400#46281#0" expanded="false" />
+            <element signature="n#!!block;n#showRows#0" expanded="false" />
+            <element signature="n#!!block;n#toggleAll#0" expanded="false" />
+            <element signature="n#!!block;n#tellIfLoaded#0" expanded="false" />
             <element signature="n#!!block;n#nextDelayTime#0" expanded="false" />
-            <element signature="n#!!block;n#doAjaxRequestLoop0#0" expanded="false" />
-            <element signature="n#!!block;n#doAjaxRequestLoop1#0" expanded="false" />
-            <element signature="n#!!block;n#doAjaxRequestLoop2#0" expanded="false" />
-            <marker date="1453643018495" expanded="true" signature="27753:27785" placeholder="/*...*/" />
+            <element signature="e#49697#49751#0" expanded="false" />
+            <element signature="e#51839#53755#0" expanded="false" />
           </folding>
         </state>
       </provider>
@@ -672,9 +778,7 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
           <caret line="309" column="0" selection-start-line="309" selection-start-column="0" selection-end-line="310" selection-end-column="0" />
-          <folding>
-            <element signature="n#!!doc" expanded="false" />
-          </folding>
+          <folding />
         </state>
       </provider>
     </entry>
@@ -711,36 +815,36 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/js/table_sort_script.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/js/content.js">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
           <caret line="859" column="4" selection-start-line="859" selection-start-column="4" selection-end-line="859" selection-end-column="4" />
           <folding>
-            <element signature="e#1559#1887#0" expanded="false" />
-            <element signature="e#2089#2592#0" expanded="false" />
-            <element signature="e#2691#2947#0" expanded="false" />
-            <element signature="e#8594#9097#0" expanded="false" />
-            <element signature="e#12671#17743#0" expanded="false" />
-            <element signature="e#29173#29262#0" expanded="false" />
-            <element signature="e#29282#29385#0" expanded="false" />
-            <element signature="e#29391#29466#0" expanded="false" />
-            <element signature="e#37111#37727#0" expanded="false" />
-            <element signature="e#37782#39206#0" expanded="false" />
-            <element signature="e#39276#41485#0" expanded="false" />
-            <element signature="n#!!block;n#filterRows#0" expanded="false" />
+            <element signature="n#!!block;n#insertAtt#0" expanded="false" />
+            <element signature="n#!!block;n#InitDiv#0" expanded="false" />
+            <element signature="e#1829#2157#0" expanded="false" />
+            <element signature="e#2359#2862#0" expanded="false" />
+            <element signature="e#10623#12767#0" expanded="false" />
+            <element signature="n#!!block;n#initPageAndSorting#0" expanded="false" />
+            <element signature="n#!!block;n#fetchNextList#0" expanded="false" />
+            <element signature="n#!!block;n#initCtrls#0" expanded="false" />
+            <element signature="e#26541#26599#0" expanded="false" />
+            <element signature="n#!!block;n#getMessage#0" expanded="false" />
+            <element signature="e#31845#31850#0" expanded="false" />
+            <element signature="n#!!block;n#makenewdraft#0" expanded="false" />
+            <element signature="e#35142#46284#0" expanded="false" />
+            <element signature="e#35305#35391#0" expanded="false" />
+            <element signature="e#35978#36444#0" expanded="false" />
+            <element signature="e#36719#38592#0" expanded="false" />
+            <element signature="e#38599#38667#0" expanded="false" />
+            <element signature="e#42824#45178#0" expanded="false" />
+            <element signature="e#45400#46281#0" expanded="false" />
+            <element signature="n#!!block;n#showRows#0" expanded="false" />
+            <element signature="n#!!block;n#toggleAll#0" expanded="false" />
+            <element signature="n#!!block;n#tellIfLoaded#0" expanded="false" />
             <element signature="n#!!block;n#nextDelayTime#0" expanded="false" />
-            <element signature="n#!!block;n#doAjaxRequestLoop0#0" expanded="false" />
-            <element signature="n#!!block;n#doAjaxRequestLoop1#0" expanded="false" />
-            <element signature="n#!!block;n#doAjaxRequestLoop2#0" expanded="false" />
-            <marker date="1453643018495" expanded="true" signature="27753:27785" placeholder="/*...*/" />
+            <element signature="e#49697#49751#0" expanded="false" />
+            <element signature="e#51839#53755#0" expanded="false" />
           </folding>
         </state>
       </provider>
@@ -764,9 +868,7 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
           <caret line="309" column="0" selection-start-line="309" selection-start-column="0" selection-end-line="310" selection-end-column="0" />
-          <folding>
-            <element signature="n#!!doc" expanded="false" />
-          </folding>
+          <folding />
         </state>
       </provider>
     </entry>
@@ -785,23 +887,31 @@
         <state vertical-scroll-proportion="0.0">
           <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
           <folding>
-            <element signature="e#1559#1887#0" expanded="false" />
-            <element signature="e#2089#2592#0" expanded="false" />
-            <element signature="e#2691#2947#0" expanded="false" />
-            <element signature="e#8594#9097#0" expanded="false" />
-            <element signature="e#12671#17743#0" expanded="false" />
-            <element signature="e#29173#29262#0" expanded="false" />
-            <element signature="e#29282#29385#0" expanded="false" />
-            <element signature="e#29391#29466#0" expanded="false" />
-            <element signature="e#37111#37727#0" expanded="false" />
-            <element signature="e#37782#39206#0" expanded="false" />
-            <element signature="e#39276#41485#0" expanded="false" />
-            <element signature="n#!!block;n#filterRows#0" expanded="false" />
+            <element signature="n#!!block;n#insertAtt#0" expanded="false" />
+            <element signature="n#!!block;n#InitDiv#0" expanded="false" />
+            <element signature="e#1829#2157#0" expanded="false" />
+            <element signature="e#2359#2862#0" expanded="false" />
+            <element signature="e#10623#12767#0" expanded="false" />
+            <element signature="n#!!block;n#initPageAndSorting#0" expanded="false" />
+            <element signature="n#!!block;n#fetchNextList#0" expanded="false" />
+            <element signature="n#!!block;n#initCtrls#0" expanded="false" />
+            <element signature="e#26541#26599#0" expanded="false" />
+            <element signature="n#!!block;n#getMessage#0" expanded="false" />
+            <element signature="e#31845#31850#0" expanded="false" />
+            <element signature="n#!!block;n#makenewdraft#0" expanded="false" />
+            <element signature="e#35142#46284#0" expanded="false" />
+            <element signature="e#35305#35391#0" expanded="false" />
+            <element signature="e#35978#36444#0" expanded="false" />
+            <element signature="e#36719#38592#0" expanded="false" />
+            <element signature="e#38599#38667#0" expanded="false" />
+            <element signature="e#42824#45178#0" expanded="false" />
+            <element signature="e#45400#46281#0" expanded="false" />
+            <element signature="n#!!block;n#showRows#0" expanded="false" />
+            <element signature="n#!!block;n#toggleAll#0" expanded="false" />
+            <element signature="n#!!block;n#tellIfLoaded#0" expanded="false" />
             <element signature="n#!!block;n#nextDelayTime#0" expanded="false" />
-            <element signature="n#!!block;n#doAjaxRequestLoop0#0" expanded="false" />
-            <element signature="n#!!block;n#doAjaxRequestLoop1#0" expanded="false" />
-            <element signature="n#!!block;n#doAjaxRequestLoop2#0" expanded="false" />
-            <marker date="1453643018495" expanded="true" signature="27753:27785" placeholder="/*...*/" />
+            <element signature="e#49697#49751#0" expanded="false" />
+            <element signature="e#51839#53755#0" expanded="false" />
           </folding>
         </state>
       </provider>
@@ -818,21 +928,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
           <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/js/table_sort_script.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/js/test4.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="27" column="16" selection-start-line="27" selection-start-column="16" selection-end-line="27" selection-end-column="16" />
         </state>
       </provider>
     </entry>
@@ -896,61 +991,9 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/js/table_sort_script.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="11" column="25" selection-start-line="11" selection-start-column="25" selection-end-line="11" selection-end-column="25" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/oauth2/oauth2.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="-11.3">
-          <caret line="423" column="35" selection-start-line="423" selection-start-column="35" selection-end-line="423" selection-end-column="35" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/js/content.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="-13.7">
-          <caret line="1306" column="68" selection-start-line="1306" selection-start-column="68" selection-end-line="1306" selection-end-column="68" />
-          <folding>
-            <element signature="e#1559#1887#0" expanded="false" />
-            <element signature="e#2089#2592#0" expanded="false" />
-            <element signature="e#2691#2947#0" expanded="false" />
-            <element signature="e#8594#9097#0" expanded="false" />
-            <element signature="e#12671#17743#0" expanded="false" />
-            <element signature="e#29173#29262#0" expanded="false" />
-            <element signature="e#29282#29385#0" expanded="false" />
-            <element signature="e#29391#29466#0" expanded="false" />
-            <element signature="e#37111#37727#0" expanded="false" />
-            <element signature="e#37782#39206#0" expanded="false" />
-            <element signature="e#39276#41485#0" expanded="false" />
-            <element signature="n#!!block;n#filterRows#0" expanded="false" />
-            <element signature="n#!!block;n#nextDelayTime#0" expanded="false" />
-            <element signature="n#!!block;n#doAjaxRequestLoop0#0" expanded="false" />
-            <element signature="n#!!block;n#doAjaxRequestLoop1#0" expanded="false" />
-            <element signature="n#!!block;n#doAjaxRequestLoop2#0" expanded="false" />
-            <marker date="1453643018495" expanded="true" signature="27753:27785" placeholder="/*...*/" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/js/load.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="115" column="1" selection-start-line="115" selection-start-column="1" selection-end-line="115" selection-end-column="1" />
-          <folding>
-            <element signature="e#58#2322#0" expanded="false" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/popup.html">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="-2.8148148">
+        <state vertical-scroll-proportion="0.0">
           <caret line="4" column="34" selection-start-line="4" selection-start-column="16" selection-end-line="4" selection-end-column="34" />
           <folding />
         </state>
@@ -958,25 +1001,69 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/manifest.json">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="-5.4814816">
+        <state vertical-scroll-proportion="0.0">
           <caret line="16" column="38" selection-start-line="16" selection-start-column="38" selection-end-line="16" selection-end-column="38" />
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/js/test4.js">
+    <entry file="file://$PROJECT_DIR$/oauth2/oauth2.js">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
-          <caret line="1" column="0" selection-start-line="1" selection-start-column="0" selection-end-line="5" selection-end-column="3" />
+          <caret line="417" column="45" selection-start-line="417" selection-start-column="45" selection-end-line="417" selection-end-column="45" />
           <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/js/load.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="98" column="27" selection-start-line="98" selection-start-column="27" selection-end-line="98" selection-end-column="27" />
+          <folding>
+            <element signature="e#58#2322#0" expanded="false" />
+          </folding>
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/js/background.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.6191537">
-          <caret line="35" column="3" selection-start-line="35" selection-start-column="3" selection-end-line="35" selection-end-column="3" />
+        <state vertical-scroll-proportion="0.0">
+          <caret line="30" column="11" selection-start-line="30" selection-start-column="11" selection-end-line="30" selection-end-column="11" />
           <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/js/content.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.48736462">
+          <caret line="734" column="34" selection-start-line="734" selection-start-column="34" selection-end-line="734" selection-end-column="34" />
+          <folding>
+            <element signature="n#!!block;n#insertAtt#0" expanded="false" />
+            <element signature="n#!!block;n#InitDiv#0" expanded="false" />
+            <element signature="e#1829#2157#0" expanded="false" />
+            <element signature="e#2359#2862#0" expanded="false" />
+            <element signature="e#10623#12767#0" expanded="false" />
+            <element signature="n#!!block;n#initPageAndSorting#0" expanded="false" />
+            <element signature="n#!!block;n#fetchNextList#0" expanded="false" />
+            <element signature="n#!!block;n#initCtrls#0" expanded="false" />
+            <element signature="e#26541#26599#0" expanded="false" />
+            <element signature="n#!!block;n#getMessage#0" expanded="false" />
+            <element signature="e#31845#31850#0" expanded="false" />
+            <element signature="n#!!block;n#makenewdraft#0" expanded="false" />
+            <element signature="e#35142#46284#0" expanded="false" />
+            <element signature="e#35305#35391#0" expanded="false" />
+            <element signature="e#35978#36444#0" expanded="false" />
+            <element signature="e#36719#38592#0" expanded="false" />
+            <element signature="e#38599#38667#0" expanded="false" />
+            <element signature="e#42824#45178#0" expanded="false" />
+            <element signature="e#45400#46281#0" expanded="false" />
+            <element signature="n#!!block;n#showRows#0" expanded="false" />
+            <element signature="n#!!block;n#toggleAll#0" expanded="false" />
+            <element signature="n#!!block;n#tellIfLoaded#0" expanded="false" />
+            <element signature="n#!!block;n#nextDelayTime#0" expanded="false" />
+            <element signature="e#49697#49751#0" expanded="false" />
+            <element signature="e#51839#53755#0" expanded="false" />
+          </folding>
         </state>
       </provider>
     </entry>

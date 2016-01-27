@@ -4,28 +4,34 @@ var DRAFT_URL_prefix = 'https://www.googleapis.com/gmail/v1/users/me/drafts/';//
 var token = '';
 var sortingTable;
 var id = 0;//附件编号（按获取到的顺序）
-var id_show = 0;//附件编号（显示出来的列表行的编号，经过filter后生成的）
 var msgFinished = [];
 var allContent = [];
 var visibleRows = [];
 var msgNow = 0;//获取附件（邮件）列表过程中，当前已获取到的邮件总数
 var not_include_content_pics = true;
 var filterValue;//搜索框输入值
+var partsBeingInserted = [];//待插入到草稿中的附件们的raw串。每次成功插入全部附件后，将在updateDraft函数中，赋值为[]来清空之
+var dfdsGettingMsg = [];
 
 //添加附件过程
 function insertAtt() {
     var id2;//id2指明当前要操作的附件在table中的编号（由获取到的顺序决定）
-
+    var i=0;
+    var id_in_visRows=[];
     for (id2 = idnow; id2 < visibleRows.length; id2++) {
+        //console.log(id2);
+        //console.log(document.getElementById("checkbox_" + id2));
         if (document.getElementById("checkbox_" + id2).checked == true) {
             var name = document.getElementById("attachment_tr_" + id2).getElementsByTagName('td')[1].innerHTML;
-            document.getElementById('status_span').innerHTML = chrome.i18n.getMessage("hintInserting", name);//'正在插入附件<strong>'+name+'</strong>...';
+            //document.getElementById('status_span').innerHTML = chrome.i18n.getMessage("hintInserting", name);//'正在插入附件<strong>'+name+'</strong>...';
             document.getElementById('load1').style.display = 'inline-block';
-            makenewdraft(id2, name);
+            //makenewdraft(id2, name);
+            id_in_visRows[i++]=id2;
             //document.getElementById('status_span').innerHTML ='附件<strong>'+ name +'</strong>已成功插入至最新草稿！';
-            document.getElementById('load1').style.display = 'none';
+            //document.getElementById('load1').style.display = 'none';
         }
     }
+    makenewdraft(id_in_visRows);
 }
 
 //初始化div，包括table的初始化
@@ -89,6 +95,13 @@ function InitDiv() {
         id = 0;//附件编号（按获取到的顺序）
         msgNow = 0;
         not_include_content_pics = !document.getElementById('includeContentPics').checked;
+        //$(document).ajaxStop(function(){
+        //    console.info('全部message get请求已完成');
+        //    visibleRows = allContent;
+        //    showRows();
+        //    initCtrls();
+        //    $(document).ajaxStop(function(){});//本想通过这种方式来把在ajaxStop事件上附加的回调函数清除掉，结果没想到这样只是又往上附加一个空的函数...没法清除已经附加的回调函数
+        //});
         fetchNextList(null);//原本是fetchList();现在统一到fetchNextList这个函数上了。//将获取到的东西都存到数组allContent中
 
     };
@@ -133,9 +146,11 @@ function InitDiv() {
         status_span.innerHTML = '';
         for (id2 = 0; id2 < visibleRows.length; id2++) {
             idnow = id2;
+            //console.log('id2是 '+id2+'。visibleRows.length= ' + visibleRows.length);
+            //console.log(document.getElementById("checkbox_" + id2));
             if (document.getElementById("checkbox_" + id2).checked == true) {
                 var name = document.getElementById("attachment_tr_" + id2).getElementsByTagName('td')[1].innerHTML;
-                document.getElementById('status_span').innerHTML = chrome.i18n.getMessage("hintInserting", name);//'正在插入附件<strong>'+name+'</strong>...';
+                document.getElementById('status_span').innerHTML = chrome.i18n.getMessage("fetchingOldDraft");//'正在获取当前草稿...';
                 document.getElementById('load1').style.display = 'inline-block';
                 break;
             }
@@ -161,8 +176,7 @@ function InitDiv() {
          url: chrome.extension.getURL("../injected-js/tableInited.js")
          }, function () {*/
         initPageAndSorting();
-        console.log("controls inited!");
-        alert('controls inited?!');
+        //console.log("controls inited!");
 
         document.getElementById('status_span').innerHTML = chrome.i18n.getMessage("finishListing");//'获取附件列表完毕！';
         document.getElementById('load1').style.display = 'none';
@@ -189,20 +203,6 @@ function InitDiv() {
     var node = document.createTextNode(chrome.i18n.getMessage("lookPicsAsAttachments"));//"将正文中的图片也视为附件"
     //node.style.fontSize = '20px';
     div.appendChild(node);
-    /*
-     //---------显示退出按钮-----
-     var btnexit = document.createElement('button');
-     btnexit.id = 'btnexit';
-     btnexit.innerHTML = 'X';
-     btnexit.className="btn btn-1 btn-1e";
-     btnexit.onclick = function(){
-     div.style.visibility = "hidden";
-     //sortingtable.style.visibility = "hidden";
-     overlay.style.visibility = "hidden";
-     document.getElementById('table_to_sort').getElementsByTagName('tbody')[0].style.visibility = 'hidden';
-     }
-     div.appendChild(btnexit);
-     */
     //--------生成占位空白行
     var blank_span = document.createElement('div');
     div.appendChild(blank_span);
@@ -446,8 +446,8 @@ function initPageAndSorting() {
         }();
     }
     sorter_instance = new TINY.table.sorter("sorter_instance");
-    console.log(sorter_instance);
-    console.log(TINY);
+    //console.log(sorter_instance);
+    //console.log(TINY);
     sorter_instance.head = "head";
     sorter_instance.asc = "asc";
     sorter_instance.desc = "desc";
@@ -572,159 +572,8 @@ function initPageAndSorting() {
         }
     }
 
+    console.log('Now init the table_to_sort');
     sorter_instance.init("table_to_sort", 0);
-}
-//===================显示UI大块=================================
-//chrome.extension.onMessage.addListener(
-/*chrome.runtime.onMessage.addListener(
- function(request, sender, sendResponse) {
- alert('TOKEN IS: '+token);
- if (request.token != '')
- {
- token = request.token;
- //alert(token);
- document.getElementById('GmailAssist').style.visibility = "visible";
- document.getElementById('overlay').style.visibility = "visible";
- document.getElementById('table_to_sort').getElementsByTagName('tbody')[0].style.visibility = 'visible';
- //sendResponse({farewell: "goodbye"});
- }
- });*/
-//------------testing------------ 
-//function fetchList() {
-//    filterValue = document.getElementById('filter').value;
-//    /*if(filterValue==null)
-//     console.log('NULL?'+filterValue);
-//     else if(filterValue==undefined)
-//     console.log('UNdefined');
-//     else if(filterValue=='')
-//     console.log('空串！');
-//     else if(filterValue==' ')
-//     console.log('空格！！');*/
-//    var xhr = new XMLHttpRequest();
-//    xhr.onreadystatechange = function (event) {
-//        if (xhr.readyState == 4) {
-//            if (xhr.status == 200) {
-//                var i = 0;
-//
-//                var list = JSON.parse(xhr.responseText);
-//                MsgList = list;
-//                //id = 0;
-//                /*				//弄个数组来保存每个message是否处理完的信息
-//
-//                 */				//Fetch information of the attachments with a for loop
-//                /*		if(list.resultSizeEstimate > 100)
-//                 {
-//                 list.resultSizeEstimate = 100;
-//                 }*/
-//                for (i = 0; i < list.messages.length; i++) {
-//                    msgFinished[i + msgNow] = false;
-//                    //console.log(list.messages[i].id + ' ' + i + msgNow + ' ' + list.resultSizeEstimate);
-//                    getMessage(list.messages[i].id, i);
-//                }
-//                msgNow += i;
-//                if (list.nextPageToken) {
-//                    console.log('nextPageToken: ' + list.nextPageToken);
-//                    fetchNextList(list.nextPageToken);
-//                }
-//                else {
-//                    //list.nextPageToken;
-//                    var time = setTimeout("initCtrls();", 4000);
-//                }
-//
-//            } else if (xhr.status == 401) {
-//                document.getElementById('status_span').innerHTML = chrome.i18n.getMessage("errorOfUnauthorized");//'未成功授权，请重新授权后再试！';
-//                document.getElementById('load1').style.display = 'none';
-//            }
-//            else {
-//                document.getElementById('status_span').innerHTML = chrome.i18n.getMessage("errorOfConnection");//'网络问题，请重试。不行的话，请刷新网页再试！';
-//                document.getElementById('load1').style.display = 'none';
-//            }
-//        }
-//        /*else{
-//         document.getElementById('status_span').innerHTML = '网络问题，请重试。不行的话，请刷新网页再试！wai';
-//         document.getElementById('load1').style.display = 'none';
-//         }*/
-//    };
-//
-//    xhr.open('GET', LIST_FETCH_URL + '?q=has%3Aattachment', true);
-//
-//    xhr.setRequestHeader('Content-Type', 'application/json');
-//    xhr.setRequestHeader('Authorization', 'OAuth ' + token);
-//
-//    xhr.send(null);
-//}
-
-//获取附件列表（事实上这个是获取邮件列表）
-function fetchNextList0(pagetoken) {
-    filterValue = document.getElementById('filter').value;
-    var xhr = new XMLHttpRequest();
-    xhr.onreadystatechange = function (event) {
-        if (xhr.readyState == 4) {
-            if (xhr.status == 200) {
-                var i = 0;
-
-                var list = JSON.parse(xhr.responseText);
-                MsgList = list;
-                //id = 0;
-                /*				//弄个数组来保存每个message是否处理完的信息
-
-                 */				//Fetch information of the attachments with a for loop
-                console.log(list.nextPageToken);
-                for (i = 0; i < list.messages.length; i++) {
-                    msgFinished[i + msgNow] = false;
-                    console.log(list.messages[i].id + ' ' + i + msgNow + ' ' + list.resultSizeEstimate);
-                    getMessage(list.messages[i].id, i + msgNow);
-                }
-                msgNow += i;
-                if (list.nextPageToken) {
-                    console.log(list.nextPageToken);
-                    fetchNextList(list.nextPageToken);
-                }
-                else {
-                    //fetchList();
-                    var time = setTimeout("visibleRows=allContent;showRows();initCtrls();", 4000);
-                }
-
-            } else if (xhr.status == 401) {
-                document.getElementById('status_span').innerHTML = chrome.i18n.getMessage("errorOfUnauthorized");//'未成功授权，请重新授权后再试！';
-                document.getElementById('load1').style.display = 'none';
-                //console.log(xhr);
-                setTimeout(function () {
-                    xhr.readyState = 1;
-                    //console.log(xhr);
-                    xhr.send();
-                    console.log(xhr);
-                }, 1000);
-            }
-            else {
-                document.getElementById('status_span').innerHTML = chrome.i18n.getMessage("errorOfConnection");//'网络问题，请重试。不行的话，请刷新网页再试！';
-                document.getElementById('load1').style.display = 'none';
-            }
-        }
-        /*else{
-         document.getElementById('status_span').innerHTML = '网络问题，请重试。不行的话，请刷新网页再试！wai';
-         document.getElementById('load1').style.display = 'none';
-         }*/
-    };
-    var otherParams = '';
-    if (filterValue) {
-        otherParams = '+' + encodeURIComponent(filterValue).replace(/%20/g, '+');
-    }
-    if (pagetoken) {
-        xhr.open('GET', LIST_FETCH_URL + '?pageToken=' + pagetoken + '&q=has%3Aattachment' + otherParams, true);
-        console.log('?pageToken=' + pagetoken + '&q=has%3Aattachment' + otherParams);
-    } else {
-        xhr.open('GET', LIST_FETCH_URL + '?q=has%3Aattachment' + otherParams, true);
-        console.log('?q=has%3Aattachment' + otherParams);
-    }
-
-    xhr.setRequestHeader('Content-Type', 'application/json');
-    xhr.setRequestHeader('Authorization', 'OAuth ' + token);
-
-    console.log('XHR做好了：');
-    console.log(xhr);
-    xhr.send(null);
-    console.time('发一次');
 }
 
 function fetchNextList(pagetoken) {
@@ -734,11 +583,18 @@ function fetchNextList(pagetoken) {
         otherParams = '+' + encodeURIComponent(filterValue).replace(/%20/g, '+');
     }
     if (pagetoken) {
+        //url = LIST_FETCH_URL + '?pageToken=' + pagetoken;//去掉has:attachment参数，为了发起更大数量的邮件get
         url = LIST_FETCH_URL + '?pageToken=' + pagetoken + '&q=has%3Aattachment' + otherParams;
     } else {
+        //url = LIST_FETCH_URL;
         url = LIST_FETCH_URL + '?q=has%3Aattachment' + otherParams;
     }
     var settings = {
+        //headers: {
+        //    "Content-Type": "application/json",
+        //    "Authorization": 'OAuth ' + 'ya29.awJE76XyhFHTniZ2PTsyC0zRbBAtVKoUbhQuSNT3SSmv9yWqVzH0ESuxg7ySzthL6ZWU'
+        //    //"Authorization": 'OAuth ' + token
+        //},
         retryCount: 0,
         url: url,
         /**
@@ -753,11 +609,12 @@ function fetchNextList(pagetoken) {
             /*				//弄个数组来保存每个message是否处理完的信息
 
              */				//Fetch information of the attachments with a for loop
-            console.log(list.nextPageToken);
+            //console.log(list.nextPageToken);
             for (i = 0; i < list.messages.length; i++) {
                 msgFinished[i + msgNow] = false;
-                console.log(list.messages[i].id + ' ' + (i + msgNow) + ' ' + list.resultSizeEstimate);
-                getMessage(list.messages[i].id, i + msgNow);
+                //console.log(list.messages[i].id + ' ' + (i + msgNow) + ' ' + list.resultSizeEstimate);
+                dfdsGettingMsg.push(getMessage(list.messages[i].id, i + msgNow));//放进数组里，准备传给$.when.apply
+                //getMessage(list.messages[i].id, i + msgNow);
             }
             msgNow += i;
             if (list.nextPageToken) {
@@ -765,78 +622,127 @@ function fetchNextList(pagetoken) {
                 fetchNextList(list.nextPageToken);
             }
             else {
-                //fetchList();
+             /*//fetchList();
                 setTimeout(function () {
                     visibleRows = allContent;
                     showRows();
                     initCtrls();
-                }, 2000);
+                }, 2000);*/
+                $.when.apply($,dfdsGettingMsg).done(function(){
+                    console.info('全部message get请求已完成');
+                    visibleRows = allContent;
+                    showRows();
+                    initCtrls();
+                }); //msg.list到最后一页了，之后没有了，这时候就可以开始调用when了！等待全部ajax的jqXHR（即deferred对象们）的done了！
             }
         }
     }
     $.ajax(settings);
 }
 
-//排序table的控制（翻页）按钮们的初始化
-function initCtrls0() {
-    var flag = true;
-    for (i in msgFinished) {
-        //console.log(msgFinished+' i='+i);
-        //console.log('(before)flag='+flag);
-        flag = msgFinished[i] && flag;
-        //console.log('(after)flag='+flag);
-    }
-    if (flag == false) {
-        console.log('再等会');
-        setTimeout("initCtrls();", 2500);
-    }
-    else {
-        //filterRows();//根据搜索框，过滤不显示的
-        //showRows();//根据数组visibleRows决定显示哪些行
-
+function initCtrls() {
+    //var allMsgFetched = true;
+    //for (var i = 0; i < msgFinished.length; i++) {
+    //    if (!msgFinished[i]) {
+    //        console.log('再等会');
+    //        allMsgFetched = false;
+    //        i = msgFinished.length;
+    //        setTimeout(function () {
+    //            initCtrls();
+    //        }, 2100);
+    //    }
+    //}
+    //if(allMsgFetched){
+        //console.log(msgFinished);
         initPageAndSorting();
-        console.log("controls inited!");
+        console.log("全部邮件已获取");
 
         document.getElementById('status_span').innerHTML = chrome.i18n.getMessage("finishListing");//'获取附件列表完毕！';
         document.getElementById('load1').style.display = 'none';
         document.getElementById('GmailAssist').style.visibility = 'visible';
         document.getElementById('overlay').style.visibility = 'visible';
         document.getElementById('table_to_sort').getElementsByTagName('tbody')[0].style.visibility = 'visible';
-
-        //setTimeout("document.getElementById('status_span').innerHTML = '';",3000);
-
-    }
+    //}
 }
 
-function initCtrls() {
-    for (var i = 0; i < msgFinished.length; i++) {//实现了一种滑动窗口，已收到的（msgFinished==true的）就不再检测
-        if (!msgFinished[i]) {
-            console.log('再等会');
-            setTimeout(function () {
-                i -= 1;
-            }, 2100);
-        }
-    }
-    initPageAndSorting();
-    console.log("controls inited!");
 
-    document.getElementById('status_span').innerHTML = chrome.i18n.getMessage("finishListing");//'获取附件列表完毕！';
-    document.getElementById('load1').style.display = 'none';
-    document.getElementById('GmailAssist').style.visibility = 'visible';
-    document.getElementById('overlay').style.visibility = 'visible';
-    document.getElementById('table_to_sort').getElementsByTagName('tbody')[0].style.visibility = 'visible';
-}
-
+//function getMessage0(MessageId, j) {//j为在msgFinished中的下标
+//    url = MESSAGE_FETCH_URL_prefix + MessageId;
+//    var settings = {
+//        retryCount: 0,
+//        url: url,
+//        //headers: {
+//        //    "Content-Type": "application/json",
+//        //    //"Authorization": 'OAuth ' + 'ya29.awJE76XyhFHTniZ2PTsyC0zRbBAtVKoUbhQuSNT3SSmv9yWqVzH0ESuxg7ySzthL6ZWU'
+//        //    "Authorization": 'OAuth ' + token
+//        //},
+//
+//        success: function (messageObj, textStatus, xhr) {
+//            //var messageObj = JSON.parse(xhr.responseText);
+//            var parts = messageObj.payload.parts;
+//
+//            var headers = messageObj.payload.headers;
+//            var sender;
+//            var subject = '-';
+//            var labels = messageObj.labelIds;
+//            var date;
+//            if (parts) {
+//                //Fetch information of the attachments with a for loop
+//                for (i in headers) {
+//                    var header = headers[i];
+//                    if (header.name == 'From') {
+//                        sender = header.value;
+//                    }
+//                    else if (header.name == 'Subject') {
+//                        if (header.value) {
+//                            subject = header.value;
+//                        }
+//                    }
+//                    else if (header.name == 'Date') {
+//                        date = header.value;
+//                    }
+//                }
+//                //for(var i=0; i<parts.length ; i++)
+//                for (i in parts) {
+//                    var part = parts[i];
+//
+//                    if (part.filename) {
+//                        for (i in part.headers) {
+//                            var partheader = part.headers[i];
+//                            if (partheader.name == 'Content-ID') {
+//                                var in_content = true;
+//                            }
+//                        }
+//
+//                        if (in_content && not_include_content_pics) {
+//                            break;
+//                        }
+//                        part.body.size = Math.ceil(part.body.size * 0.75 / 1024);
+//                        var d = new Date(Date.parse(date));
+//
+//                        allContent[id] = part.filename + '|-|' + part.body.size + '|-|' + sender + '|-|' + labels + '|-|' + subject + '|-|' + d.toLocaleDateString() + '|-|' + MessageId + '|-|' + part.partId;
+//
+//                        id++;
+//                    }
+//                }
+//            }
+//            msgFinished[j] = true;
+//        }
+//    }
+//    $.ajax(settings);
+//}
 
 function getMessage(MessageId, j) {//j为在msgFinished中的下标
+    var dfd = $.Deferred();//用个dfd来表明Message到底有没有完成get。这里所谓完成，是指完成一封msg里的所有part添加进allContent的步骤。
     url = MESSAGE_FETCH_URL_prefix + MessageId;
     var settings = {
         retryCount: 0,
         url: url,
-        headers: {
-            "Content-Type": "application/json",
-            "Authorization": 'OAuth ' + token
-        },
+        //headers: {
+        //    "Content-Type": "application/json",
+        //    //"Authorization": 'OAuth ' + 'ya29.awJE76XyhFHTniZ2PTsyC0zRbBAtVKoUbhQuSNT3SSmv9yWqVzH0ESuxg7ySzthL6ZWU'
+        //    "Authorization": 'OAuth ' + token
+        //},
 
         success: function (messageObj, textStatus, xhr) {
             //var messageObj = JSON.parse(xhr.responseText);
@@ -887,36 +793,86 @@ function getMessage(MessageId, j) {//j为在msgFinished中的下标
                     }
                 }
             }
-            msgFinished[j] = true;
+            dfd.resolve();
+            //msgFinished[j] = true;
         }
     }
-    $.ajax(settings);
+    return dfd.promise($.ajax(settings));
 }
 
 //---草稿操作函数
-function makenewdraft(passed, name) {
+
+///**
+// *
+// * @param passed    visibleRows数组的下标
+// * @param name      插入的附件名（接下来要把这个改成一个队列）
+// */
+//function makenewdraft0(passed, name) {
+//    //1.获得当前的draft内容（非raw的字符串）
+//    //var id_in_func = passed;
+//    getCurrentDraftID(function (draftID) {
+//        console.log('in draft:' + draftID);
+//        currentdraftid = draftID;
+//        getCurrentRawDraft(currentdraftid, function (draftmail) {
+//            currentDraftString = draftmail;
+//            //2.获得当前message中相应的附件内容和信息（非raw的字符串）
+//            console.log(visibleRows[passed].split('|-|')[6] + ' ' + visibleRows[passed].split('|-|')[7]);
+//            getAttPart(visibleRows[passed].split('|-|')[6], visibleRows[passed].split('|-|')[7], function (attachpart) {
+//                //console.log(attachpart);
+//                partBeingInserted = attachpart;
+//                /*console.log('THE PART BEING APPENDED TO DRAFT IS:' + partBeingInserted);*/
+//                //3.把2拼到1上
+//                var updatedRaw = joinPartToDraft(currentDraftString, partBeingInserted);
+//                //----alert('joined!');
+//                //4.更新draft
+//                updateDraft(currentdraftid, updatedRaw, name);
+//                //----alert('Updated your draft!');
+//            });
+//        });
+//    });//存到变量draftID中
+//}
+
+/**
+ * 取得当前最新草稿，并遍历队列queue，取得待插入的各附件的raw string，然后依次插入该草稿，拼成新草稿
+ * @param id_in_visRows  [Array]      visibleRows[]中的下标组成的数组。id_in_visRows[]中指明了在sortTable中有哪些附件是要插入草稿的
+ */
+function makenewdraft(id_in_visRows) {
     //1.获得当前的draft内容（非raw的字符串）
-    //var id_in_func = passed;
     getCurrentDraftID(function (draftID) {
         console.log('in draft:' + draftID);
-        currentdraftid = draftID;
+        var currentdraftid = draftID;
         getCurrentRawDraft(currentdraftid, function (draftmail) {
-            currentDraftString = draftmail;
-            //2.获得当前message中相应的附件内容和信息（非raw的字符串）
-            console.log(visibleRows[passed].split('|-|')[6] + ' ' + visibleRows[passed].split('|-|')[7]);
-            getAttPart(visibleRows[passed].split('|-|')[6], visibleRows[passed].split('|-|')[7], function (attachpart) {
-                //console.log(attachpart);
-                partBeingInserted = attachpart;
-                /*console.log('THE PART BEING APPENDED TO DRAFT IS:' + partBeingInserted);*/
-                //3.把2拼到1上
-                var updatedRaw = joinPartToDraft(currentDraftString, partBeingInserted);
-                //----alert('joined!');
-                //4.更新draft
-                updateDraft(currentdraftid, updatedRaw, name);
-                //----alert('Updated your draft!');
+            var currentDraftString = draftmail;
+            //2.依次出队，每次出队，获取一个附件
+            // 把要插入的附件们，处理成待插入的串后，存入数组partsBeingInserted
+            var dfdsGettingAtt = [];
+
+            for(var i=0; i<id_in_visRows.length; i++){
+                var visRowsSplit = visibleRows[id_in_visRows[i]].split('|-|');
+                console.log(visRowsSplit[6] + ' ' + visRowsSplit[7]);
+                //_addingPartList[i] = getAttPart(visRowsSplit[6],visRowsSplit[7],i);
+                //partsBeingInserted[i] = getAttPart(visRowsSplit[6],visRowsSplit[7],i);
+                document.getElementById('status_span').innerHTML = chrome.i18n.getMessage("fetchingAtts");//正在获取待插入的附件...
+                dfdsGettingAtt.push( getAttPart(visRowsSplit[6],visRowsSplit[7],i) );
+            }
+
+            $.when.apply($,dfdsGettingAtt).done(function(){
+                console.info('各个待拼接的part已经成功放到数组里了，开始拼接吧？');
+                //3.把partsBeingInserted内的每个附件依次拼到1上
+                //var updatedRaw = joinPartToDraft(currentDraftString)
+                joinPartToDraft(currentDraftString,function(updatedRaw){
+                    //4.更新draft
+                    document.getElementById('status_span').innerHTML = chrome.i18n.getMessage("updatingDraft");//正在上传新草稿...
+                    updateDraft(currentdraftid, updatedRaw);
+                });//有返回值。这个函数会阻塞，自然地实现了同步操作。-实现个P的同步！
+                //var updatedRaw = joinPartToDraft(currentDraftString, partsBeingInserted);//有返回值。这个函数会阻塞，自然地实现了同步操作。
+
+            })
+
+
             });
         });
-    });//存到变量draftID中
+    //});//存到变量draftID中
 }
 
 //---草稿操作相关函数
@@ -924,13 +880,13 @@ function makenewdraft(passed, name) {
     function getCurrentDraftID(callback) {
         url = DRAFT_URL_prefix;
         var settings = {
+            retryCount: 0,
             url: url,
             /**
              *
              * @param result  经JSON.parse解析过的请求返回内容
              */
             success: function (result) {
-                //var result = JSON.parse(xhr.responseText);
                 if (result.drafts) {
                     draftID = result.drafts[0].id;
                     callback(draftID);
@@ -943,32 +899,36 @@ function makenewdraft(passed, name) {
             }
         }
         $.ajax(settings);
-        //为啥原来写的async是false？？难道这个需要同步才行？？
-        //xhr.open('GET', DRAFT_URL_prefix, false);
     }
 
     function getCurrentRawDraft(DraftId, callback) {
         url = DRAFT_URL_prefix + DraftId + '?format=raw';
         var settings = {
+            retryCount: 0,
             url: url,
             /**
              *
              * @param oldDraft  经JSON.parse解析过的xhr.responseText
              */
             success: function (oldDraft) {
-                //var oldDraft = JSON.parse(xhr.responseText);
                 var raw = oldDraft.message.raw;
                 callback(atob(raw.replace(/-/g, '+').replace(/_/g, '/')));
             }
         }
         $.ajax(settings);
-        //这个也是false？？？也要同步才行？不能异步？？
-        //xhr.open('GET', DRAFT_URL_prefix + DraftId + '?format=raw', false);
     }
 
-    function getAttPart(MessageId, partid, callback) {
+    /**
+     * 返回由MessageId和partid指出的那个附件在邮件内容中的raw字符串形式
+     * @param MessageId
+     * @param partid
+     * @param i_in_partsBeingInserted   根据这个参数，在请求成功返回后，把这个part放进参数指向的数组partsBeingInserted中的位置
+     */
+    function getAttPart(MessageId, partid, i_in_partsBeingInserted) {
+        var dfd = $.Deferred();
         url = MESSAGE_FETCH_URL_prefix + MessageId + '?format=raw';
         var settings = {
+            retryCount: 0,
             url: url,
             /**
              *
@@ -990,85 +950,144 @@ function makenewdraft(passed, name) {
                 var mailparts = mail.split(boundary);
                 partid = parseInt(partid) + 2;
 
+                var partBeingInserted;
                 if (mailparts[partid].indexOf('X-Attachment-Id') == -1) {
-                    callback('\nX-Attachment-Id: f_' + MessageId + partid + mailparts[partid]);
+                    partBeingInserted = '\nX-Attachment-Id: f_' + MessageId + partid + mailparts[partid];
+                    //callback('\nX-Attachment-Id: f_' + MessageId + partid + mailparts[partid]);
                 }
                 else {
-                    callback(mailparts[partid]);
+                    partBeingInserted = mailparts[partid];
+                    //callback(mailparts[partid]);
                 }
+                //根据传入的第三个参数 i_in_partsBeingInserted，在请求成功返回后，把这个part放进数组partsBeingInserted
+                //return partBeingInserted;
+                partsBeingInserted.push(partBeingInserted);
+                //console.log(partBeingInserted);
+                dfd.resolve();
             }
+
         }
-        $.ajax(settings);
-//又是一个false？？草稿相关的都得false？？
-        //xhr.open('GET', MESSAGE_FETCH_URL_prefix + MessageId + '?format=raw', false);
+        return dfd.promise($.ajax(settings));
     }
 
-    function joinPartToDraft(currentDraftString, partBeingInserted) {
+
+    //function joinPartToDraft0(currentDraftString, partBeingInserted) {
+    //    var boundstartpos = currentDraftString.indexOf('Content-Type: multipart/mixed; boundary=');
+    //    if (boundstartpos != -1)//找到了mix boundary
+    //    {
+    //        var prepart = currentDraftString.substring(0, currentDraftString.length - 2);//先去掉最后两个--,前提是已经有mix boundary
+    //        boundstartpos += 40;//移动到boundary的起点
+    //        var boundary = currentDraftString.substring(boundstartpos, currentDraftString.indexOf('\r', boundstartpos));//获取最高的boundary
+    //        //newdraft = prepart + '\r\n' + partBeingInserted + boundary +'--';//合并出最终的新草稿
+    //        newdraft = prepart + partBeingInserted + boundary + '--';//合并出最终的新草稿
+    //    }
+    //    else {
+    //        //var alterBoundStartPos = prepart.indexOf('boundary=')+9;
+    //        //在alter boundary起点拆开，prepart1 preapart2
+    //        var alterBoundStartPos = currentDraftString.indexOf('Content-Type: multipart/alternative; boundary=');
+    //        var prepart1 = currentDraftString.substring(0, alterBoundStartPos);
+    //        var prepart2 = currentDraftString.substring(alterBoundStartPos, currentDraftString.length);
+    //        //构造mix boundary
+    //        //	var boundary = currentDraftString.substring(alterBoundStartPos, currentDraftString.indexOf('\r',alterBoundStartPos));
+    //        var boundary = '1218521a9381b1992c2014d0000f';
+    //
+    //        var prepart = prepart1 + 'Content-Type: multipart/mixed; boundary=' + boundary + '\n\r\n--' + boundary + '\n' + prepart2 + '\n--' + boundary;
+    //        //var boundary = currentDraftString.substring(alterBoundStartPos, currentDraftString.indexOf('\r',alterBoundStartPos));//获取alter boundary
+    //
+    //        //newdraft = prepart + '\r\n' + partBeingInserted + boundary +'--';//合并出最终的新草稿
+    //        newdraft = prepart + partBeingInserted + boundary + '--';//合并出最终的新草稿
+    //    }
+    //
+    //    return btoa(newdraft).replace(/\//g, '_').replace(/\+/g, '-');
+    //}
+    //
+    //function joinPartToDraft1(currentDraftString, partsBeingInserted) {
+    //    //注意，boundary分为mixed 和 alter 两种。
+    //    var boundstartpos = currentDraftString.indexOf('Content-Type: multipart/mixed; boundary=');
+    //    var boundary;
+    //    var prepart;
+    //    if (boundstartpos != -1)//找到了mix boundary
+    //    {
+    //        /**
+    //         * prepart是指原草稿中，除了最后的'--'外的前面的全部内容。
+    //         * 在这之后直接附上partBeingInserted即可完成插入一个part。
+    //         * 最后再补上一个boundary（mixed），和一个'--'即可完成草稿的拼接。
+    //         */
+    //        prepart = currentDraftString.substring(0, currentDraftString.length - 2);//先去掉最后两个--,前提是已经有mix boundary
+    //        boundstartpos += 40;//移动到boundary的起点
+    //        boundary = currentDraftString.substring(boundstartpos, currentDraftString.indexOf('\r', boundstartpos));//获取最高的boundary
+    //        //newdraft = prepart + partBeingInserted + boundary + '--';//合并出最终的新草稿
+    //    }
+    //    else {
+    //        //在alter boundary起点拆开，prepart1 preapart2
+    //        var alterBoundStartPos = currentDraftString.indexOf('Content-Type: multipart/alternative; boundary=');
+    //        var prepart1 = currentDraftString.substring(0, alterBoundStartPos);
+    //        var prepart2 = currentDraftString.substring(alterBoundStartPos, currentDraftString.length);
+    //        //构造mix boundary
+    //        boundary = '1218521a9381b1992c2014d0000f';
+    //
+    //        prepart = prepart1 + 'Content-Type: multipart/mixed; boundary=' + boundary + '\n\r\n--' + boundary + '\n' + prepart2 + '\n--' + boundary;
+    //        //var boundary = currentDraftString.substring(alterBoundStartPos, currentDraftString.indexOf('\r',alterBoundStartPos));//获取alter boundary
+    //
+    //    }
+    //    /**
+    //     * 经过上面这个if-else，原草稿中的prepart已经取好。
+    //     * 接下来用循环把partsBeingInserted中的parts们依次接到prepart后面即可。（每个part结束后要补上一个boundary）
+    //     */
+    //    for(var i in partsBeingInserted){
+    //        prepart = prepart + partsBeingInserted[i] + boundary;
+    //    }
+    //
+    //    var newdraft = prepart + '--';//合并出最终的新草稿
+    //    return btoa(newdraft).replace(/\//g, '_').replace(/\+/g, '-');
+    //}
+
+    function joinPartToDraft(currentDraftString,callback) {
+        //注意，boundary分为mixed 和 alter 两种。
         var boundstartpos = currentDraftString.indexOf('Content-Type: multipart/mixed; boundary=');
+        var boundary;
+        var prepart;
         if (boundstartpos != -1)//找到了mix boundary
         {
-            var prepart = currentDraftString.substring(0, currentDraftString.length - 2);//先去掉最后两个--,前提是已经有mix boundary
+            /**
+             * prepart是指原草稿中，除了最后的'--'外的前面的全部内容。
+             * 在这之后直接附上partBeingInserted即可完成插入一个part。
+             * 最后再补上一个boundary（mixed），和一个'--'即可完成草稿的拼接。
+             */
+            prepart = currentDraftString.substring(0, currentDraftString.length - 2);//先去掉最后两个--,前提是已经有mix boundary
             boundstartpos += 40;//移动到boundary的起点
-            var boundary = currentDraftString.substring(boundstartpos, currentDraftString.indexOf('\r', boundstartpos));//获取最高的boundary
-            //newdraft = prepart + '\r\n' + partBeingInserted + boundary +'--';//合并出最终的新草稿
-            newdraft = prepart + partBeingInserted + boundary + '--';//合并出最终的新草稿
+            boundary = currentDraftString.substring(boundstartpos, currentDraftString.indexOf('\r', boundstartpos));//获取最高的boundary
+            //newdraft = prepart + partBeingInserted + boundary + '--';//合并出最终的新草稿
         }
         else {
-            //var alterBoundStartPos = prepart.indexOf('boundary=')+9;
             //在alter boundary起点拆开，prepart1 preapart2
             var alterBoundStartPos = currentDraftString.indexOf('Content-Type: multipart/alternative; boundary=');
             var prepart1 = currentDraftString.substring(0, alterBoundStartPos);
             var prepart2 = currentDraftString.substring(alterBoundStartPos, currentDraftString.length);
             //构造mix boundary
-            //	var boundary = currentDraftString.substring(alterBoundStartPos, currentDraftString.indexOf('\r',alterBoundStartPos));
-            var boundary = '1218521a9381b1992c2014d0000f';
-            //prepart1+'Content-Type: multipart/mixed; boundary='+boundary+'\n\r\n--'+boundary+'\n'+prepart2;
-            var prepart = prepart1 + 'Content-Type: multipart/mixed; boundary=' + boundary + '\n\r\n--' + boundary + '\n' + prepart2 + '\n--' + boundary;
+            boundary = '1218521a9381b1992c2014d0000f';
+
+            prepart = prepart1 + 'Content-Type: multipart/mixed; boundary=' + boundary + '\n\r\n--' + boundary + '\n' + prepart2 + '\n--' + boundary;
             //var boundary = currentDraftString.substring(alterBoundStartPos, currentDraftString.indexOf('\r',alterBoundStartPos));//获取alter boundary
 
-            //newdraft = prepart + '\r\n' + partBeingInserted + boundary +'--';//合并出最终的新草稿
-            newdraft = prepart + partBeingInserted + boundary + '--';//合并出最终的新草稿
         }
-        /*
-         var boundstartpos = currentDraftString.indexOf('boundary=')+9;
-         var boundary = currentDraftString.substring(boundstartpos, currentDraftString.indexOf('\r',boundstartpos));//获取最高的boundary
+        /**
+         * 经过上面这个if-else，原草稿中的prepart已经取好。
+         * 接下来用循环把partsBeingInserted中的parts们依次接到prepart后面即可。（每个part结束后要补上一个boundary）
          */
+        console.info('开始拼接附件！');
+        //console.log(partsBeingInserted);
+        for(var i in partsBeingInserted){
+            console.log('正在拼第几个附件？'+i +' partsBeingInserted中共几个？'+partsBeingInserted.length);
+            document.getElementById('status_span').innerHTML = chrome.i18n.getMessage("makingNewDraft");//正在本地生成新草稿...
+            prepart = prepart + partsBeingInserted[i] + boundary;
+        }
 
-        return btoa(newdraft).replace(/\//g, '_').replace(/\+/g, '-');
+        var newdraft = prepart + '--';//合并出最终的新草稿
+        callback( btoa(newdraft).replace(/\//g, '_').replace(/\+/g, '-') );
+        //return btoa(newdraft).replace(/\//g, '_').replace(/\+/g, '-');
     }
 
-    /**废弃了
-     *
-     * @param oldEmail
-     */
-    function makeUpdatedDraft(oldEmail) {
-        var xhr = new XMLHttpRequest();
-        xhr.onreadystatechange = function (event) {
-            if (xhr.readyState == 4) {
-                if (xhr.status == 200) {
-                    var drafts = JSON.parse(xhr.responseText);
-                    //noinspection JSUnusedLocalSymbols
-                    var draftID = drafts[0].id;
-                    return btoa(updatedRaw).replace(/\//g, '_').replace(/\+/g, '-');
-                } else if (xhr.status == 401) {
-                    document.getElementById('status_span').innerHTML = chrome.i18n.getMessage("errorOfUnauthorized");//'未成功授权，请重新授权后再试！';
-                    document.getElementById('load1').style.display = 'none';
-                } else {
-                    document.getElementById('status_span').innerHTML = chrome.i18n.getMessage("errorOfConnection");//'网络问题，请重试。不行的话，请刷新网页再试！';
-                    document.getElementById('load1').style.display = 'none';
-                }
-            } else {
-                document.getElementById('status_span').innerHTML = chrome.i18n.getMessage("badRequest");//'网络请求失败，请重试！';
-                document.getElementById('load1').style.display = 'none';
-            }
-        };
-
-        xhr.open('GET', DRAFT_URL_prefix, false);
-
-        xhr.setRequestHeader('Content-Type', 'application/json');
-        xhr.setRequestHeader('Authorization', 'OAuth ' + token);
-        xhr.send(null);
-    }
 
     /**更新当前最新的草稿，即把本地拼好要插入的附件之后的新草稿发回服务器
      *
@@ -1084,19 +1103,21 @@ function makenewdraft(passed, name) {
 
         url = DRAFT_URL_prefix + DraftId;
         var settings = {
+            retryCount: 0,
             type: 'PUT',
             url: url,
             data: json,
-            async: false,
+            //async: false,
             success: function () {
-                document.getElementById('status_span').innerHTML = chrome.i18n.getMessage("finishInsert", name);//'附件<strong>'+ name +'</strong>已成功插入至最新草稿！';
+                document.getElementById('status_span').innerHTML = chrome.i18n.getMessage("finishInsertAll");//'附件们已全部插入至最新草稿！';
                 console.log('添加附件成功！');
+                document.getElementById('load1').style.display = 'none';
+                document.getElementById('GmailAssist').style.visibility = 'visible';
+                document.getElementById('overlay').style.visibility = 'visible';
+                partsBeingInserted = [];
             }
         }
         $.ajax(settings);
-
-        //果然还是个false
-        //xhr.open('PUT', DRAFT_URL_prefix + DraftId, false);
     }
 
 }
@@ -1106,7 +1127,7 @@ function makenewdraft(passed, name) {
  *
  */
 function filterRows() {
-    console.log('过滤器工作啦');
+    //console.log('过滤器工作啦');
     var filterValue = document.getElementById('filter').value;
     {
         var terms = filterValue.split(' ');
@@ -1211,102 +1232,103 @@ function tellIfLoaded() {
 function nextDelayTime(attempts) {
     return (Math.pow(2, attempts) * 1000) + Math.floor(Math.random() * 1000);//random() 方法可返回介于 0 ~ 1 之间的一个随机数。
 }
-//如果ajax失败了，就重发（指数退避重试7次以上都按7次算）
-function doAjaxRequestLoop0(attempts, xhr) {
-    attempts += 1;
-    if (attempts > 7) {
-        attempts = 7;
-    }
-    setTimeout(function () {
-        $.ajax({
-            xhr: xhr,
-            error: function (error) {
-                console.log('未授权哦');
-                doAjaxRequestLoop(attempts, xhr);
-            }
-        });
-    }, nextDelayTime(attempts));
-}
-
-function doAjaxRequestLoop1(attempts, callback) {
-    attempts += 1;
-    if (attempts > 7) {
-        attempts = 7;
-    }
-    setTimeout(callback, nextDelayTime(attempts));
-}
-
-function doAjaxRequestLoop2(attempts, originalOptions) {
-    attempts += 1;
-    if (attempts > 7) {
-        attempts = 7;
-    }
-    setTimeout(function () {
-        $.ajax({
-            error: function (error) {
-                console.log('未授权哦');
-                doAjaxRequestLoop(attempts, originalOptions);
-            }
-        });
-    }, nextDelayTime(attempts));
-}
-
 
 InitDiv();
-//全局ajax设置，ajax失败则指数退避重传(jq ajax的type默认为'GET')
-//$.ajaxSetup({
-//    //attempts: 0,//已重试次数
-//    error: function (xhr) {
-//        if (xhr.status == 401) {
+// register AJAX prefilter : options, original options
+//$.ajaxPrefilter0(function (options, originalOptions, jqXHR) {
+//
+//    originalOptions._error = originalOptions.error;
+//
+//    // overwrite error handler for current request
+//    options.error = function (_xhr, _textStatus, _errorThrown) {
+//
+//        if (_xhr.status == 401 ){
 //            document.getElementById('status_span').innerHTML = chrome.i18n.getMessage("errorOfUnauthorized");//'未成功授权，请重新授权后再试！';
 //            document.getElementById('load1').style.display = 'none';
-//            //console.log('未授权哦');
-//            //console.log(xhr);
-//            //通过闭包（还是？匿名函数？）来把this（即当前这个ajax请求的设置参数）传走
-//            //doAjaxRequestLoop(0, function(){
-//            //    $.ajax(this);
-//            //    console.log('重传'+this.url);
-//            //});
-//
-//            //doAjaxRequestLoop(0, xhr);//attempts=0 是当前重试的次数，用于指数退避的时间间隔计算。xhr是把当前失败了的这个xhr传下去，重发之。//但这个xhr不是已经readystate==4的了么？？
-//        } else if (xhr.status == 403 || xhr.status == 429 || xhr.status == 502 || xhr.status == 503) {
-//            //doAjaxRequestLoop(0, xhr);//attempts=0 是当前重试的次数，用于指数退避的时间间隔计算。xhr是把当前失败了的这个xhr传下去，重发之。//但这个xhr不是已经readystate==4的了么？？
-//        } else {//除了上述错误码，其他的都认为是网络错误，直接提示。
+//            chrome.runtime.sendMessage({reAuth: '401'}, function (response) {
+//                token = response.token;
+//            });
+//        } else {//if (_xhr.status == 403 || _xhr.status == 429 || _xhr.status == 502 || _xhr.status == 503) {
+//            document.getElementById('status_span').innerHTML = chrome.i18n.getMessage("errorOfUnauthorized");//'未成功授权，请重新授权后再试！';
+//            document.getElementById('load1').style.display = 'none';
+//            //console.log(_xhr.status + '错误  已重试次数：' + originalOptions.retryCount);
+//            //
+//            //originalOptions.retryCount++;
+//            //if (originalOptions.retryCount > 7) {
+//            //    originalOptions.retryCount = 7;
+//            //}//重试次数+1，到7不再加
+//            //
+//            //setTimeout(function () {
+//            //    $.ajax(originalOptions);
+//            //}, nextDelayTime(originalOptions.retryCount));
+//        }/*else {
 //            document.getElementById('status_span').innerHTML = chrome.i18n.getMessage("errorOfConnection");//'网络问题，请重试。不行的话，请刷新网页再试！';
 //            document.getElementById('load1').style.display = 'none';
-//        }
-//    }
+//        }*/
+//        console.log(_xhr.status + '错误  已重试次数：' + originalOptions.retryCount);
+//
+//        originalOptions.retryCount++;
+//        if (originalOptions.retryCount > 7) {
+//            originalOptions.retryCount = 7;
+//        }//重试次数+1，到7不再加
+//
+//        setTimeout(function () {
+//            $.ajax(originalOptions);
+//        }, nextDelayTime(originalOptions.retryCount));
+//
+//    };
 //});
-// register AJAX prefilter : options, original options
-$.ajaxPrefilter(function (options, originalOptions, jqXHR) {
 
-    originalOptions._error = originalOptions.error;
+$.ajaxPrefilter(function(opts, originalOptions, jqXHR) {
+    // our own deferred object to handle done/fail callbacks
+    var dfd = $.Deferred();
 
-    // overwrite error handler for current request
-    options.error = function (_xhr, _textStatus, _errorThrown) {
+    // if the request works, return normally
+    jqXHR.done(dfd.resolve);
 
-        if (_xhr.status == 403 || _xhr.status == 429 || _xhr.status == 502 || _xhr.status == 503) {
-            document.getElementById('status_span').innerHTML = chrome.i18n.getMessage("errorOfUnauthorized");//'未成功授权，请重新授权后再试！';
+    // if the request fails, do something else
+    // yet still resolve
+    jqXHR.fail(function() {
+        console.log(jqXHR.status + '错误  已重试次数：' + originalOptions.retryCount);
+        originalOptions.retryCount++;
+        if (originalOptions.retryCount > 7) {
+            originalOptions.retryCount = 7;
+        }//重试次数+1，到7不再加
+        if(!jqXHR.status){
+            document.getElementById('status_span').innerHTML = chrome.i18n.getMessage("errorOfConnection");//'网络错误，请刷新页面重试！';
             document.getElementById('load1').style.display = 'none';
-            console.log(_xhr.status + '错误  已重试次数：' + originalOptions.retryCount);
-
-            originalOptions.retryCount++;
-            if (originalOptions.retryCount > 7) {
-                originalOptions.retryCount = 7;
-            }//重试次数+1，到7不再加
-
-            setTimeout(function () {
-                $.ajax(originalOptions);
-            }, nextDelayTime(originalOptions.retryCount));
-            //doAjaxRequestLoop(0, originalOptions);
-        } else if (_xhr.status == 401 ){
-            document.getElementById('status_span').innerHTML = chrome.i18n.getMessage("errorOfUnauthorized");//'未成功授权，请重新授权后再试！';
-            document.getElementById('load1').style.display = 'none';
-        } else {
-            document.getElementById('status_span').innerHTML = chrome.i18n.getMessage("errorOfConnection");//'网络问题，请重试。不行的话，请刷新网页再试！';
-            document.getElementById('load1').style.display = 'none';
+            return;
         }
 
-    };
+
+        if(jqXHR.status == 401){
+            //重新授权
+            //document.getElementById('status_span').innerHTML = chrome.i18n.getMessage("errorOfUnauthorized");//'未成功授权，请重新授权后再试！';
+            //document.getElementById('load1').style.display = 'none';
+            chrome.runtime.sendMessage({reAuth: '401'}, function (response) {
+                token = response.token;
+            });
+            console.log('已过期的token: '+originalOptions.headers.Authorization);
+            originalOptions.headers.Authorization = 'OAuth '+token;
+            console.log('更新后的token: '+originalOptions.headers.Authorization);
+        }
+        var newOpts = $.extend({},originalOptions,{
+            error: function() {
+                //console.log('要重发');
+                dfd.rejectWith(jqXHR);
+            }
+        });
+
+        setTimeout(function () {
+            $.ajax(newOpts);
+        }, nextDelayTime(originalOptions.retryCount));//这个求时间用参数也许有问题？现在也许只重发一次？或者算的时间都是按重发1次的？
+        //试验了一下，这个参数没问题。为啥呢？
+
+        dfd.rejectWith(jqXHR);
+    });
+
+    // NOW override the jqXHR's promise functions with our deferred
+    return dfd.promise(jqXHR);//jqHXR本来的done和fail方法被覆盖了
 });
+
 setTimeout("tellIfLoaded();", 20000);

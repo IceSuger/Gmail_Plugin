@@ -1,7 +1,7 @@
 ﻿{
   "manifest_version": 2,
   "name": "__MSG_extName__",
-  "version": "1.9",
+  "version": "1.12",
   "default_locale": "en",
   "description": "__MSG_extDescript__",
   "icons": {
@@ -36,7 +36,7 @@
     {
       "js": [
         "js/jquery-1.11.1.min.js",
-        "js/table_sort_script.js","js/load.js",
+        "js/load.js",
         "js/content.js"
       ],
       "css": [

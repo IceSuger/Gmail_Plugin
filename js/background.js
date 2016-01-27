@@ -25,6 +25,10 @@ chrome.runtime.onMessage.addListener(function (message, sender, sendResponse) {
             conflictAction: 'uniquify',
             saveAs: false
         });
+    } else if (message.reAuth){
+        google.authorize(function(){
+            sendResponse({token: google.getAccessToken()});
+        });
     }
     //sendResponse({farewell: "from bg"});
 });

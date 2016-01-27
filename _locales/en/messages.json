@@ -105,5 +105,20 @@
 	},
 	"displayInterface":{
 		"message":"Show up"
+	},
+	"finishInsertAll":{
+		"message":"All attachments are inserted into the latest draft!"
+	},
+	"updatingDraft":{
+		"message":"Updating the latest draft..."
+	},
+	"makingNewDraft":{
+		"message":"Generating the new content of the latest draft..."
+	},
+	"fetchingAtts":{
+		"message":"Fetching the attachments ..."
+	},
+	"fetchingOldDraft":{
+		"message":"Fetching the draft..."
 	}
 }

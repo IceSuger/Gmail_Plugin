@@ -3,7 +3,7 @@
 		"message":"Gmail附件助手"
 	},
 	"extDescript":{
-		"message":"查询邮箱内全部附件，支持批量下载，支持批量添加至最新的草稿。要开始使用，在登录Gmail后，点击地址栏右端图标，在弹出页面中同意授权即可。"
+		"message":"查詢郵箱內全部附件，支持批量下載，支持批量添加至最新的草稿。要開始使用，在登錄Gmail後，點擊地址欄右端圖標，在彈出頁面中同意授權即可。"
 	},
 	"itemsPerPage":{
 		"message":"项每页"
@@ -18,10 +18,10 @@
 		"message":"下载"
 	},
 	"hintListing":{
-		"message":"正在获取附件列表...(您可以先暂时关闭助手界面，继续其他操作，获取成功后会自动弹出此界面)"
+		"message":"正在獲取附件列表...(您可以先暫時關閉助手界面，繼續其他操作，獲取成功後會自動彈出此界面)"
 	},
 	"fetchAttsList":{
-		"message":"获取附件列表"
+		"message":"獲取附件列表"
 	},
 	"hintInserting":{
 		"message":"正在插入附件<strong>$name$</strong>...",
@@ -43,19 +43,19 @@
 		"message":"插入草稿"
 	},
 	"searchTheResults":{
-		"message":"在结果中搜索"
+		"message":"在結果中搜索"
 	},
 	"finishListing":{
-		"message":"获取附件列表完毕！"
+		"message":"獲取附件列表完畢！"
 	},
 	"hintForSearch":{
-		"message":"请输入关键词，以空格分隔"
+		"message":"請輸入關鍵詞，以空格分隔"
 	},
 	"lookPicsAsAttachments":{
-		"message":"将正文中的图片也视为附件"
+		"message":"將正文中的圖片也視為附件"
 	},
 	"loading":{
-		"message":"正在等待加载..."
+		"message":"正在等待加載..."
 	},
 	"fileName":{
 		"message":"附件名"
@@ -64,50 +64,50 @@
 		"message":"附件大小"
 	},
 	"from":{
-		"message":"发件人",
-		"description":"sender/发件人"
+		"message":"發件人",
+		"description":"sender/發件人"
 	},
 	"label":{
-		"message":"邮件标签"
+		"message":"郵件標籤"
 	},
 	"subject":{
-		"message":"邮件标题"
+		"message":"郵件標題"
 	},
 	"date":{
 		"message":"日期"
 	},
 	"errorOfUnauthorized":{
-		"message":"未成功授权，请重新授权后再试！"
+		"message":"未成功授權，請重新授權後再試！"
 	},
 	"errorOfConnection":{
-		"message":"网络问题，请重试。不行的话，请刷新网页再试！"
+		"message":"網絡問題，請重試。不行的話，請刷新網頁再試！"
 	},
 	"draftBoxEmpty":{
-		"message":"草稿箱为空，请先创建草稿后再试！"
+		"message":"草稿箱為空，請先創建草稿後再試！"
 	},
 	"badRequest":{
-		"message":"网络请求失败，请重试！"
+		"message":"網絡請求失敗，請重試！"
 	},
 	"failLoading":{
-		"message":"Gmail助手加载失败了，请刷新网页重试。(建议先等页面加载完毕，再打开助手界面)"
+		"message":"Gmail助手加載失敗了，請刷新網頁重試。 (建議先等頁面加載完畢，再打開助手界面)"
 	},
 	"completeLoading":{
-		"message":"Gmail附件助手加载完毕！"
+		"message":"Gmail附件助手加載完畢！"
 	},
 	"Authorize":{
-		"message":"授权"
+		"message":"授權"
 	},
 	"DeAuthorize":{
-		"message":"取消授权"
+		"message":"取消授權"
 	},
 	"alreadyAuthorized":{
-		"message":"已授权"
+		"message":"已授權"
 	},
 	"displayInterface":{
-		"message":"显示助手界面"
+		"message":"顯示助手界面"
 	},
 	"finishInsertAll":{
-		"message":"附件们已全部插入草稿！"
+		"message":"附件已全部插入草稿！"
 	},
 	"updatingDraft":{
 		"message":"正在上传新草稿..."

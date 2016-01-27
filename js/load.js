@@ -96,7 +96,8 @@ window.onload = function () {
                         headers: {
                             "Content-Type":"application/json",
                             "Authorization":'OAuth ' + token
-                        }
+                        }//,
+                        //retryCount: 0
                     });
                     //alert(token);
                     document.getElementById('GmailAssist').style.display = "block";
