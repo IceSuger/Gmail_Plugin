@@ -49,7 +49,7 @@
 		"message":"Successfully listed the attachments!"
 	},
 	"hintForSearch":{
-		"message":"Input key words to search or filter"
+		"message":"Input key words to search the list below"
 	},
 	"lookPicsAsAttachments":{
 		"message":"Include images in mail body"

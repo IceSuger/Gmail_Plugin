@@ -1123,8 +1123,8 @@ function makenewdraft(id_in_visRows) {
 }
 
 
-/**
- * 根据搜索框（过滤条件框）内的内容，过滤掉不显示的行
+/**根据搜索框（过滤条件框）内的内容，过滤掉不显示的行
+ *
  */
 function filterRows() {
     //console.log('过滤器工作啦');

@@ -1,7 +1,7 @@
 ﻿{
   "manifest_version": 2,
   "name": "__MSG_extName__",
-  "version": "1.13",
+  "version": "1.12",
   "default_locale": "en",
   "description": "__MSG_extDescript__",
   "icons": {
@@ -14,8 +14,8 @@
       "19": "images/icon19.png",
       "38": "images/icon38.png"
     },
-    "default_title": "__MSG_extName__",
-    "default_popup": "popup.html"
+    "default_title": "__MSG_extName__"
+    //"default_popup": "popup.html"
   },
   "background": {
     "scripts": [
@@ -29,7 +29,7 @@
         "oauth2/oauth2_inject.js"
       ],
       "matches": [
-        "http://www.google.com/robots.txt*","https://www.google.com/robots.txt*"
+        "http://www.google.com/robots.txt*"
       ],
       "run_at": "document_start"
     },
@@ -71,5 +71,4 @@
     "images/asc.gif",
     "images/header-bg.gif"
   ]
-  //"options_page": "option.html"
 }
