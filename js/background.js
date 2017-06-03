@@ -1,4 +1,8 @@
-chrome.runtime.onInstalled.addListener(function () {
+chrome.runtime.onInstalled.addListener(function (details) {
+    // Check whether new version is installed
+    if (details.reason == "install" || details.reason == "update") {
+        chrome.tabs.create({url: "help.html"});
+    }
     chrome.declarativeContent.onPageChanged.removeRules(undefined, function () {
         chrome.declarativeContent.onPageChanged.addRules([
             {
@@ -25,8 +29,8 @@ chrome.runtime.onMessage.addListener(function (message, sender, sendResponse) {
             conflictAction: 'uniquify',
             saveAs: false
         });
-    } else if (message.reAuth){
-        google.authorize(function(){
+    } else if (message.reAuth) {
+        google.authorize(function () {
             sendResponse({token: google.getAccessToken()});
         });
     }
@@ -38,14 +42,14 @@ var google = new OAuth2('google', {
     client_secret: 'Ihu8AKXFttSGBVXA-hOsk5Yf',
     api_scope: 'https://www.googleapis.com/auth/gmail.modify'
 });
-chrome.pageAction.onClicked.addListener(function(){
+chrome.pageAction.onClicked.addListener(function () {
     console.log('GmailAssist come out');
-    google.authorize(function(){
-            chrome.tabs.query({active: true, currentWindow: true}, function (tabs) {
-                chrome.tabs.sendMessage(tabs[0].id, {token: google.getAccessToken()}, function (response) {
-                    //console.log(response.farewell);
-                });
+    google.authorize(function () {
+        chrome.tabs.query({active: true, currentWindow: true}, function (tabs) {
+            chrome.tabs.sendMessage(tabs[0].id, {token: google.getAccessToken()}, function (response) {
+                //console.log(response.farewell);
             });
+        });
 
     });
 })
