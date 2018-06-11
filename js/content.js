@@ -592,7 +592,7 @@ function fetchNextList(pagetoken) {
     var settings = {
         //headers: {
         //    "Content-Type": "application/json",
-        //    "Authorization": 'OAuth ' + 'ya29.awJE76XyhFHTniZ2PTsyC0zRbBAtVKoUbhQuSNT3SSmv9yWqVzH0ESuxg7ySzthL6ZWU'
+        //    "Authorization": 'OAuth ' + 'ya29.XXXXXXXXXXXXXXXXXXXXXX'
         //    //"Authorization": 'OAuth ' + token
         //},
         retryCount: 0,
@@ -673,7 +673,7 @@ function initCtrls() {
 //        url: url,
 //        //headers: {
 //        //    "Content-Type": "application/json",
-//        //    //"Authorization": 'OAuth ' + 'ya29.awJE76XyhFHTniZ2PTsyC0zRbBAtVKoUbhQuSNT3SSmv9yWqVzH0ESuxg7ySzthL6ZWU'
+//        //    //"Authorization": 'OAuth ' + 'ya29.XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX'
 //        //    "Authorization": 'OAuth ' + token
 //        //},
 //
@@ -740,7 +740,7 @@ function getMessage(MessageId, j) {//j为在msgFinished中的下标
         url: url,
         //headers: {
         //    "Content-Type": "application/json",
-        //    //"Authorization": 'OAuth ' + 'ya29.awJE76XyhFHTniZ2PTsyC0zRbBAtVKoUbhQuSNT3SSmv9yWqVzH0ESuxg7ySzthL6ZWU'
+        //    //"Authorization": 'OAuth ' + 'ya29.XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX'
         //    "Authorization": 'OAuth ' + token
         //},
 
